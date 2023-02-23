@@ -10,9 +10,10 @@ require('node-cron').schedule('* * * * *', function() {
       'User-Agent': 'node-cron ' + (new Date()).toString() + ' ' + process.pid
     }
   };
-  console.log(__filename);
-  console.error(process.env.SERVER_NAME);
+  console.log(process.pid + " START " + __filename);
+  // console.error(process.env.SERVER_NAME);
   require('https').request(options).end();
+  console.log(process.pid + " FINISH " + __filename);
 }, {
   scheduled: true,
   timezone: 'Asia/Tokyo'
