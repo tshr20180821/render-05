@@ -11,4 +11,7 @@ RUN npm install
 
 RUN node --version
 
+RUN cat /proc/version
+RUN cat /etc/os-release
+ 
 COPY index.html /var/www/html/
