@@ -3,7 +3,9 @@ FROM php:8.2-apache
 RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install -y curl
-RUN docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring oniguruma
+RUN docker-php-ext-install -j$(nproc) pdo_mysql
+RUN docker-php-ext-install -j$(nproc) mysqli
+RUN docker-php-ext-install -j$(nproc) mbstring
  
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get install -y nodejs
