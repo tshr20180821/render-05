@@ -1,4 +1,4 @@
-require('node-cron').schedule(schedule, function() {
+require('node-cron').schedule('* * * *', function() {
   let options = {
     hostname: 'dummy.local',
     port: 443,
@@ -9,6 +9,7 @@ require('node-cron').schedule(schedule, function() {
       'User-Agent': 'node-cron'
     }
   };
+  console.error('test');
   // require('https').request(options).end();
 }, {
   scheduled: true,
