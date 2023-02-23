@@ -1,4 +1,4 @@
-require('node-cron').schedule('* * * *', function() {
+require('node-cron').schedule('* * * * *', function() {
   let options = {
     hostname: 'dummy.local',
     port: 443,
