@@ -21,4 +21,5 @@ EXPOSE 3000
 # RUN php --version
 RUN ls -lang /etc/apache2/
 
-CMD ["node","crond.js"]
+# CMD ["node","crond.js"]
+CMD ["sh","./start.sh"]
