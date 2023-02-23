@@ -9,7 +9,7 @@ require('node-cron').schedule('* * * * *', function() {
       'User-Agent': 'node-cron'
     }
   };
-  console.error('test');
+  console.error(os.hostname());
   // require('https').request(options).end();
 }, {
   scheduled: true,
