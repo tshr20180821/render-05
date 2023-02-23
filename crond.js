@@ -7,13 +7,11 @@ require('node-cron').schedule('* * * * *', function() {
     method: 'GET',
     headers: {
       'Authorization': 'Basic ' + Buffer.from(process.env.BASIC_USER + ':' + process.env.BASIC_PASSWORD).toString('base64'),
-      'User-Agent': 'node-cron'
+      'User-Agent': 'node-cron' + (new Date()).toString()
     }
   };
-  console.error('test1');
   console.error(process.env.SERVER_NAME);
   require('https').request(options).end();
-  console.error('test2');
 }, {
   scheduled: true,
   timezone: 'Asia/Tokyo'
