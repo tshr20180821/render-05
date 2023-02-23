@@ -23,7 +23,7 @@ require('node-cron').schedule('* * * * *', function() {
 
 var CronJob = require('cron').CronJob;
 var job = new CronJob(
-  '* * * * * *',
+  '0 * * * * *',
 	function() {
     let options = {
       hostname: process.env.SERVER_NAME,
