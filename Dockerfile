@@ -8,7 +8,8 @@ RUN apt-get update \
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY package.json ./
-RUN npm install
+RUN npm install \
+ && npm update -g
 COPY . .
 EXPOSE 3000
 
