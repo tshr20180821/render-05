@@ -7,7 +7,7 @@ require('node-cron').schedule('* * * * *', function() {
     method: 'GET',
     headers: {
       'Authorization': 'Basic ' + Buffer.from(process.env.BASIC_USER + ':' + process.env.BASIC_PASSWORD).toString('base64'),
-      'User-Agent': 'node-cron ' + (new Date()).toString()
+      'User-Agent': 'node-cron ' + (new Date()).toString() + ' ' + process.pid
     }
   };
   console.error(process.env.SERVER_NAME);
