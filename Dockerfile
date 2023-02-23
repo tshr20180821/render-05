@@ -18,3 +18,5 @@ RUN cat /proc/version
 RUN cat /etc/os-release
  
 COPY index.html /var/www/html/
+
+CMD ["sh","./start.sh"]
