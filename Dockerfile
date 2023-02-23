@@ -2,7 +2,7 @@ FROM node:18-bullseye
 
 RUN apt-get update \
  && apt-get -y upgrade \
- && apt-get -y install apache2 php8 \
+ && apt-get -y install apache2 php \
  && apt-get clean
  
 RUN mkdir -p /usr/src/app
@@ -14,5 +14,6 @@ COPY . .
 EXPOSE 3000
 
 RUN php --version
+RUN systemctl restart apache2
 
 CMD ["node","crond.js"]
