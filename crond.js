@@ -10,9 +10,9 @@ require('node-cron').schedule('* * * * *', function() {
     }
   };
   console.error('test1');
-  console.error('test2');
+  console.error(process.env.SERVER_NAME);
   console.error(require('os').hostname());
-  console.error('test3');
+  console.error('test2');
   // require('https').request(options).end();
 }, {
   scheduled: true,
