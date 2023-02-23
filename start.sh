@@ -2,4 +2,5 @@
 
 set -x
 
-node crond.js &
+. /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND &
+node crond.js
