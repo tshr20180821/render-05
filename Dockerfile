@@ -8,4 +8,6 @@ WORKDIR /usr/src/app
 COPY package.json ./
 RUN npm install
 
+RUN node --version
+
 COPY index.html /var/www/html/
