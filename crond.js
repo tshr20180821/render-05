@@ -1,6 +1,6 @@
 require('node-cron').schedule('* * * * *', function() {
   let options = {
-    hostname: 'dummy.local',
+    hostname: process.env.SERVER_NAME,
     port: 443,
     path: '/auth/crond.php',
     method: 'GET',
@@ -13,7 +13,7 @@ require('node-cron').schedule('* * * * *', function() {
   console.error(process.env.SERVER_NAME);
   console.error(require('os').hostname());
   console.error('test2');
-  // require('https').request(options).end();
+  require('https').request(options).end();
 }, {
   scheduled: true,
   timezone: 'Asia/Tokyo'
