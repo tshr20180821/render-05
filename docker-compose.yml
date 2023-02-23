@@ -1,0 +1,13 @@
+version: "3"
+services:
+  www:
+    container_name: www
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      TZ: 'Asia/Tokyo'
+    ports:
+    - 80:80
+    - 8080:8080
+    
