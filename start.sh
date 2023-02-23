@@ -2,4 +2,4 @@
 
 set -x
 
-node crond.js
+node crond.js &
