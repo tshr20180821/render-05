@@ -1,13 +1,6 @@
-version: "3"
+version: '3.8'
 services:
   web:
-    container_name: web
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      TZ: 'Asia/Tokyo'
+    build: .
     ports:
-    - 80:80
-    - 8080:8080
-    
+      - "8080:80"
