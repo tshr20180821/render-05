@@ -2,5 +2,5 @@
 
 set -x
 
-node crond.js
+node crond.js &
 # exec /usr/sbin/apache2 -DFOREGROUND
