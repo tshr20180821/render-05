@@ -5,7 +5,7 @@ RUN apt-get install -y curl
 # RUN apt-get clean
 
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
-RUN apt-get install -y nodejs npm
+RUN apt-get install -y nodejs
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
