@@ -21,6 +21,7 @@ RUN php --version
 
 RUN cat /proc/version
 RUN cat /etc/os-release
+RUN strings /etc/localtime
  
 COPY index.html /var/www/html/
 COPY crond.js /usr/src/app/
