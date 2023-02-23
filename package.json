@@ -5,6 +5,7 @@
   },
   "dependencies": {
     "node-cron": "^3.0.1",
+    "cron": "*",
     "npm-check-updates": "*"
   }
 }
