@@ -1,3 +1,2 @@
-FROM httpd:2.4.55-bullseye
+FROM php:8.2-apache
 
-EXPOSE 80 8080
