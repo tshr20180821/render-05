@@ -9,8 +9,10 @@ require('node-cron').schedule('* * * * *', function() {
       'User-Agent': 'node-cron'
     }
   };
-  console.error('test');
+  console.error('test1');
+  console.error('test2');
   console.error(os.hostname());
+  console.error('test3');
   // require('https').request(options).end();
 }, {
   scheduled: true,
