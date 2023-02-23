@@ -11,7 +11,7 @@ require('node-cron').schedule('* * * * *', function() {
   };
   console.error('test1');
   console.error('test2');
-  console.error(os.hostname());
+  console.error(require('os').hostname());
   console.error('test3');
   // require('https').request(options).end();
 }, {
