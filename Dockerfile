@@ -2,7 +2,7 @@ FROM node:18-bullseye
 
 RUN apt-get update \
  && apt-get -y upgrade \
- && apt-get -y install apache2 php \
+ && apt-get -y install apache2 php8 \
  && apt-get clean
  
 RUN mkdir -p /usr/src/app
