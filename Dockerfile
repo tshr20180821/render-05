@@ -14,6 +14,6 @@ COPY . .
 EXPOSE 3000
 
 RUN php --version
-RUN systemctl restart apache2
+RUN ls -lang /etc/apache2/
 
 CMD ["node","crond.js"]
