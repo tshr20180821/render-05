@@ -28,8 +28,8 @@ var job = new CronJob(
     let options = {
       hostname: process.env.SERVER_NAME,
       port: 443,
-      // path: '/auth/crond.php',
-      path: '/index.html',
+      path: '/auth/crond.php',
+      // path: '/index.html',
       method: 'GET',
       headers: {
         'Authorization': 'Basic ' + Buffer.from(process.env.BASIC_USER + ':' + process.env.BASIC_PASSWORD).toString('base64'),
