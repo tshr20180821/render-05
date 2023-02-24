@@ -25,7 +25,7 @@ RUN strings /etc/localtime
 
 RUN mkdir -p /var/www/html/auth/
 
-COPY ./config/php.ini "$PHP_INI_DIR/"
+COPY ./config/php.ini ${PHP_INI_DIR}/
 
 RUN a2dissite -q 000-default.conf
 # RUN a2enmod -q authz_groupfile rewrite
