@@ -33,7 +33,10 @@ RUN a2dissite -q 000-default.conf
 RUN a2enmod -q authz_groupfile
 
 COPY ./apache.conf /etc/apache2/sites-enabled/
-RUN htpasswd -c -b /var/www/html/.htpasswd ${BASIC_USER} ${BASIC_PASSWORD}
+
+RUN echo ${BASIC_USER}
+RUN echo ${BASIC_PASSWORD}
+RUN htpasswd -bc /var/www/html/.htpasswd ${BASIC_USER} ${BASIC_PASSWORD}
 
 RUN chmod 644 /var/www/html/.htpasswd
 
