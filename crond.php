@@ -3,7 +3,7 @@
 $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
 $time_start = microtime(true);
-error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s'));
+error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s') . ' ' . gethostname());
 
 $rc = crond();
 
