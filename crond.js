@@ -33,7 +33,7 @@ var job = new CronJob(
       method: 'GET',
       headers: {
         'Authorization': 'Basic ' + Buffer.from(process.env.BASIC_USER + ':' + process.env.BASIC_PASSWORD).toString('base64'),
-        'User-Agent': 'node-cron ' + (new Date()).toString() + ' ' + process.pid
+        'User-Agent': 'node-cron ' + (new Date()).toString() + ' ' + process.pid + ' ' + (require('os')).hostname()
       }
     };
     console.log(process.pid + " START " + __filename);
