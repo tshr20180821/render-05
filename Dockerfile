@@ -18,7 +18,7 @@ RUN npm update -g
 
 RUN node --version
 RUN php --version
-RUN httpd -v
+RUN apache2 -v
 
 RUN cat /proc/version
 RUN cat /etc/os-release
