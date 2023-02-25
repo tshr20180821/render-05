@@ -2,32 +2,25 @@
 
 FROM php:8.2-apache
 
-RUN apt-get update
-RUN apt-get upgrade -y
-
 # curl : curl -sL https://deb.nodesource.com/setup_18.x | bash -
 # libonig-dev : mbstring
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
-RUN apt-get install -y curl libonig-dev tzdata
-
-# php
-RUN pecl install apcu
-RUN docker-php-ext-enable apcu
-RUN docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring
-
-# nodejs
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
-RUN apt-get install -y nodejs
-
-RUN apt-get clean
+RUN apt-get update \
+ && apt-get install -y curl libonig-dev tzdata \
+ && pecl install apcu \
+ && docker-php-ext-enable apcu \
+ && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring \
+ && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
+ && apt-get install -y nodejs \
+ && apt-get clean
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./package.json ./
-RUN npm install
-RUN npm update -g
-RUN npm audit fix
-RUN npm cache clean --force
+RUN npm install \
+ && npm update -g \
+ && npm audit fix \
+ && npm cache clean --force
 
 RUN mkdir -p /var/www/html/auth/
 
