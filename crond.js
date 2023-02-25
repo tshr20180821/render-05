@@ -20,7 +20,7 @@ require('node-cron').schedule('* * * * *', function() {
   timezone: 'Asia/Tokyo'
 }).start();
 */
-import fs from 'fs';
+import * as fs from 'fs';
 
 var CronJob = require('cron').CronJob;
 var job = new CronJob(
