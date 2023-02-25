@@ -16,6 +16,7 @@ function crond()
     $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
     error_log($log_prefix . 'BEGIN');
     
+    clearstatcache();
     $lock_file = '/tmp/crond_php';
     if (file_exists($lock_file) == true) {
         error_log($log_prefix . 'EXISTS LOCK FILE');
