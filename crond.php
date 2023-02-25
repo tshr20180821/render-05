@@ -51,7 +51,7 @@ __HEREDOC__;
     
     if ($count != 1) {
         error_log($log_prefix . 'THROUGH');
-        touch('/tmp/NODE_STOP_FILE');
+        // touch('/tmp/NODE_STOP_FILE');
         // sem_release($sem);
         return;
     }
