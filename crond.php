@@ -37,6 +37,8 @@ __HEREDOC__;
     
     if ($count != 1) {
         error_log($log_prefix . 'THROUGH');
+        exec('ps aux', $res);
+        error_log(print_r($res, true));
         return;
     }
     error_log($log_prefix . 'HIT ' . gethostname());
