@@ -39,5 +39,5 @@ __HEREDOC__;
         error_log($log_prefix . 'THROUGH');
         return;
     }
-    error_log($log_prefix . 'HIT');
+    error_log($log_prefix . 'HIT ' . gethostname());
 }
