@@ -17,6 +17,8 @@ whoami
 
 npm audit
 
+cat /etc/httpd/conf/httpd.conf
+
 php -f /usr/src/app/update_server.php
 
 . /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND &
