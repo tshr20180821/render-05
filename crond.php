@@ -52,6 +52,7 @@ __HEREDOC__;
         error_log($log_prefix . 'THROUGH');
         exec('ps aux', $res);
         error_log(print_r($res, true));
+        // sem_release($sem);
         return;
     }
     error_log($log_prefix . 'HIT ' . gethostname());
