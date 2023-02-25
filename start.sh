@@ -12,11 +12,11 @@ cat /etc/os-release
 strings /etc/localtime
 echo 'Processor Count : ' $(grep -c -e processor /proc/cpuinfo)
 head -n $(($(< /proc/cpuinfo wc -l) / $(grep -c -e processor /proc/cpuinfo))) /proc/cpuinfo
+hostname -A
+whoami
 
 npm audit
 
-touch /tmp/$(hostname)
-ls -lang /tmp/
 
 . /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND &
 node crond.js
