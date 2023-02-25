@@ -46,6 +46,7 @@ RUN chmod 644 /var/www/html/.htpasswd
 COPY ./index.html /var/www/html/
 COPY ./crond.php /var/www/html/auth/
 
+COPY ./update_server.php /usr/src/app/
 COPY ./crond.js /usr/src/app/
 COPY ./start.sh /usr/src/app/
 
