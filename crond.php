@@ -24,6 +24,7 @@ function crond()
     $lock_file = '/tmp/crond_php_' . date('i');
     if (file_exists($lock_file) == true && (time() - filemtime($lock_file)) < 300) {
         error_log($log_prefix . 'EXISTS LOCK FILE');
+        sem_release($sem);
         return;
     }
     touch($lock_file);
