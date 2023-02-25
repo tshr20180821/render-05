@@ -16,6 +16,13 @@ function crond()
     $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
     error_log($log_prefix . 'BEGIN');
     
+    $lock_file = '/tmp/crond_php';
+    if (file_exists($lock_file) == true) {
+        error_log($log_prefix . 'EXISTS LOCK FILE');
+        return;
+    }
+    touch($lock_file);
+    
     $dsn = "mysql:host={$_ENV['DB_SERVER']};dbname={$_ENV['DB_NAME']}";
     $options = array(
       PDO::MYSQL_ATTR_SSL_CA => '/etc/ssl/certs/ca-certificates.crt',
@@ -42,4 +49,5 @@ __HEREDOC__;
         return;
     }
     error_log($log_prefix . 'HIT ' . gethostname());
+    unlink($lock_file);
 }
