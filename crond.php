@@ -16,9 +16,13 @@ function crond()
     $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
     error_log($log_prefix . 'BEGIN');
     
+    $sem_id = 1000;
+    $sem = sem_get($sem_id);
+    sem_acquire($sem);
+    
     clearstatcache();
-    $lock_file = '/tmp/crond_php';
-    if (file_exists($lock_file) == true) {
+    $lock_file = '/tmp/crond_php_' . date('i');
+    if (file_exists($lock_file) == true && (time() - filemtime($lock_file)) < 300) {
         error_log($log_prefix . 'EXISTS LOCK FILE');
         return;
     }
@@ -50,5 +54,5 @@ __HEREDOC__;
         return;
     }
     error_log($log_prefix . 'HIT ' . gethostname());
-    unlink($lock_file);
+    sem_release($sem);
 }
