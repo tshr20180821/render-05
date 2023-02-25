@@ -43,4 +43,6 @@ COPY ./crond.php /var/www/html/auth/
 COPY ./crond.js /usr/src/app/
 COPY ./start.sh /usr/src/app/
 
+RUN timedatectl set-timezone Asia/Tokyo
+
 CMD ["sh","/usr/src/app/start.sh"]
