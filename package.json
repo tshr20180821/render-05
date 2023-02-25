@@ -1,6 +1,5 @@
 {
   "name": "node-js-cli",
-  "type": "module",
   "engines": {
     "node": "18.x"
   },
