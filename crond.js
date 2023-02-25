@@ -20,7 +20,6 @@ require('node-cron').schedule('* * * * *', function() {
   timezone: 'Asia/Tokyo'
 }).start();
 */
-import * as fs from 'fs';
 
 var CronJob = require('cron').CronJob;
 var job = new CronJob(
@@ -37,7 +36,7 @@ var job = new CronJob(
         'User-Agent': 'node-cron ' + process.pid + ' ' + (require('os')).hostname()
       }
     };
-    if (fs.existsSync('/tmp/NODE_STOP_FILE') == false)
+    if (require('fs').existsSync('/tmp/NODE_STOP_FILE') == false)
     {
       console.log(process.pid + " START " + __filename);
       // console.error(process.env.SERVER_NAME);
