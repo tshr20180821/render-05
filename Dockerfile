@@ -12,6 +12,7 @@ RUN apt-get install -y curl libonig-dev tzdata
 
 # php
 RUN pecl install apcu
+RUN docker-php-ext-enable apcu
 RUN docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring
 
 # nodejs
