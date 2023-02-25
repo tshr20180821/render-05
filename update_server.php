@@ -13,7 +13,7 @@ INSERT INTO m_server (server_id, server_name)
                            ,server_name = :b_server_name
 __HEREDOC__;
 
-$statemant_upsert = $pdo->prepare($sql_upsert);
+$statement_upsert = $pdo->prepare($sql_upsert);
 
 $statement_upsert->execute([':b_server_name' => gethostname(),]);
 
