@@ -24,4 +24,3 @@ export BUILD_DATETIME=$(date +'%Y%m%d%H%M%S')
 # . /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND &
 node crond.js
 
-exit 0
