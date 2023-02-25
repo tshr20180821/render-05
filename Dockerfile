@@ -2,7 +2,7 @@ FROM php:8.2-apache
 
 RUN apt-get update
 RUN apt-get upgrade -y
-RUN apt-get install -y curl libonig-dev
+RUN apt-get install -y curl libonig-dev tzdata
 RUN docker-php-ext-install -j$(nproc) pdo_mysql mysqli
 RUN docker-php-ext-install -j$(nproc) mbstring
 
@@ -43,6 +43,6 @@ COPY ./crond.php /var/www/html/auth/
 COPY ./crond.js /usr/src/app/
 COPY ./start.sh /usr/src/app/
 
-RUN timedatectl set-timezone Asia/Tokyo
+RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
 CMD ["sh","/usr/src/app/start.sh"]
