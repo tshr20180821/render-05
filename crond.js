@@ -26,7 +26,7 @@ var job = new CronJob(
   '0 * * * * *',
 	function() {
     let options = {
-      hostname: process.env.RENDER_EXTERNAL_URL,
+      hostname: process.env.SERVER_NAME,
       port: 443,
       path: '/auth/crond.php',
       // path: '/index.html',
