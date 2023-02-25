@@ -17,7 +17,7 @@ whoami
 
 npm audit
 
-cat /etc/httpd/conf/httpd.conf
+ls -lang /etc/apache2/
 
 php -f /usr/src/app/update_server.php
 
