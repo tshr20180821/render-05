@@ -18,14 +18,14 @@ function crond()
     
     $sem_id = ftok(__FILE__, gethostname());
     error_log($log_prefix . 'sem_id : ' . $sem_id);
-    $sem = sem_get($sem_id);
-    sem_acquire($sem);
+    // $sem = sem_get($sem_id);
+    // sem_acquire($sem);
     
     clearstatcache();
     $lock_file = '/tmp/crond_php_' . date('i');
     if (file_exists($lock_file) == true && (time() - filemtime($lock_file)) < 300) {
         error_log($log_prefix . 'EXISTS LOCK FILE');
-        sem_release($sem);
+        // sem_release($sem);
         return;
     }
     touch($lock_file);
@@ -57,5 +57,5 @@ __HEREDOC__;
         return;
     }
     error_log($log_prefix . 'HIT ' . gethostname());
-    sem_release($sem);
+    // sem_release($sem);
 }
