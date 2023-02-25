@@ -21,8 +21,8 @@ require('node-cron').schedule('* * * * *', function() {
 }).start();
 */
 
-//var CronJob = require('cron').CronJob;
-var job = new require('cron').CronJob(
+var CronJob = require('cron').CronJob;
+var job = new CronJob(
   '0 * * * * *',
 	function() {
     let options = {
