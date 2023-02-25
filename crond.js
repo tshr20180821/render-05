@@ -38,7 +38,7 @@ var job = new CronJob(
     };
     if (require('fs').existsSync('/tmp/NODE_STOP_FILE') == false)
     {
-      console.log(process.pid + ' START ' + __filename + ' ' + (require('os')).hostname()) + process.env.BUILD_DATETIME;
+      console.log(process.pid + ' START ' + __filename + ' ' + (require('os')).hostname()) + ' ' + process.env.BUILD_DATETIME;
       // console.error(process.env.SERVER_NAME);
       require('https').request(options).end();
       console.log(process.pid + ' FINISH ' + __filename);
