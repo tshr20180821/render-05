@@ -2,6 +2,10 @@
 
 FROM php:8.2-apache
 
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY ./package.json ./
+
 # curl : curl -sL https://deb.nodesource.com/setup_18.x | bash -
 # libonig-dev : mbstring
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
@@ -12,12 +16,9 @@ RUN apt-get update \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring \
  && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
  && apt-get install -y nodejs \
- && apt-get clean
-
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-COPY ./package.json ./
-RUN npm install \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && npm install \
  && npm update -g \
  && npm audit fix \
  && npm cache clean --force
