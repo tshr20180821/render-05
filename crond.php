@@ -16,7 +16,8 @@ function crond()
     $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
     error_log($log_prefix . 'BEGIN');
     
-    $sem_id = 1000;
+    $sem_id = ftok(__FILE__, gethostname());
+    error_log($log_prefix . 'sem_id : ' . $sem_id);
     $sem = sem_get($sem_id);
     sem_acquire($sem);
     
