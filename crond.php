@@ -15,10 +15,12 @@ function crond()
 {
     $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
     error_log($log_prefix . 'BEGIN');
-        
+    
+    $time = time();
+    
     clearstatcache();
-    $lock_file = '/tmp/crond_php_' . date('i');
-    if (file_exists($lock_file) == true && (time() - filemtime($lock_file)) < 300) {
+    $lock_file = '/tmp/crond_php_' . date('i', $time);
+    if (file_exists($lock_file) == true && ($time - filemtime($lock_file)) < 300) {
         error_log($log_prefix . 'EXISTS LOCK FILE');
         return;
     }
@@ -46,7 +48,7 @@ __HEREDOC__;
 
     $rc = $statement_update->execute([
         ':b_server_name' => $_ENV['RENDER_EXTERNAL_HOSTNAME'],
-        ':b_processed_minute_one_digit' => (int)date('i') % 10,
+        ':b_processed_minute_one_digit' => (int)date('i', $time) % 10,
     ]);
     
     if ($statement_update->rowCount() != 0) {
