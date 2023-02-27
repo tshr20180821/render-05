@@ -58,6 +58,6 @@ __HEREDOC__;
     }
     
     $pdo->commit();
-    error_log($log_prefix . 'OK');
+    error_log($log_prefix . 'COMMIT');
     
 }
