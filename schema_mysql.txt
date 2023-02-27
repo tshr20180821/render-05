@@ -1,0 +1,18 @@
+CREATE TABLE m_server (
+ server_name varchar(128) COLLATE utf8mb4_0900_bin NOT NULL,
+ processed_minute_one_digit int NOT NULL,
+ update_time timestamp NOT NULL,
+ PRIMARY KEY (server_name,processed_minute_one_digit)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
+
+CREATE TABLE m_cron (
+ id int AUTO_INCREMENT PRIMARY KEY,
+ schedule VARCHAR(128) NOT NULL,
+ uri VARCHAR(256) NOT NULL,
+ method VARCHAR(10) NOT NULL,
+ authentication VARCHAR(128),
+ headers VARCHAR(128),
+ post_data VARCHAR(512),
+ enable boolean NOT NULL,
+ memo text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
