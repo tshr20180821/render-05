@@ -43,8 +43,8 @@ function crond()
     $sql_update = <<< __HEREDOC__
 UPDATE m_server2
    SET update_time = NOW()
- WHERE server_name = @b_server_name
-   AND processed_minute_one_digit = @b_processed_minute_one_digit
+ WHERE server_name = :b_server_name
+   AND processed_minute_one_digit = :b_processed_minute_one_digit
    AND update_time < NOW() - INTERVAL 5 MINUTE
 __HEREDOC__;
     
