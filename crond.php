@@ -15,17 +15,11 @@ function crond()
 {
     $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
     error_log($log_prefix . 'BEGIN');
-    
-    $sem_id = ftok(__FILE__, gethostname()[-1]);
-    error_log($log_prefix . 'sem_id : ' . $sem_id);
-    // $sem = sem_get($sem_id);
-    // sem_acquire($sem);
-    
+        
     clearstatcache();
     $lock_file = '/tmp/crond_php_' . date('i');
     if (file_exists($lock_file) == true && (time() - filemtime($lock_file)) < 300) {
         error_log($log_prefix . 'EXISTS LOCK FILE');
-        // sem_release($sem);
         return;
     }
     touch($lock_file);
@@ -35,26 +29,33 @@ function crond()
       PDO::MYSQL_ATTR_SSL_CA => '/etc/ssl/certs/ca-certificates.crt',
     );
     $pdo = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $options);
-
-    $sql_select = <<< __HEREDOC__
-SELECT M1.server_id
-  FROM m_server M1
- WHERE M1.server_id = 1
-   AND M1.server_name = :b_server_name
+    
+    // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    $pdo->beginTransaction();
+    
+    $sql_update = <<< __HEREDOC__
+UPDATE m_server2
+   SET update_time = NOW()
+ WHERE server_name = @b_server_name
+   AND processed_minute_one_digit = @b_processed_minute_one_digit
+   AND update_time < ADDTIME(NOW(), '00:05:00')
 __HEREDOC__;
-    $statement_select = $pdo->prepare($sql_select);
     
-    $rc = $statement_select->execute([':b_server_name' => gethostname(),]);
-    $results = $statement_select->fetchAll();
-    $count = count($results);
-    $pdo = null;
+    $statement_update = $pdo->prepare($sql_update);
+
+    $rc = $statement_update->execute([
+        ':b_server_name' => $_ENV['RENDER_EXTERNAL_HOSTNAME'],
+        ':b_processed_minute_one_digit' => (int)date('i') % 10,
+    ]);
     
-    if ($count != 1) {
-        error_log($log_prefix . 'THROUGH');
-        // touch('/tmp/NODE_STOP_FILE');
-        // sem_release($sem);
+    if ($statement_update->rowCount() != 0) {
+        $pdo->rollBack();
+        error_log($log_prefix . 'ROLLBACK');
         return;
     }
-    error_log($log_prefix . 'HIT ' . gethostname());
-    // sem_release($sem);
+    
+    $pdo->commit();
+    error_log($log_prefix . 'OK');
+    
 }
