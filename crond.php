@@ -41,7 +41,7 @@ UPDATE m_server2
    SET update_time = NOW()
  WHERE server_name = @b_server_name
    AND processed_minute_one_digit = @b_processed_minute_one_digit
-   AND update_time < ADDTIME(NOW(), '00:05:00')
+   AND update_time < NOW() - INTERVAL 5 MINUTE
 __HEREDOC__;
     
     $statement_update = $pdo->prepare($sql_update);
