@@ -52,13 +52,11 @@ __HEREDOC__;
 
     error_log($log_prefix . 'CHECKPOINT 030');
     
-    $rc = $statement_update->execute([
+    $statement_update->execute([
         ':b_server_name' => $_ENV['RENDER_EXTERNAL_HOSTNAME'],
         ':b_processed_minute_one_digit' => (int)date('i', $time) % 10,
     ]);
-    
-    error_log($log_prefix . 'CHECKPOINT 040');
-    
+        
     if ($statement_update->rowCount() != 0) {
         error_log($log_prefix . 'CHECKPOINT 050');
         $pdo->rollBack();
