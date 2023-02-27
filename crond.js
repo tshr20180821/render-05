@@ -36,7 +36,7 @@ var job = new CronJob(
         'User-Agent': 'node-cron ' + process.pid + ' ' + (require('os')).hostname()
       }
     };
-    console.log(process.pid + ' START ' + __filename + ' ' + (require('os')).hostname() + ' ' + process.env.BUILD_DATETIME);
+    console.log(process.pid + ' START ' + __filename + ' ' + process.env.BUILD_DATETIME);
     // console.error(process.env.SERVER_NAME);
     require('https').request(options).end();
     console.log(process.pid + ' FINISH ' + __filename);
