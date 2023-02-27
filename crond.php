@@ -37,7 +37,7 @@ function crond()
     $pdo->beginTransaction();
     
     $sql_update = <<< __HEREDOC__
-UPDATE m_server2
+UPDATE m_server
    SET update_time = NOW()
  WHERE server_name = :b_server_name
    AND processed_minute_one_digit = :b_processed_minute_one_digit
