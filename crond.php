@@ -51,10 +51,7 @@ __HEREDOC__;
         ':b_processed_minute_one_digit' => (int)date('i', $time) % 10,
     ]);
     
-    $row_count = $statement_update->rowCount();
-    
-    if ($row_count != 1) {
-        error_log($log_prefix . 'CHECKPOINT 050');
+    if ($statement_update->rowCount() != 1) {
         $pdo->rollBack();
         error_log($log_prefix . 'ROLLBACK');
         return;
