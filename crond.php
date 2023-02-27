@@ -13,7 +13,7 @@ exit();
 
 function crond()
 {
-    $log_prefix = getmypid() . ' [' . __METHOD__ . '] ';
+    $log_prefix = getmypid() . ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
     error_log($log_prefix . 'BEGIN');
     
     $time = time();
