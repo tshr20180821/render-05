@@ -15,7 +15,7 @@ head -n $(($(< /proc/cpuinfo wc -l) / $(grep -c -e processor /proc/cpuinfo))) /p
 hostname -A
 whoami
 
-npm audit
+# npm audit
 
 # php -f /usr/src/app/update_server.php
 
