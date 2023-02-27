@@ -34,11 +34,7 @@ function crond()
     
     // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
-    error_log($log_prefix . 'CHECKPOINT 010');
-    
     $pdo->beginTransaction();
-    
-    error_log($log_prefix . 'CHECKPOINT 020');
     
     $sql_update = <<< __HEREDOC__
 UPDATE m_server2
@@ -49,8 +45,6 @@ UPDATE m_server2
 __HEREDOC__;
     
     $statement_update = $pdo->prepare($sql_update);
-
-    error_log($log_prefix . 'CHECKPOINT 030');
     
     $statement_update->execute([
         ':b_server_name' => $_ENV['RENDER_EXTERNAL_HOSTNAME'],
@@ -59,16 +53,12 @@ __HEREDOC__;
     
     $row_count = $statement_update->rowCount();
     
-    error_log($log_prefix . 'CHECKPOINT 040 ' . $row_count);
-    
-    if ($row_count != 0) {
+    if ($row_count != 1) {
         error_log($log_prefix . 'CHECKPOINT 050');
         $pdo->rollBack();
         error_log($log_prefix . 'ROLLBACK');
         return;
     }
-    
-    error_log($log_prefix . 'CHECKPOINT 060');
     
     $pdo->commit();
     error_log($log_prefix . 'COMMIT');
