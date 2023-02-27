@@ -56,8 +56,12 @@ __HEREDOC__;
         ':b_server_name' => $_ENV['RENDER_EXTERNAL_HOSTNAME'],
         ':b_processed_minute_one_digit' => (int)date('i', $time) % 10,
     ]);
-        
-    if ($statement_update->rowCount() != 0) {
+    
+    $row_count = $statement_update->rowCount();
+    
+    error_log($log_prefix . 'CHECKPOINT 040 ' . $row_count);
+    
+    if ($row_count != 0) {
         error_log($log_prefix . 'CHECKPOINT 050');
         $pdo->rollBack();
         error_log($log_prefix . 'ROLLBACK');
