@@ -17,7 +17,7 @@ whoami
 
 npm audit
 
-php -f /usr/src/app/update_server.php
+# php -f /usr/src/app/update_server.php
 
 export BUILD_DATETIME=$(date +'%Y%m%d%H%M%S')
 
