@@ -37,6 +37,104 @@ __HEREDOC__;
     
     error_log($log_prefix . 'time : ' date('Y/m/d H:i'));
     
+    $format = [];
+    $format[0] = 'i';
+    $format[1] = 'H';
+    $format[2] = 'd';
+    $format[3] = 'm';
+    $format[4] = 'D';
+    
+    $urls = [];
+    
+    $pdo = get_pdo();
+    
+    $statement = $pdo->prepare($sql_select);
+    $rc = $statement->execute();
+    $results = $statement->fetchAll();
+    foreach ($results as $row) {
+        error_log($log_prefix . $row['schedule'] . ' ' . $row['uri']);
+        $schedule = explode(' ', $row['schedule']);
+        
+        if (count($schedule) != 5) {
+            continue;
+        }
+        
+        for ($i = 0; $i < 5; $i++) {
+            $is_execute = false;
+            $tmp1 = explode(',', $schedule[$i]);
+            for ($j = 0; $j < count($tmp1); $j++) {
+                if ($tmp1[$j] === '*') {
+                    $is_execute = true;
+                    break;
+                }
+                
+                if (str_pad($tmp1[$j], 2, '0', STR_PAD_LEFT) === date($format[$i], $timestamp)) {
+                    $is_execute = true;
+                    break;
+                }
+                
+                if ($i === 4) {
+                    continue;
+                }
+                
+                // m-n
+                $tmp2 = explode('-', $tmp1[$j]);
+                if (count($tmp2) === 2) {
+                    $tmp3 = (int)date($format[$i], $timestamp);
+                    if ((int)$tmp2[0] <= $tmp3 && $tmp3 <= (int)$tmp2[1]) {
+                        $is_execute = true;
+                        break;
+                    }
+                }
+                
+                // */n
+                $tmp2 = explode('*/', $tmp1[$j]);
+                if (count($tmp2) === 2) {
+                    if ((int)date($format[$i], $timestamp) % (int)$tmp2[1] === 0) {
+                        $is_execute = true;
+                        break;
+                    }
+                }
+            }
+            if ($is_execute === false) {
+                break;
+            }
+        }
+        if ($is_execute === false) {
+            continue;
+        }
+        
+        // execute
+        $options = [CURLOPT_TIMEOUT => 15];
+
+        if (strlen($row['headers']) > 0) {
+            $options += [CURLOPT_HTTPHEADER => unserialize(base64_decode($row['headers']))];
+        }
+        if (strlen($row['authentication']) > 0) {
+            $options += [CURLOPT_USERPWD => $row['authentication']];
+        }
+        
+        if ($row['method'] == 'POST') {
+            if (strlen($row['post_data']) > 0) {
+                $options += [CURLOPT_POST => true,
+                             CURLOPT_POSTFIELDS => unserialize(base64_decode($row['post_data'])),
+                            ];
+            }
+        }
+        $urls[$row['uri']] = $options;
+    }
+    
+    $pdo = null;
+    
+    $multi_options = [
+        CURLMOPT_PIPELINING => CURLPIPE_MULTIPLEX,
+        CURLMOPT_MAX_HOST_CONNECTIONS => 20,
+        CURLMOPT_MAXCONNECTS => 20,
+    ];
+    
+    error_log(print_r($urls, true));
+    
+    // $mu_->get_contents_multi($urls, null, $multi_options);
 }
 
 function check_duplicate()
