@@ -38,12 +38,10 @@ var job = new CronJob(
       }
     };
     console.log(process.pid + ' START ' + __filename + ' ' + process.env.BUILD_DATETIME);
-    require('https').request(options).end();
-    /*
-    require('https').request(options, function (error, response, body) {
+    // require('https').request(options).end();
+    require('https').request(options, function (error, response, body) => {
       console.log(process.pid + ' HTTP STATUS CODE : ' + response.statusCode);
     }).end();
-    */
     console.log(process.pid + ' FINISH ' + __filename);
   },
   null,
