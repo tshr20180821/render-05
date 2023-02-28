@@ -18,8 +18,8 @@ try {
       console.log(process.pid + ' START ' + __filename + ' ' + process.env.BUILD_DATETIME);
       try {
         require('https').request(options).end();
-      } catch (ex) {
-        console.log(process.pid + ' ' + ex.toString());
+      } catch (err) {
+        console.log(process.pid + ' ' + err.toString());
       }
 
       //require('https').request(options, (response) => {
@@ -33,6 +33,6 @@ try {
     'Asia/Tokyo'
   );
   job.start();
-} catch (ex) {
-  console.log(process.pid + ' ' + ex.toString());
+} catch (err) {
+  console.log(process.pid + ' ' + err.toString());
 }
