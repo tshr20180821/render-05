@@ -16,6 +16,17 @@ function crond()
     $log_prefix = getmypid() . ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
     error_log($log_prefix . 'BEGIN');
     
+    if (check_duplicate() == false) {
+        return;
+    }
+    
+}
+
+function check_duplicate()
+{
+    $log_prefix = getmypid() . ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
+    error_log($log_prefix . 'BEGIN');
+    
     $time = time();
     
     clearstatcache();
@@ -51,17 +62,20 @@ __HEREDOC__;
         $pdo->rollBack();
         $pdo = null;
         error_log($log_prefix . 'ROLLBACK');
-        return;
+        return false;
     }
     
     $pdo->commit();
     $pdo = null;
     error_log($log_prefix . 'COMMIT');
-    
+    return true;
 }
 
 function get_pdo()
 {
+    $log_prefix = getmypid() . ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
+    error_log($log_prefix . 'BEGIN');
+    
     $dsn = "mysql:host={$_ENV['DB_SERVER']};dbname={$_ENV['DB_NAME']}";
     $options = array(
       PDO::MYSQL_ATTR_SSL_CA => '/etc/ssl/certs/ca-certificates.crt',
