@@ -42,7 +42,7 @@ var job = new CronJob(
     
     require('https').request(options, function (error, response, body) {
       // console.log(process.pid + ' HTTP STATUS CODE : ' + response.statusCode);
-      console.log(process.pid + ' TEST ' + response);
+      console.log(process.pid + ' TEST ');
     });
     
     console.log(process.pid + ' FINISH ' + __filename);
