@@ -11,7 +11,7 @@ try {
     error_log("${pid}" . $ex->getMessage());
 }
 
-error_log("${pid} FINISH " . substr((microtime(true) - $time_start), 0, 6) . 's');
+error_log("${pid} FINISH " . substr((microtime(true) - $time_start), 0, 7) . 's');
 
 exit();
 
