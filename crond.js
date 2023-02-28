@@ -16,7 +16,11 @@ try {
         }
       };
       console.log(process.pid + ' START ' + __filename + ' ' + process.env.BUILD_DATETIME);
-      require('https').request(options).end();
+      try {
+        require('https').request(options).end();
+      } catch (ex) {
+        console.log(process.pid + ' ' + ex.toString());
+      }
 
       //require('https').request(options, (response) => {
       //  console.log(process.pid + ' HTTP STATUS CODE : ' + response.statusCode);
@@ -28,7 +32,7 @@ try {
     true,
     'Asia/Tokyo'
   );
-job.start();
+  job.start();
 } catch (ex) {
-  console.log(ex.toString());
+  console.log(process.pid + ' ' + ex.toString());
 }
