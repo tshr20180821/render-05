@@ -33,11 +33,11 @@ var job = new CronJob(
       method: 'GET',
       headers: {
         'Authorization': 'Basic ' + Buffer.from(process.env.BASIC_USER + ':' + process.env.BASIC_PASSWORD).toString('base64'),
-        'User-Agent': 'node-cron ' + process.pid + ' ' + process.env.BUILD_DATETIME
+        'User-Agent': 'node-cron ' + process.pid + ' ' + process.env.BUILD_DATETIME,
+        'X-Build-DateTime : ' + process.env.BUILD_DATETIME
       }
     };
     console.log(process.pid + ' START ' + __filename + ' ' + process.env.BUILD_DATETIME);
-    // console.error(process.env.SERVER_NAME);
     require('https').request(options).end();
     console.log(process.pid + ' FINISH ' + __filename);
   },
