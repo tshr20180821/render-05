@@ -26,11 +26,7 @@ function crond()
     }
     touch($lock_file);
     
-    $dsn = "mysql:host={$_ENV['DB_SERVER']};dbname={$_ENV['DB_NAME']}";
-    $options = array(
-      PDO::MYSQL_ATTR_SSL_CA => '/etc/ssl/certs/ca-certificates.crt',
-    );
-    $pdo = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $options);
+    $pdo = get_pdo();
     
     // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
@@ -60,4 +56,13 @@ __HEREDOC__;
     $pdo->commit();
     error_log($log_prefix . 'COMMIT');
     
+}
+
+function get_pdo()
+{
+    $dsn = "mysql:host={$_ENV['DB_SERVER']};dbname={$_ENV['DB_NAME']}";
+    $options = array(
+      PDO::MYSQL_ATTR_SSL_CA => '/etc/ssl/certs/ca-certificates.crt',
+    );
+    return new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $options);
 }
