@@ -21,7 +21,7 @@ function crond()
     error_log($log_prefix . 'BEGIN');
     
     if ($_SERVER['HTTP_X_BUILD_DATETIME'] != $_ENV['BUILD_DATETIME']) {
-        error_log($log_prefix . 'VERSION NOT MATCH');
+        error_log($log_prefix . 'VERSION NOT MATCH ' . $_SERVER['HTTP_X_BUILD_DATETIME']);
         return;
     }
     
