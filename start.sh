@@ -17,6 +17,8 @@ whoami
 
 # npm audit
 
+php -l /var/www/html/auth/crond.php
+
 # php -f /usr/src/app/update_server.php
 
 export BUILD_DATETIME=$(date +'%Y%m%d%H%M%S')
