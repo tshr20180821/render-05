@@ -18,8 +18,8 @@ try {
       console.log(process.pid + ' START ' + __filename + ' ' + process.env.BUILD_DATETIME);
       try {
         require('https').request(options).end();
-      } catch (ex1) {
-        console.log(process.pid + ' ' + ex1.toString());
+      } catch (ex) {
+        console.log(process.pid + ' ' + ex.toString());
       }
 
       //require('https').request(options, (response) => {
