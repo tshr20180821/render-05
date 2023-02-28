@@ -34,7 +34,7 @@ var job = new CronJob(
       headers: {
         'Authorization': 'Basic ' + Buffer.from(process.env.BASIC_USER + ':' + process.env.BASIC_PASSWORD).toString('base64'),
         'User-Agent': 'node-cron ' + process.pid + ' ' + process.env.BUILD_DATETIME,
-        'X-Build-DateTime : ' + process.env.BUILD_DATETIME
+        'X-Build-DateTime': process.env.BUILD_DATETIME
       }
     };
     console.log(process.pid + ' START ' + __filename + ' ' + process.env.BUILD_DATETIME);
