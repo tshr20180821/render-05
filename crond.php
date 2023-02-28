@@ -20,6 +20,23 @@ function crond()
         return;
     }
     
+    $sql_select = <<< __HEREDOC__
+SELECT M1.schedule
+      ,M1.uri
+      ,M1.method
+      ,M1.authentication
+      ,M1.headers
+      ,M1.post_data
+      ,M1.memo
+  FROM m_cron M1
+ WHERE M1.enable = TRUE
+ ORDER BY M1.uri
+__HEREDOC__;
+    
+    $timestamp = strtotime('+9 hours');
+    
+    error_log($log_prefix . 'time : ' date('Y/m/d H:i'));
+    
 }
 
 function check_duplicate()
@@ -33,7 +50,7 @@ function check_duplicate()
     $lock_file = '/tmp/crond_php_' . date('i', $time);
     if (file_exists($lock_file) == true && ($time - filemtime($lock_file)) < 300) {
         error_log($log_prefix . 'EXISTS LOCK FILE');
-        return;
+        return false;
     }
     touch($lock_file);
     
