@@ -3,21 +3,21 @@
 $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
 $time_start = microtime(true);
-error_log("${pid} START ${requesturi} " . date('Y/m/d H:i:s') . ' ' . $_ENV['BUILD_DATETIME']);
+error_log("START ${requesturi} " . date('Y/m/d H:i:s') . ' ' . $_ENV['BUILD_DATETIME']);
 
 try {
     crond();
 } catch (Exception $ex) {
-    error_log("${pid}" . $ex->getMessage());
+    error_log($ex->getMessage());
 }
 
-error_log("${pid} FINISH " . substr((microtime(true) - $time_start), 0, 7) . 's');
+error_log("FINISH " . substr((microtime(true) - $time_start), 0, 7) . 's');
 
 exit();
 
 function crond()
 {
-    $log_prefix = getmypid() . ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
+    $log_prefix = ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
     error_log($log_prefix . 'BEGIN');
     
     if ($_SERVER['HTTP_X_BUILD_DATETIME'] != $_ENV['BUILD_DATETIME']) {
@@ -148,7 +148,7 @@ __HEREDOC__;
 
 function check_duplicate()
 {
-    $log_prefix = getmypid() . ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
+    $log_prefix = ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
     error_log($log_prefix . 'BEGIN');
     
     $time = time();
@@ -197,7 +197,7 @@ __HEREDOC__;
 
 function get_pdo()
 {
-    $log_prefix = getmypid() . ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
+    $log_prefix = ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
     error_log($log_prefix . 'BEGIN');
     
     $dsn = "mysql:host={$_ENV['DB_SERVER']};dbname={$_ENV['DB_NAME']}";
@@ -209,7 +209,7 @@ function get_pdo()
 
 function get_contents_multi($urls_, $multi_options_ = null)
 {
-    $log_prefix = getmypid() . ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
+    $log_prefix = ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
     error_log($log_prefix . 'BEGIN');
 
     $time_start = microtime(true);
