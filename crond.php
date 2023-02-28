@@ -197,3 +197,115 @@ function get_pdo()
     );
     return new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $options);
 }
+
+function get_contents_multi($urls_, $multi_options_ = null)
+{
+    $log_prefix = getmypid() . ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
+    error_log($log_prefix . 'BEGIN');
+
+    $time_start = microtime(true);
+
+    if (is_null($urls_)) {
+        $urls_ = [];
+    }
+    
+    $mh = curl_multi_init();
+    if (is_null($multi_options_) === false) {
+        foreach ($multi_options_ as $key => $value) {
+            $rc = curl_multi_setopt($mh, $key, $value);
+            if ($rc === false) {
+                error_log($log_prefix . "curl_multi_setopt : ${key} ${value}");
+            }
+        }
+    }
+
+    foreach ($urls_ as $url => $options_add) {
+        error_log($log_prefix . 'CURL MULTI Add $url : ' . $url);
+        $ch = curl_init();
+        $this->_count_web_access++;
+        $options = [CURLOPT_URL => $url,
+                    // CURLOPT_USERAGENT => getenv('USER_AGENT'),
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_MAXREDIRS => 3,
+                    CURLOPT_PATH_AS_IS => true,
+                    CURLOPT_TCP_FASTOPEN => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_2TLS,
+                    // CURLOPT_TIMEOUT => 25,
+                    CURLOPT_TIMEOUT => 20,
+                   ];
+
+        // if (is_null($options_add) === false && array_key_exists(CURLOPT_USERAGENT, $options_add)) {
+        //     unset($options[CURLOPT_USERAGENT]);
+        // }
+        foreach ($options as $key => $value) {
+            $rc = curl_setopt($ch, $key, $value);
+            if ($rc == false) {
+                error_log($log_prefix . "curl_setopt : ${key} ${value}");
+            }
+        }
+        if (is_null($options_add) === false) {
+            foreach ($options_add as $key => $value) {
+                $rc = curl_setopt($ch, $key, $value);
+                if ($rc == false) {
+                    error_log($log_prefix . "curl_setopt : ${key} ${value}");
+                }
+            }
+        }
+        curl_multi_add_handle($mh, $ch);
+        $list_ch[$url] = $ch;
+    }
+
+    $active = null;
+    $rc = curl_multi_exec($mh, $active);
+
+    $count = 0;
+    while ($active && $rc == CURLM_OK) {
+        $count++;
+        if (curl_multi_select($mh) == -1) {
+            usleep(1);
+        }
+        $rc = curl_multi_exec($mh, $active);
+    }
+    error_log($log_prefix . 'loop count : ' . $count);
+
+    $results = [];
+    foreach (array_keys($urls_) as $url) {
+        $ch = $list_ch[$url];
+        $res = curl_getinfo($ch);
+        $http_code = (string)$res['http_code'];
+        error_log($log_prefix . "CURL Result ${http_code} : ${url}");
+        if ($http_code[0] == '2') {
+            $result = curl_multi_getcontent($ch);
+            $results[$url] = $result;
+        }
+        curl_multi_remove_handle($mh, $ch);
+        curl_close($ch);
+
+        // if (apcu_exists('HTTP_STATUS') === true) {
+        //     $dic_http_status = apcu_fetch('HTTP_STATUS');
+        // } else {
+        //     $dic_http_status = [];
+        // }
+        // if (array_key_exists($http_code, $dic_http_status) === true) {
+        //     $dic_http_status[$http_code]++;
+        // } else {
+        //     $dic_http_status[$http_code] = 1;
+        // }
+        // apcu_store('HTTP_STATUS', $dic_http_status);
+    }
+
+    curl_multi_close($mh);
+
+    $results = array_merge($results, $results_cache);
+
+    $total_time = substr((microtime(true) - $time_start), 0, 5) . 'sec';
+
+    // error_log("${log_prefix}urls :");
+    // $this->logging_object(array_keys($results), $log_prefix);
+    error_log("${log_prefix}Total Time : [${total_time}]");
+    error_log("${log_prefix}memory_get_usage : " . number_format(memory_get_usage()) . 'byte');
+
+    return $results;
+}
