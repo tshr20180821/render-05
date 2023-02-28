@@ -17,7 +17,7 @@ exit();
 
 function crond()
 {
-    $log_prefix = ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
+    $log_prefix = '[' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
     error_log($log_prefix . 'BEGIN');
     
     if ($_SERVER['HTTP_X_BUILD_DATETIME'] != $_ENV['BUILD_DATETIME']) {
@@ -148,7 +148,7 @@ __HEREDOC__;
 
 function check_duplicate()
 {
-    $log_prefix = ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
+    $log_prefix = '[' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
     error_log($log_prefix . 'BEGIN');
     
     $time = time();
@@ -197,7 +197,7 @@ __HEREDOC__;
 
 function get_pdo()
 {
-    $log_prefix = ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
+    $log_prefix = '[' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
     error_log($log_prefix . 'BEGIN');
     
     $dsn = "mysql:host={$_ENV['DB_SERVER']};dbname={$_ENV['DB_NAME']}";
@@ -209,7 +209,7 @@ function get_pdo()
 
 function get_contents_multi($urls_, $multi_options_ = null)
 {
-    $log_prefix = ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
+    $log_prefix = '[' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
     error_log($log_prefix . 'BEGIN');
 
     $time_start = microtime(true);
