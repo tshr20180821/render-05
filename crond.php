@@ -49,11 +49,13 @@ __HEREDOC__;
     
     if ($statement_update->rowCount() != 1) {
         $pdo->rollBack();
+        $pdo = null;
         error_log($log_prefix . 'ROLLBACK');
         return;
     }
     
     $pdo->commit();
+    $pdo = null;
     error_log($log_prefix . 'COMMIT');
     
 }
