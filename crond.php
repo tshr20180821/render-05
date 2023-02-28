@@ -20,9 +20,6 @@ function crond()
     $log_prefix = getmypid() . ' [' . __METHOD__ . ' ' . $_ENV['BUILD_DATETIME'] . '] ';
     error_log($log_prefix . 'BEGIN');
     
-    error_log(print_r($_SERVER, true));
-    error_log($log_prefix . $_SERVER['HTTP_X_BUILD_DATETIME'] . ' ' . $_ENV['BUILD_DATETIME']);
-    
     if ($_SERVER['HTTP_X_BUILD_DATETIME'] != $_ENV['BUILD_DATETIME']) {
         error_log($log_prefix . 'VERSION NOT MATCH');
         return;
