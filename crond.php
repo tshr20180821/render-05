@@ -134,7 +134,7 @@ __HEREDOC__;
     
     error_log(print_r($urls, true));
     
-    // $mu_->get_contents_multi($urls, null, $multi_options);
+    get_contents_multi($urls, $multi_options);
 }
 
 function check_duplicate()
