@@ -226,7 +226,6 @@ function get_contents_multi($urls_, $multi_options_ = null)
     foreach ($urls_ as $url => $options_add) {
         error_log($log_prefix . 'CURL MULTI Add $url : ' . $url);
         $ch = curl_init();
-        $this->_count_web_access++;
         $options = [CURLOPT_URL => $url,
                     // CURLOPT_USERAGENT => getenv('USER_AGENT'),
                     CURLOPT_RETURNTRANSFER => true,
