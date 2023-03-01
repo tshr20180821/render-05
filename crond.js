@@ -22,16 +22,19 @@ try {
       try {
         require('https').request(options, (response) => {
           console.log(log_prefix + 'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname']);
-          
+
+          const send_mail_file = '/tmp/SEND_MAIL';
           const fs = require('fs');
-          console.log(log_prefix + 'FILE UPDATE TIME : ' + fs.statSync('/tmp/SEND_MAIL').mtime);
-          if ((new Date().getTime() - fs.statSync('/tmp/SEND_MAIL').mtimeMs) > 5 * 60 * 1000) {
+          if (!fs.existsSync(send_mail_file)) {
+            fs.closeSync(fs.openSync(send_mail_file, 'w'));
+          }
+          console.log(log_prefix + 'FILE UPDATE TIME : ' + fs.statSync(send_mail_file).mtime);
+          const dt = new Date();
+          if ((dt.getTime() - fs.statSync(send_mail_file).mtimeMs) > 5 * 60 * 1000) {
             console.log(log_prefix + '5 minutes later');
-            fs.utimes('/tmp/SEND_MAIL', new Date(), new Date(), err=> {
-              if (err) {
-                console.log(log_prefix + err.toString());
-              }
-            });
+            fs.utimes(send_mail_file, dt, dt);
+            
+            // send mail
           }
           /*
           if (response.statusCode != 200 && process.env.MAIL_ADDRESS != undefined) {
