@@ -27,7 +27,7 @@ try {
       try {
         console.log(process.pid + ' CHECKPOINT 010');
         require('https').request(options, (response) => {
-          console.log(process.pid + ' HTTP STATUS CODE : ' + response.statusCode);
+          console.log(process.pid + ' HTTP STATUS CODE : ' + response.statusCode . + ' ' + options['hostname']);
         }).end();
         console.log(process.pid + ' CHECKPOINT 020');
       } catch (err) {
