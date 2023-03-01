@@ -306,7 +306,7 @@ function get_contents_multi($urls_, $multi_options_ = null)
 
     curl_multi_close($mh);
 
-    $total_time = substr((microtime(true) - $time_start), 0, 5) . 'sec';
+    $total_time = substr((microtime(true) - $time_start), 0, 6) . 'sec';
 
     // error_log("${log_prefix}urls :");
     // $this->logging_object(array_keys($results), $log_prefix);
