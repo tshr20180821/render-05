@@ -18,6 +18,7 @@ try {
         }
       };
       
+      console.log(log_prefix + 'START ' + __filename );
       try {
         require('https').request(options, (response) => {
           console.log(log_prefix + 'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname']);
@@ -38,14 +39,13 @@ try {
       } catch (err) {
         console.log(log_prefix + err.toString());
       }
+      console.log(log_prefix + 'FINISH ' + __filename);
     },
     null,
     true,
     'Asia/Tokyo'
   );
-  console.log(log_prefix + 'START ' + __filename );
   job.start();
-  console.log(log_prefix + 'FINISH ' + __filename);
 } catch (err) {
   console.log(log_prefix + err.toString());
 }
