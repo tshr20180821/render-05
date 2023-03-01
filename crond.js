@@ -30,7 +30,7 @@ try {
               subject: 'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname'],
               text: 'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname'],
             }, function(err, reply) {
-              console.log(process.env.DEPLOY_DATETIME + ' ' + process.pid + ' ' + err.toString());
+              console.log(log_prefix + err.toString());
               console.dir(reply);
             });
           }  
