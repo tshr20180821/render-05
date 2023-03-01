@@ -23,6 +23,7 @@ try {
         require('https').request(options, (response) => {
           console.log(log_prefix + 'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname']);
           
+          /*
           if (response.statusCode != 200 && process.env.MAIL_ADDRESS != undefined) {
             const sendmail = require('sendmail')();
             sendmail({
@@ -34,7 +35,8 @@ try {
               console.log(log_prefix + err.toString());
               console.dir(reply);
             });
-          }  
+          }
+          */
         }).end();
       } catch (err) {
         console.log(log_prefix + err.toString());
