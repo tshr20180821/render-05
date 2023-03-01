@@ -16,12 +16,14 @@ try {
         }
       };
       console.log(process.pid + ' START ' + __filename + ' ' + process.env.BUILD_DATETIME);
+      /*
       try {
         require('https').request(options).end();
       } catch (err) {
         console.log(process.pid + ' ' + err.toString());
       }
-
+      */
+      
       try {
         console.log(process.pid + ' CHECKPOINT 010');
         require('https').request(options, (response) => {
