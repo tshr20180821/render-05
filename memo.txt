@@ -1,4 +1,4 @@
-Environment
+Environment Variables
 
 BASIC_USER
 BASIC_PASSWORD
@@ -7,3 +7,7 @@ DB_NAME
 DB_USER
 DB_PASSWORD
 MAIL_ADDRESS
+
+Secret Files
+
+.htpasswd
