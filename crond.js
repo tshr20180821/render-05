@@ -1,3 +1,5 @@
+// cron sendmail
+
 const CronJob = require('cron').CronJob;
 try {
   const job = new CronJob(
@@ -31,7 +33,7 @@ try {
               console.log(process.pid + ' ' + err.toString());
               console.dir(reply);
             });
-            
+          }  
         }).end();
       } catch (err) {
         console.log(process.pid + ' ' + err.toString());
