@@ -22,9 +22,13 @@ try {
         console.log(process.pid + ' ' + err.toString());
       }
 
-      //require('https').request(options, (response) => {
-      //  console.log(process.pid + ' HTTP STATUS CODE : ' + response.statusCode);
-      //});
+      try {
+        require('https').request(options, (response) => {
+          console.log(process.pid + ' HTTP STATUS CODE : ' + response.statusCode);
+        });
+      } catch (err) {
+        console.log(process.pid + ' ' + err.toString());
+      }
 
       console.log(process.pid + ' FINISH ' + __filename);
     },
