@@ -18,6 +18,7 @@ whoami
 # npm audit
 
 php -l /var/www/html/auth/crond.php
+node -c crond.js
 
 # php -f /usr/src/app/update_server.php
 
