@@ -24,5 +24,7 @@ node -c crond.js
 
 export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 
+touch /tmp/SEND_MAIL
+
 . /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND &
 node crond.js
