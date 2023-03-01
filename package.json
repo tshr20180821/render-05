@@ -5,7 +5,6 @@
   },
   "dependencies": {
     "cron": "*",
-    "sendmail": "*",
-    "npm-check-updates": "*"
+    "sendmail": "*"
   }
 }
