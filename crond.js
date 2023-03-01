@@ -1,6 +1,6 @@
-var CronJob = require('cron').CronJob;
+const CronJob = require('cron').CronJob;
 try {
-  var job = new CronJob(
+  const job = new CronJob(
     '0 * * * * *',
     function() {
       let options = {
@@ -19,6 +19,19 @@ try {
       try {
         require('https').request(options, (response) => {
           console.log(process.pid + ' HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname']);
+          
+          if (response.statusCode != 200 && process.env.MAIL_ADDRESS != undefined) {
+            const sendmail = require('sendmail')();
+            sendmail({
+              from: process.env.MAIL_ADDRESS,
+              to: process.env.MAIL_ADDRESS,
+              subject: 'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname'],
+              text: 'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname'],
+            }, function(err, reply) {
+              console.log(process.pid + ' ' + err.toString());
+              console.dir(reply);
+            });
+            
         }).end();
       } catch (err) {
         console.log(process.pid + ' ' + err.toString());
