@@ -4,7 +4,6 @@
     "node": "18.x"
   },
   "dependencies": {
-    "node-cron": "^3.0.1",
     "cron": "*",
     "sendmail": "*",
     "npm-check-updates": "*"
