@@ -23,6 +23,7 @@ try {
         require('https').request(options, (response) => {
           console.log(log_prefix + 'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname']);
           
+          console.log(log_prefix + ' FILE UPDATE TIME : ' + require('fs').statSync('/tmp/SEND_MAIL').mtime);
           /*
           if (response.statusCode != 200 && process.env.MAIL_ADDRESS != undefined) {
             const sendmail = require('sendmail')();
