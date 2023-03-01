@@ -11,7 +11,7 @@ try {
         headers: {
           'Authorization': 'Basic ' + Buffer.from(process.env.BASIC_USER + ':' + process.env.BASIC_PASSWORD).toString('base64'),
           'User-Agent': 'cron ' + process.pid + ' ' + process.env.DEPLOY_DATETIME,
-          'X-Build-DateTime': process.env.DEPLOY_DATETIME
+          'X-Deploy-DateTime': process.env.DEPLOY_DATETIME
         }
       };
       console.log(process.pid + ' START ' + __filename + ' ' + process.env.DEPLOY_DATETIME);
