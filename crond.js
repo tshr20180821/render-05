@@ -7,7 +7,6 @@ try {
         hostname: process.env.RENDER_EXTERNAL_HOSTNAME,
         port: 443,
         path: '/auth/crond.php',
-        // path: '/index.html',
         method: 'GET',
         headers: {
           'Authorization': 'Basic ' + Buffer.from(process.env.BASIC_USER + ':' + process.env.BASIC_PASSWORD).toString('base64'),
