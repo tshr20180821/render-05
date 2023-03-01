@@ -22,7 +22,7 @@ node -c crond.js
 
 # php -f /usr/src/app/update_server.php
 
-export BUILD_DATETIME=$(date +'%Y%m%d%H%M%S')
+export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 
 . /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND &
 node crond.js
