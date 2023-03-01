@@ -30,7 +30,10 @@ try {
           }
           console.log(log_prefix + 'FILE UPDATE TIME : ' + fs.statSync(send_mail_file).mtime);
           const dt = new Date();
-          if ((dt.getTime() - fs.statSync(send_mail_file).mtimeMs) > 5 * 60 * 1000) {
+          if (response.statusCode != 200
+              && process.env.MAIL_ADDRESS != undefined
+              && (dt.getTime() - fs.statSync(send_mail_file).mtimeMs) > 5 * 60 * 1000
+              ) {
             console.log(log_prefix + '5 minutes later');
             fs.utimes(send_mail_file, dt, dt);
             
