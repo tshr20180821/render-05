@@ -6,7 +6,7 @@ try {
   const job = new CronJob(
     '0 * * * * *',
     function() {
-      let options = {
+      let http_options = {
         hostname: process.env.RENDER_EXTERNAL_HOSTNAME,
         port: 443,
         path: '/auth/crond.php',
@@ -28,7 +28,7 @@ try {
           return;
         }
         var data_buffer = [];
-        require('https').request(options, (res) => {
+        require('https').request(http_options, (res) => {
           res.on('data', (chunk) => {
             data_buffer.push(chunk);
           });
@@ -76,7 +76,7 @@ try {
 
 function send_mail(subject_, body_)
 {
-  const options = {
+  const smtp_options = {
     host: process.env.SMTP_SERVER,
     port: 465,
     secure: true,
@@ -95,7 +95,7 @@ function send_mail(subject_, body_)
 
   (async () => {
     try {
-      const smtp = require('nodemailer').createTransport(options);
+      const smtp = require('nodemailer').createTransport(smtp_options);
       const result = await smtp.sendMail(mail, function(err, info) {
         if (err) {
           console.log(log_prefix + err.toString());
