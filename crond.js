@@ -26,7 +26,7 @@ try {
             data_buffer.push(chunk);
           });
           res.on('end', () => {
-            console.log(log_prefix + 'RESPONSE BODY : ' . Buffer.concat(data_buffer));
+            console.log(log_prefix + 'RESPONSE BODY : ' + Buffer.concat(data_buffer));
           });
           
           console.log(log_prefix + 'HTTP STATUS CODE : ' + res.statusCode + ' ' + options['hostname']);
