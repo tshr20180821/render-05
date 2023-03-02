@@ -16,6 +16,7 @@ hostname -A
 whoami
 
 # npm audit
+npm list --depth=0
 
 php -l /var/www/html/auth/crond.php
 node -c crond.js
