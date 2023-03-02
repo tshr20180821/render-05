@@ -7,6 +7,8 @@ error_log("START ${requesturi} " . date('Y/m/d H:i:s') . ' ' . $_ENV['DEPLOY_DAT
 
 try {
     crond();
+    header("Content-Type: text/plain");
+    echo $_ENV['DEPLOY_DATETIME'];
 } catch (Exception $ex) {
     error_log($ex->getMessage());
 }
