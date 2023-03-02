@@ -76,8 +76,8 @@ __HEREDOC__;
         $tasks = apcu_fetch('tasks');
     }
     
-    foreach (list($schedules, $uri, $method, $authentication, $headers, $post_data) as $tasks) {
-        error_log($log_prefix . $schedule . ' ' . $uri);
+    foreach ($tasks as list($schedules, $uri, $method, $authentication, $headers, $post_data)) {
+        error_log($log_prefix . $schedules . ' ' . $uri);
         $schedule = explode(' ', $schedules);
         
         if (count($schedule) != 5) {
