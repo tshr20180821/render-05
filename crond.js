@@ -22,10 +22,10 @@ try {
       try {
         var data_buffer = [];
         require('https').request(options, (response) => {
-          res.on('data', (chunk) => {
+          response.on('data', (chunk) => {
             data_buffer.push(chunk);
           });
-          res.on('end', () => {
+          response.on('end', () => {
             console.log(log_prefix + 'RESPONSE BODY : ' . Buffer.concat(data_buffer));
           });
           
