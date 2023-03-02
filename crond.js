@@ -28,8 +28,9 @@ try {
           res.on('end', () => {
             console.log(log_prefix + 'RESPONSE BODY : ' + Buffer.concat(data_buffer));
             var num = Number(Buffer.concat(data_buffer));
-            if (!Number.isNaN(num)) {
-              console.log(num.toString());
+            if (!Number.isNaN(num) && Number(process.env.DEPLOY_DATETIME) < num) {
+              console.log(log_prefix + 'MAKE STOP FILE');
+              //
             }
           });
           
