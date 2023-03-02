@@ -1,4 +1,4 @@
-// package : cron sendmail
+// package : cron nodemailer
 
 const log_prefix = process.env.DEPLOY_DATETIME + ' ' + process.pid + ' ';
 const CronJob = require('cron').CronJob;
@@ -38,21 +38,38 @@ try {
             fs.utimes(send_mail_file, dt, dt);
             
             // send mail
-          }
-          /*
-          if (response.statusCode != 200 && process.env.MAIL_ADDRESS != undefined) {
-            const sendmail = require('sendmail')();
-            sendmail({
+            
+            const options = {
+              host: process.env.SMTP_SERVER,
+              port: process.env.SMTP_PORT,
+              secure: process.env.SMTP_SECURE,
+              auth: {
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASSWORD,
+              },
+            };
+            
+            const mail = {
               from: process.env.MAIL_ADDRESS,
               to: process.env.MAIL_ADDRESS,
               subject: 'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname'],
-              text: 'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname'],
-            }, function(err, reply) {
-              console.log(log_prefix + err.toString());
-              console.dir(reply);
-            });
+              text: 'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname']
+            };
+            
+            (async () => {
+              try {
+                const smtp = require('nodemailer').createTransport(options);
+                const result = await smtp.sendMail(mail, function(err, info) {
+                  if (err) {
+                    console.log(log_prefix + err.toString());
+                  }
+                });
+                console.log(log_prefix + ' Send Mail Result : ' + result);
+              } catch (err) {
+                console.log(log_prefix + err.toString());
+              }
+            })();
           }
-          */
         }).end();
       } catch (err) {
         console.log(log_prefix + err.toString());
