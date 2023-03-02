@@ -18,8 +18,15 @@ try {
         }
       };
       
-      console.log(log_prefix + 'START ' + __filename );
+      console.log(log_prefix + 'START ' + __filename);
       try {
+        const fs = require('fs');
+        const stop_file = '/tmp/STOP_FILE';
+        if (fs.existsSync(stop_file)) {
+          console.log(log_prefix + 'STOP FILE EXISTS');
+          console.log(log_prefix + 'FINISH ' + __filename);
+          return;
+        }
         var data_buffer = [];
         require('https').request(options, (res) => {
           res.on('data', (chunk) => {
@@ -30,14 +37,13 @@ try {
             var num = Number(Buffer.concat(data_buffer));
             if (!Number.isNaN(num) && Number(process.env.DEPLOY_DATETIME) < num) {
               console.log(log_prefix + 'MAKE STOP FILE');
-              //
+              fs.closeSync(fs.openSync(stop_file, 'w'));
             }
           });
           
           console.log(log_prefix + 'HTTP STATUS CODE : ' + res.statusCode + ' ' + options['hostname']);
 
           const send_mail_file = '/tmp/SEND_MAIL';
-          const fs = require('fs');
           if (!fs.existsSync(send_mail_file)) {
             fs.closeSync(fs.openSync(send_mail_file, 'w'));
           }
