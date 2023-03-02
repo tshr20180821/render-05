@@ -36,38 +36,9 @@ try {
               ) {
             fs.utimes(send_mail_file, dt, dt);
             
-            // send mail
-            
-            const options = {
-              host: process.env.SMTP_SERVER,
-              port: 465,
-              secure: true,
-              auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASSWORD,
-              },
-            };
-            
-            const mail = {
-              from: process.env.MAIL_ADDRESS,
-              to: process.env.MAIL_ADDRESS,
-              subject: 'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname'],
-              text: 'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname']
-            };
-            
-            (async () => {
-              try {
-                const smtp = require('nodemailer').createTransport(options);
-                const result = await smtp.sendMail(mail, function(err, info) {
-                  if (err) {
-                    console.log(log_prefix + err.toString());
-                  }
-                });
-                console.log(log_prefix + ' Send Mail Result : ' + result);
-              } catch (err) {
-                console.log(log_prefix + err.toString());
-              }
-            })();
+            send_mail(
+              'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname'],
+              'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname']);
           }
         }).end();
       } catch (err) {
@@ -82,4 +53,38 @@ try {
   job.start();
 } catch (err) {
   console.log(log_prefix + err.toString());
+}
+
+function send_mail(subject_, body_)
+{
+  const options = {
+    host: process.env.SMTP_SERVER,
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASSWORD,
+    },
+  };
+
+  const mail = {
+    from: process.env.MAIL_ADDRESS,
+    to: process.env.MAIL_ADDRESS,
+    subject: subject_,
+    text: body_
+  };
+
+  (async () => {
+    try {
+      const smtp = require('nodemailer').createTransport(options);
+      const result = await smtp.sendMail(mail, function(err, info) {
+        if (err) {
+          console.log(log_prefix + err.toString());
+        }
+      });
+      console.log(log_prefix + ' Send Mail Result : ' + result);
+    } catch (err) {
+      console.log(log_prefix + err.toString());
+    }
+  })();
 }
