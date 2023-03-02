@@ -20,7 +20,15 @@ try {
       
       console.log(log_prefix + 'START ' + __filename );
       try {
+        var data_buffer = [];
         require('https').request(options, (response) => {
+          res.on('data', (chunk) => {
+            data_buffer.push(chunk);
+          });
+          res.on('end', () => {
+            console.log(log_prefix + 'RESPONSE BODY : ' . Buffer.concat(data_buffer));
+          });
+          
           console.log(log_prefix + 'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname']);
 
           const send_mail_file = '/tmp/SEND_MAIL';
