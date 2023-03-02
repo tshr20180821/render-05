@@ -5,6 +5,6 @@
   },
   "dependencies": {
     "cron": "*",
-    "sendmail": "*"
+    "nodemailer": "*"
   }
 }
