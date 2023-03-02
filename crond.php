@@ -38,7 +38,6 @@ SELECT M1.schedule
       ,M1.authentication
       ,M1.headers
       ,M1.post_data
-      ,M1.memo
   FROM m_cron M1
  WHERE M1.enable = TRUE
  ORDER BY M1.uri
@@ -57,14 +56,29 @@ __HEREDOC__;
     
     $urls = [];
     
-    $pdo = get_pdo();
+    $tasks = [];
     
-    $statement = $pdo->prepare($sql_select);
-    $rc = $statement->execute();
-    $results = $statement->fetchAll();
-    foreach ($results as $row) {
-        error_log($log_prefix . $row['schedule'] . ' ' . $row['uri']);
-        $schedule = explode(' ', $row['schedule']);
+    if (!apcu_exists('tasks') || (int)date('i') % 2 == 0) {
+        $pdo = get_pdo();
+
+        $statement = $pdo->prepare($sql_select);
+        $rc = $statement->execute();
+        $results = $statement->fetchAll();
+
+        foreach ($results as $row) {
+            $tasks[] = array($row['schedule'], $row['uri'], $row['method'], $row['authentication'], $row['headers'], $row['post_data']);
+        }
+
+        $pdo = null;
+        apcu_clear_cache();
+        apcu_store('tasks', $tasks);
+    } else {
+        $tasks = apcu_fetch('tasks');
+    }
+    
+    foreach (list($schedules, $uri, $method, $authentication, $headers, $post_data) as $tasks) {
+        error_log($log_prefix . $schedule . ' ' . $uri);
+        $schedule = explode(' ', $schedules);
         
         if (count($schedule) != 5) {
             continue;
@@ -118,24 +132,22 @@ __HEREDOC__;
         // execute
         $options = [CURLOPT_TIMEOUT => 15];
 
-        if (strlen($row['headers']) > 0) {
-            $options += [CURLOPT_HTTPHEADER => unserialize(base64_decode($row['headers']))];
+        if (strlen($headers) > 0) {
+            $options += [CURLOPT_HTTPHEADER => unserialize(base64_decode($headers))];
         }
-        if (strlen($row['authentication']) > 0) {
-            $options += [CURLOPT_USERPWD => $row['authentication']];
+        if (strlen(authentication) > 0) {
+            $options += [CURLOPT_USERPWD => $authentication];
         }
         
-        if ($row['method'] == 'POST') {
-            if (strlen($row['post_data']) > 0) {
+        if ($method == 'POST') {
+            if (strlen($post_data) > 0) {
                 $options += [CURLOPT_POST => true,
-                             CURLOPT_POSTFIELDS => unserialize(base64_decode($row['post_data'])),
+                             CURLOPT_POSTFIELDS => unserialize(base64_decode($post_data)),
                             ];
             }
         }
-        $urls[$row['uri']] = $options;
+        $urls[$uri] = $options;
     }
-    
-    $pdo = null;
     
     $multi_options = [
         CURLMOPT_PIPELINING => CURLPIPE_MULTIPLEX,
