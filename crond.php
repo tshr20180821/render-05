@@ -71,6 +71,7 @@ __HEREDOC__;
 
         $pdo = null;
         apcu_clear_cache();
+        error_log(print_r(apcu_sma_info(), true));
         apcu_store('tasks', $tasks);
     } else {
         $tasks = apcu_fetch('tasks');
