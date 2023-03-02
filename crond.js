@@ -34,7 +34,6 @@ try {
               && process.env.MAIL_ADDRESS != undefined
               && (dt.getTime() - fs.statSync(send_mail_file).mtimeMs) > 5 * 60 * 1000
               ) {
-            console.log(log_prefix + '5 minutes later');
             fs.utimes(send_mail_file, dt, dt);
             
             // send mail
