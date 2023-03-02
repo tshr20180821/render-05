@@ -21,15 +21,15 @@ try {
       console.log(log_prefix + 'START ' + __filename );
       try {
         var data_buffer = [];
-        require('https').request(options, (response) => {
-          response.on('data', (chunk) => {
+        require('https').request(options, (res) => {
+          res.on('data', (chunk) => {
             data_buffer.push(chunk);
           });
-          response.on('end', () => {
+          res.on('end', () => {
             console.log(log_prefix + 'RESPONSE BODY : ' . Buffer.concat(data_buffer));
           });
           
-          console.log(log_prefix + 'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname']);
+          console.log(log_prefix + 'HTTP STATUS CODE : ' + res.statusCode + ' ' + options['hostname']);
 
           const send_mail_file = '/tmp/SEND_MAIL';
           const fs = require('fs');
@@ -38,15 +38,15 @@ try {
           }
           console.log(log_prefix + 'FILE UPDATE TIME : ' + fs.statSync(send_mail_file).mtime);
           const dt = new Date();
-          if (response.statusCode != 200
+          if (res.statusCode != 200
               && process.env.MAIL_ADDRESS != undefined
               && (dt.getTime() - fs.statSync(send_mail_file).mtimeMs) > 5 * 60 * 1000
               ) {
             fs.utimes(send_mail_file, dt, dt);
             
             send_mail(
-              'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname'],
-              'HTTP STATUS CODE : ' + response.statusCode + ' ' + options['hostname']);
+              'HTTP STATUS CODE : ' + res.statusCode + ' ' + options['hostname'],
+              'HTTP STATUS CODE : ' + res.statusCode + ' ' + options['hostname']);
           }
         }).end();
       } catch (err) {
