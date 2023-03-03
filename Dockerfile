@@ -9,6 +9,7 @@ COPY ./package.json ./
 # curl : curl -sL https://deb.nodesource.com/setup_18.x | bash -
 # libonig-dev : mbstring
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+# libsqlite3-0 : php sqlite
 RUN apt-get update \
  && apt-get install -y curl libonig-dev tzdata libsqlite3-0 \
  && pecl install apcu \
