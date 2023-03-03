@@ -25,6 +25,7 @@ export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 
 mkdir /tmp/db
 php /usr/src/app/init_sqlite.php
+chgrp -R www-data /tmp/db
 ls -lang /tmp/db
 
 ls -lang /usr/src/app/
