@@ -6,20 +6,21 @@ try {
   const job = new CronJob(
     '0 * * * * *',
     function() {
-      let http_options = {
-        hostname: process.env.RENDER_EXTERNAL_HOSTNAME,
-        port: 443,
-        path: '/auth/crond.php',
-        method: 'GET',
-        headers: {
-          'Authorization': 'Basic ' + Buffer.from(process.env.BASIC_USER + ':' + process.env.BASIC_PASSWORD).toString('base64'),
-          'User-Agent': 'cron ' + process.pid + ' ' + process.env.DEPLOY_DATETIME,
-          'X-Deploy-DateTime': process.env.DEPLOY_DATETIME
-        }
-      };
-      
       console.log(log_prefix + 'START ' + __filename);
+      
       try {
+        let http_options = {
+          hostname: process.env.RENDER_EXTERNAL_HOSTNAME,
+          port: 443,
+          path: '/auth/crond.php',
+          method: 'GET',
+          headers: {
+            'Authorization': 'Basic ' + Buffer.from(process.env.BASIC_USER + ':' + process.env.BASIC_PASSWORD).toString('base64'),
+            'User-Agent': 'cron ' + process.pid + ' ' + process.env.DEPLOY_DATETIME,
+            'X-Deploy-DateTime': process.env.DEPLOY_DATETIME
+          }
+        };
+
         const fs = require('fs');
         const stop_file = '/tmp/STOP_FILE';
         if (fs.existsSync(stop_file)) {
@@ -27,6 +28,7 @@ try {
           console.log(log_prefix + 'FINISH ' + __filename);
           return;
         }
+        
         var data_buffer = [];
         require('https').request(http_options, (res) => {
           res.on('data', (chunk) => {
