@@ -26,5 +26,7 @@ export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 php /usr/src/app/init_sqlite.php
 chmod 666 /usr/src/app/m_cron.db
 
+ls -lang /usr/src/app/
+
 . /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND &
 node crond.js
