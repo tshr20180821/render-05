@@ -47,4 +47,6 @@ COPY ./start.sh /usr/src/app/
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
-CMD ["bash","/usr/src/app/start.sh"]
+# CMD ["bash","/usr/src/app/start.sh"]
+ENTRYPOINT ["bash","/usr/src/app/start.sh"]
+
