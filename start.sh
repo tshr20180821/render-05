@@ -29,4 +29,7 @@ chmod 666 /usr/src/app/m_cron.db
 ls -lang /usr/src/app/
 
 . /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND &
+
+sleep 3s && ps aux
+
 node crond.js
