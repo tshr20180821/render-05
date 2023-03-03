@@ -40,7 +40,7 @@ try {
             if (!Number.isNaN(num) && Number(process.env.DEPLOY_DATETIME) < num) {
               console.log(log_prefix + 'MAKE STOP FILE');
               fs.closeSync(fs.openSync(stop_file, 'w'));
-              tshi.stop();
+              this.stop();
             }
           });
           
