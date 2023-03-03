@@ -39,7 +39,6 @@ SELECT M1.schedule
       ,M1.headers
       ,M1.post_data
   FROM m_cron M1
- WHERE M1.enable = TRUE
  ORDER BY M1.uri
 __HEREDOC__;
     
@@ -58,24 +57,17 @@ __HEREDOC__;
     
     $tasks = [];
     
-    if (!apcu_exists('tasks') || (int)date('i') % 2 == 0) {
-        $pdo = get_pdo();
+    $pdo = new PDO('sqlite:/usr/src/app/m_cron.db');
 
-        $statement = $pdo->prepare($sql_select);
-        $rc = $statement->execute();
-        $results = $statement->fetchAll();
+    $statement = $pdo->prepare($sql_select);
+    $rc = $statement->execute();
+    $results = $statement->fetchAll();
 
-        foreach ($results as $row) {
-            $tasks[] = array($row['schedule'], $row['uri'], $row['method'], $row['authentication'], $row['headers'], $row['post_data']);
-        }
-
-        $pdo = null;
-        apcu_clear_cache();
-        error_log(print_r(apcu_sma_info(), true));
-        apcu_store('tasks', $tasks);
-    } else {
-        $tasks = apcu_fetch('tasks');
+    foreach ($results as $row) {
+        $tasks[] = array($row['schedule'], $row['uri'], $row['method'], $row['authentication'], $row['headers'], $row['post_data']);
     }
+
+    $pdo = null;
     
     foreach ($tasks as list($schedules, $uri, $method, $authentication, $headers, $post_data)) {
         error_log($log_prefix . $schedules . ' ' . $uri);
