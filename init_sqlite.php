@@ -1,5 +1,7 @@
 <?php
 
+error_log('START ' . __FILE__ . ' ' . $_ENV['DEPLOY_DATETIME']);
+
 $pdo_sqlite = new PDO('sqlite:/usr/src/app/m_cron.db');
 
 $sql_create = <<< __HEREDOC__
@@ -58,3 +60,5 @@ foreach ($results as $row) {
 
 $pdo = null;
 $pdo_sqlite = null;
+
+error_log('FINISH ' . __FILE__);
