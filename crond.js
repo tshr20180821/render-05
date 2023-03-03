@@ -41,7 +41,7 @@ try {
             }
           });
           
-          console.log(log_prefix + 'HTTP STATUS CODE : ' + res.statusCode + ' ' + options['hostname']);
+          console.log(log_prefix + 'HTTP STATUS CODE : ' + res.statusCode + ' ' + http_options['hostname']);
 
           const send_mail_file = '/tmp/SEND_MAIL';
           if (!fs.existsSync(send_mail_file)) {
@@ -56,8 +56,8 @@ try {
             fs.utimes(send_mail_file, dt, dt);
             
             send_mail(
-              'HTTP STATUS CODE : ' + res.statusCode + ' ' + options['hostname'],
-              'HTTP STATUS CODE : ' + res.statusCode + ' ' + options['hostname']);
+              'HTTP STATUS CODE : ' + res.statusCode + ' ' + http_options['hostname'],
+              'HTTP STATUS CODE : ' + res.statusCode + ' ' + http_options['hostname']);
           }
         }).end();
       } catch (err) {
