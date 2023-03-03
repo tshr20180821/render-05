@@ -69,7 +69,9 @@ try {
     true,
     'Asia/Tokyo'
   );
+  console.log(log_prefix + 'START job.start()');
   job.start();
+  console.log(log_prefix + 'FINISH job.start()');
 } catch (err) {
   console.log(log_prefix + err.toString());
 }
