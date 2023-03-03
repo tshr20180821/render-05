@@ -2,7 +2,7 @@
 
 error_log('START ' . __FILE__ . ' ' . $_ENV['DEPLOY_DATETIME']);
 
-$pdo_sqlite = new PDO('sqlite:/usr/src/app/m_cron.db');
+$pdo_sqlite = new PDO('sqlite:/tmp/db/m_cron.db');
 
 $sql_delete = <<< __HEREDOC__
 DELETE FROM m_cron
