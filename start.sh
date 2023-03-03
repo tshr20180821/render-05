@@ -2,8 +2,6 @@
 
 set -x
 
-ps aux
-
 node --version
 php --version
 apache2 -v
@@ -24,6 +22,9 @@ php -l /var/www/html/auth/crond.php
 node -c crond.js
 
 export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
+
+# RENDER_EXTERNAL_HOSTNAME
+ls -lang /etc/apache2/sites-enabled/
 
 . /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND &
 
