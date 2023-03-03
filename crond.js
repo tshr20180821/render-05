@@ -7,7 +7,6 @@ try {
     '0 * * * * *',
     function() {
       console.log(log_prefix + 'START ' + __filename);
-      console.log(this);
       
       try {
         let http_options = {
@@ -41,6 +40,7 @@ try {
             if (!Number.isNaN(num) && Number(process.env.DEPLOY_DATETIME) < num) {
               console.log(log_prefix + 'MAKE STOP FILE');
               fs.closeSync(fs.openSync(stop_file, 'w'));
+              tshi.stop();
             }
           });
           
