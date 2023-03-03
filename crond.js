@@ -7,6 +7,7 @@ try {
     '0 * * * * *',
     function() {
       console.log(log_prefix + 'START ' + __filename);
+      console.log(this);
       
       try {
         let http_options = {
