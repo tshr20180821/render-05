@@ -1,6 +1,7 @@
 <?php
 
-error_log('START ' . __FILE__ . ' ' . $_ENV['DEPLOY_DATETIME']);
+$pid = getmypid();
+error_log($pid . ' START ' . __FILE__ . ' ' . $_ENV['DEPLOY_DATETIME']);
 
 $pdo_sqlite = new PDO('sqlite:/usr/src/app/m_cron.db');
 
@@ -16,7 +17,7 @@ CREATE TABLE m_cron (
 __HEREDOC__;
 
 $rc = $pdo_sqlite->exec($sql_create);
-error_log('m_cron create table result : ' . $rc);
+error_log($pid . ' m_cron create table result : ' . $rc);
 
 $sql_insert = <<< __HEREDOC__
 INSERT INTO m_cron VALUES(:b_schedule, :b_uri, :b_method, :b_authentication, :b_headers, :b_post_data)
@@ -55,10 +56,10 @@ foreach ($results as $row) {
         ':b_headers' => $row['headers'],
         ':b_post_data' => $row['post_data'],
     ]);
-    error_log('insert result : ' . $statement_insert->rowCount() . ' ' . $row['schedule'] . ' ' . $row['uri']);
+    error_log($pid . ' insert result : ' . $statement_insert->rowCount() . ' ' . $row['schedule'] . ' ' . $row['uri']);
 }
 
 $pdo = null;
 $pdo_sqlite = null;
 
-error_log('FINISH ' . __FILE__);
+error_log($pid . ' FINISH ' . __FILE__);
