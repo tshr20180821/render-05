@@ -10,7 +10,7 @@ COPY ./package.json ./
 # libonig-dev : mbstring
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 RUN apt-get update \
- && apt-get install -y curl libonig-dev tzdata sqlite3 \
+ && apt-get install -y curl libonig-dev tzdata libsqlite3-0 \
  && pecl install apcu \
  && docker-php-ext-enable apcu \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring \
