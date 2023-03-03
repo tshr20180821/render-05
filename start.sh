@@ -23,8 +23,7 @@ node -c crond.js
 
 export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 
-# RENDER_EXTERNAL_HOSTNAME
-ls -lang /etc/apache2/sites-enabled/
+echo ServerName ${RENDER_EXTERNAL_HOSTNAME} >/etc/apache2/sites-enabled/server_name.conf
 
 . /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND &
 
