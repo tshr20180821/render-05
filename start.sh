@@ -23,7 +23,5 @@ node -c crond.js
 
 export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 
-sqlite3 /usr/src/app/m_cron.db
-
 . /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND &
 node crond.js
