@@ -3,7 +3,7 @@
 $pid = getmypid();
 error_log($pid . ' START ' . __FILE__ . ' ' . $_ENV['DEPLOY_DATETIME']);
 
-$pdo_sqlite = new PDO('sqlite:/tmp/db/m_cron.db');
+$pdo_sqlite = new PDO('sqlite:/tmp/m_cron.db');
 
 $sql_create = <<< __HEREDOC__
 CREATE TABLE m_cron (
