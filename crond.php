@@ -57,7 +57,7 @@ __HEREDOC__;
     
     $tasks = [];
     
-    $pdo = new PDO('sqlite:/usr/src/app/m_cron.db');
+    $pdo = new PDO('sqlite:/tmp/db/m_cron.db');
 
     $statement = $pdo->prepare($sql_select);
     $rc = $statement->execute();
