@@ -14,6 +14,8 @@ echo 'Processor Count : ' $(grep -c -e processor /proc/cpuinfo)
 head -n $(($(< /proc/cpuinfo wc -l) / $(grep -c -e processor /proc/cpuinfo))) /proc/cpuinfo
 hostname -A
 whoami
+free -h
+df -h
 
 # npm audit
 npm list --depth=0
