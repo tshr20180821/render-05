@@ -42,7 +42,6 @@ COPY ./index.html /var/www/html/
 COPY ./crond.php /var/www/html/auth/
 COPY ./update_sqlite.php /var/www/html/auth/
 
-COPY ./init_sqlite.php /usr/src/app/
 COPY ./crond.js /usr/src/app/
 COPY ./start.sh /usr/src/app/
 
