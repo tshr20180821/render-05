@@ -20,7 +20,6 @@ try {
             'X-Deploy-DateTime': process.env.DEPLOY_DATETIME
           }
         };
-
         
         var data_buffer = [];
         require('https').request(http_options, (res) => {
