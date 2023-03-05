@@ -21,6 +21,8 @@ npm list --depth=0
 php -l /var/www/html/auth/crond.php
 node -c crond.js
 
+export BLOWFISH_SECRET=$(cat /dev//urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+
 export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 
 echo ServerName ${RENDER_EXTERNAL_HOSTNAME} >/etc/apache2/sites-enabled/server_name.conf
