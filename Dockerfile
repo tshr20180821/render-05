@@ -49,7 +49,7 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
 RUN curl -o /tmp/phpMyAdmin https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.tar.xz \
  && tar xf /tmp/phpMyAdmin \
- && ls -lang phpMyAdmin
+ && ls -lang /tmp/phpMyAdmin
 
 # CMD ["bash","/usr/src/app/start.sh"]
 ENTRYPOINT ["bash","/usr/src/app/start.sh"]
