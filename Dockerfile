@@ -22,9 +22,11 @@ RUN apt-get update \
  && npm install \
  && npm update -g \
  && npm audit fix \
- && npm cache clean --force
+ && npm cache clean --force \
+ && pecl clear-cache
 
-RUN mkdir -p /var/www/html/auth/
+RUN mkdir -p /var/www/html/auth \
+ && mkdir -p /var/www/html/phpmyadmin
 
 COPY ./php.ini ${PHP_INI_DIR}/
 
@@ -47,9 +49,9 @@ COPY ./start.sh /usr/src/app/
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
-RUN cd /tmp && curl -o /tmp/phpMyAdmin.tar.xz https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.tar.xz \
- && tar xf /tmp/phpMyAdmin.tar.xz \
- && ls -Rlang /tmp
+RUN curl -o /tmp/phpMyAdmin.tar.xz https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.tar.xz \
+ && tar xf /tmp/phpMyAdmin.tar.xz --strip-components=1 -C /var/www/html/phpmyadmin \
+ && ls -lang /var/www/html/phpmyadmin
 
 # CMD ["bash","/usr/src/app/start.sh"]
 ENTRYPOINT ["bash","/usr/src/app/start.sh"]
