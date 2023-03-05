@@ -48,8 +48,8 @@ COPY ./start.sh /usr/src/app/
 RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
 RUN curl -o /tmp/phpMyAdmin.tar.xz https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.tar.xz \
- && tar xf /tmp/phpMyAdmintar.xz \
- && ls -lang /tmp/phpMyAdmin
+ && tar xf /tmp/phpMyAdmin.tar.xz \
+ && ls -Rlang /tmp
 
 # CMD ["bash","/usr/src/app/start.sh"]
 ENTRYPOINT ["bash","/usr/src/app/start.sh"]
