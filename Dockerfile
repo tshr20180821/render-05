@@ -51,7 +51,8 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
 RUN curl -o /tmp/phpMyAdmin.tar.xz https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.tar.xz \
  && tar xf /tmp/phpMyAdmin.tar.xz --strip-components=1 -C /var/www/html/phpmyadmin \
- && rm /tmp/phpMyAdmin.tar.xz
+ && rm /tmp/phpMyAdmin.tar.xz \
+ && chown www-data:www-data /var/www/html/phpmyadmin -R
 
 COPY ./config.inc.php /var/www/html/phpmyadmin/
 
