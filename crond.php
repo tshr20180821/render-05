@@ -146,6 +146,10 @@ __HEREDOC__;
         $urls[$uri] = $options;
     }
     
+    if (count($urls) > 0) {
+        error_log($log_prefix . 'NO TARGET');
+    }
+    
     $multi_options = [
         CURLMOPT_PIPELINING => CURLPIPE_MULTIPLEX,
         CURLMOPT_MAX_HOST_CONNECTIONS => 20,
@@ -378,7 +382,7 @@ function get_contents_multi($urls_, $multi_options_ = null)
 
     curl_multi_close($mh);
 
-    $total_time = substr((microtime(true) - $time_start), 0, 6) . 'sec';
+    $total_time = substr((microtime(true) - $time_start), 0, 7) . 'sec';
 
     // error_log("${log_prefix}urls :");
     // $this->logging_object(array_keys($results), $log_prefix);
