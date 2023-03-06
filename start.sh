@@ -27,6 +27,8 @@ export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 
 echo ServerName ${RENDER_EXTERNAL_HOSTNAME} >/etc/apache2/sites-enabled/server_name.conf
 
+ls -lang /var/www/html/phpmyadmin/tmp/
+
 . /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND &
 
 sleep 3s && ps aux &
