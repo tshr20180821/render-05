@@ -12,7 +12,7 @@ try {
         let http_options = {
           hostname: process.env.RENDER_EXTERNAL_HOSTNAME,
           port: 443,
-          path: '/auth/crond.php',
+          path: '/auth/crond1.php',
           method: 'GET',
           headers: {
             'Authorization': 'Basic ' + Buffer.from(process.env.BASIC_USER + ':' + process.env.BASIC_PASSWORD).toString('base64'),
