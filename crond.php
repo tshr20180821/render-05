@@ -146,8 +146,9 @@ __HEREDOC__;
         $urls[$uri] = $options;
     }
     
-    if (count($urls) > 0) {
+    if (count($urls) == 0) {
         error_log($log_prefix . 'NO TARGET');
+        return;
     }
     
     $multi_options = [
