@@ -29,6 +29,6 @@ echo ServerName ${RENDER_EXTERNAL_HOSTNAME} >/etc/apache2/sites-enabled/server_n
 
 . /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND &
 
-sleep 3s && ps aux &
+sleep 3s && ps aux && apt-get update && apt-get -u upgrade &
 
 node crond.js
