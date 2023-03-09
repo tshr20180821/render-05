@@ -28,7 +28,7 @@ function send_mail(subject_, body_)
   };
 
   const mail = {
-    from: process.env.SMTP_USER,
+    from: process.env.MAIL_ADDRESS,
     to: process.env.MAIL_ADDRESS,
     subject: subject_,
     text: body_
