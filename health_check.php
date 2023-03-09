@@ -27,11 +27,11 @@ $atom = <<< __HEREDOC__
  <author>
    <name>__FQDN__</name>
  </author>
- <id>__FQDN__</id>
+ <id>tag:__FQDN__</id>
  <entry>
    <title>Health Check __UPDATED__</title>
    <link href="http://example.org/"/>
-   <id>__ID__</id>
+   <id>tag:__ID__</id>
    <updated>__FQDN__ __UPDATED__</updated>
    <summary>__FQDN__ __UPDATED__</summary>
  </entry>
