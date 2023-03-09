@@ -46,6 +46,7 @@ COPY ./update_sqlite.php /var/www/html/auth/
 COPY ./health_check.php /var/www/html/auth/
 
 COPY ./crond.js /usr/src/app/
+COPY ./start.js /usr/src/app/
 COPY ./start.sh /usr/src/app/
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
