@@ -40,9 +40,11 @@ function send_mail(subject_, body_)
       const result = await smtp.sendMail(mail, function(err, info) {
         if (err) {
           logger.warn(log_prefix + err.toString());
+        } else {
+          logger.info(log_prefix + 'Send Mail Result : ' + info.message);
         }
       });
-      logger.info(log_prefix + ' Send Mail Result : ' + result);
+      // logger.info(log_prefix + 'Send Mail Result : ' + result);
     } catch (err) {
       logger.warn(log_prefix + err.toString());
     }
