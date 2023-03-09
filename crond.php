@@ -23,7 +23,7 @@ function crond()
     error_log($log_prefix . 'BEGIN');
     
     if ($_SERVER['HTTP_X_DEPLOY_DATETIME'] != $_ENV['DEPLOY_DATETIME']) {
-        error_log($log_prefix . 'VERSION NOT MATCH ' . $_SERVER['HTTP_X_DEPLOY_DATETIME']);
+        error_log($log_prefix . 'VERSION UNMATCH ' . $_SERVER['HTTP_X_DEPLOY_DATETIME']);
         return;
     }
     
