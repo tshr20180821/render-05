@@ -5,6 +5,7 @@
   },
   "dependencies": {
     "cron": "*",
+    "log4js": "*",
     "nodemailer": "*"
   }
 }
