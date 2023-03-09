@@ -14,6 +14,7 @@ hostname -A
 whoami
 free -h
 df -h
+dpkg -l
 
 # npm audit
 npm list --depth=0
