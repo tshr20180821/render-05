@@ -42,14 +42,15 @@ function send_mail(subject_, body_)
       const smtp = require('nodemailer').createTransport(smtp_options);
       const result = await smtp.sendMail(mail, function(err, info) {
         if (err) {
-          logger.warn(err);
+          logger.warn(err.toString());
         } else {
-          logger.info(info);
+          logger.info(info.messageId + ' ' + info.envelope);
         }
+        logger.info(result);
       });
       // logger.info(log_prefix + 'Send Mail Result : ' + result);
     } catch (err) {
-      logger.warn(err);
+      logger.warn(err.toString());
     }
   })();
 }
