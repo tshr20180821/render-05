@@ -1,6 +1,25 @@
 // package : nodemailer log4js
 
-const logger = require('log4js').getLogger();
+const log4js = require('log4js');
+log4js.configure({
+  appenders: {
+    out: {
+      type: 'stdout',
+            layout: {
+              type: 'pattern',
+              pattern: '%d{yyyy-MM-dd hh:mm:ss} %p %f{1} %l %m'
+            }
+    }
+  },
+  categories: {
+    default: {
+      appenders: ['out'],
+                 level: 'info'
+    }
+  }
+});
+        
+const logger = log4js.getLogger();
 logger.level = 'debug';
 const log_prefix = process.env.DEPLOY_DATETIME + ' ' + process.pid + ' ';
 
