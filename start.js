@@ -1,26 +1,7 @@
 // package : nodemailer log4js
 
 const log4js = require('log4js');
-log4js.configure({
-  "appenders": {
-    "out": {
-      "type": "stdout",
-      "layout": {
-        "type": "pattern",
-        "pattern": "%d{yyyy-MM-dd hh:mm:ss} %p %f{1} %l %m"
-      }
-    }
-  },
-  "categories": {
-    "default": {
-      "appenders": [
-        "out"
-      ],
-      "level": "info",
-      "enableCallStack": true
-    }
-  }
-});
+log4js.configure('log4js.json');
         
 const logger = log4js.getLogger();
 logger.level = 'debug';
