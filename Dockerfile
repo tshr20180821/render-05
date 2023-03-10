@@ -7,6 +7,7 @@ FROM php:8.2-apache
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./package.json ./
+COPY ./composer.json ./
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
@@ -21,7 +22,7 @@ RUN apt-get update \
  && pecl install apcu \
  && docker-php-ext-enable apcu \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring zip \
- && composer require apache/log4php \
+ && composer install \
  && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
  && apt-get install -y nodejs \
  && npm install \
