@@ -9,6 +9,7 @@ WORKDIR /usr/src/app
 COPY ./package.json ./
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # curl : curl -sL https://deb.nodesource.com/setup_18.x | bash -
 # libonig-dev : mbstring
