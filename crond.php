@@ -163,7 +163,7 @@ __HEREDOC__;
     
     $logger_->info(print_r($urls, true));
     
-    get_contents_multi(logger_, $urls, $multi_options);
+    get_contents_multi($logger_, $urls, $multi_options);
 }
 
 function check_duplicate($logger_)
