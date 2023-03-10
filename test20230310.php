@@ -9,4 +9,4 @@ $logger = Logger::getLogger('default');
 
 $logger->debug('debug_message');
 
-echo 'test';
+echo 'test2';
