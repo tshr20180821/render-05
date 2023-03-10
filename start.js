@@ -44,7 +44,7 @@ function send_mail(subject_, body_)
         if (err) {
           logger.warn(err.toString());
         } else {
-          logger.info(info.messageId + ' ' + info.envelope);
+          logger.info(info);
         }
         logger.info(result);
       });
