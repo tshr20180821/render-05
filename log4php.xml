@@ -1,0 +1,6 @@
+<configuration xmlns="http://logging.apache.org/log4php/">
+    <root>
+        <level value="debug" />
+        <appender_ref ref="default" />
+    </root>
+</configuration>
