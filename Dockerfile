@@ -15,6 +15,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 # libonig-dev : mbstring
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 # libsqlite3-0 : php sqlite
+# libzip-dev : composer
 RUN apt-get update \
  && apt-get install -y curl libonig-dev tzdata libsqlite3-0 libzip-dev \
  && pecl install apcu \
