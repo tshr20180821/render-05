@@ -17,13 +17,14 @@ RUN apt-get update \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring \
  && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
  && apt-get install -y nodejs \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/* \
  && npm install \
  && npm update -g \
  && npm audit fix \
  && npm cache clean --force \
- && pecl clear-cache
+ && pecl clear-cache \
+ && apt-get purge -y --auto-remove gcc libc6-dev make \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /var/www/html/auth \
  && mkdir -p /var/www/html/phpmyadmin
