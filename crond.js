@@ -1,8 +1,13 @@
 // package : cron nodemailer log4js
 
-const logger = require('log4js').getLogger();
+const log4js = require('log4js');
+log4js.configure('log4js.json');
+        
+const logger = log4js.getLogger();
 logger.level = 'debug';
-const log_prefix = process.env.DEPLOY_DATETIME + ' ' + process.pid + ' ';
+logger.addContext("DEPLOY_DATETIME", process.env.DEPLOY_DATETIME);
+const log_prefix = '';
+
 const CronJob = require('cron').CronJob;
 try {
   const job = new CronJob(
