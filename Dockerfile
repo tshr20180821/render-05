@@ -9,7 +9,8 @@ WORKDIR /usr/src/app
 COPY ./package.json ./
 COPY ./composer.json ./
 
-COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN /usr/bin/composer --version
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # curl : curl -sL https://deb.nodesource.com/setup_18.x | bash -
