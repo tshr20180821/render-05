@@ -16,7 +16,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 # libsqlite3-0 : php sqlite
 RUN apt-get update \
- && apt-get install -y curl libonig-dev tzdata libsqlite3-0 \
+ && apt-get install -y curl libonig-dev tzdata libsqlite3-0 libzip4 \
  && pecl install apcu \
  && docker-php-ext-enable apcu \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring zip \
