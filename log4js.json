@@ -4,7 +4,7 @@
       "type": "stdout",
       "layout": {
         "type": "pattern",
-        "pattern": "\[\e[32m\]%d{yyyy-MM-dd hh:mm:ss} %p %f{1} %l\[\e[0m\] %m"
+        "pattern": "%d{yyyy-MM-dd hh:mm:ss} %p %f{1} %l %m"
       }
     }
   },
