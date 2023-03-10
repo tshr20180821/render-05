@@ -1,7 +1,7 @@
 <configuration xmlns="http://logging.apache.org/log4php/">
   <appender name="default" class="LoggerAppenderConsole">
     <layout class="LoggerLayoutPattern">
-      <param name="conversionPattern" value="%date{Y-m-d H:i:s.u} %pid %level %file %line %message$newline" />
+      <param name="conversionPattern" value="%date{Y-m-d H:i:s.u} %pid %level %file %line %message%newline" />
     </layout>
   </appender>
   <root>
