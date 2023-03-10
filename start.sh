@@ -14,13 +14,16 @@ hostname -A
 whoami
 free -h
 df -h
-dpkg -l
+# dpkg -l
 
 # npm audit
 npm list --depth=0
 
 php -l /var/www/html/auth/crond.php
 node -c crond.js
+node -c start.js
+
+ls -lang /var/www/html/
 
 export BLOWFISH_SECRET=$(cat /dev//urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
