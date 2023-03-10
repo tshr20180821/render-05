@@ -38,17 +38,13 @@ function send_mail(subject_, body_)
   };
 
   (async () => {
-    try {
-      const smtp = require('nodemailer').createTransport(smtp_options);
-      const result = await smtp.sendMail(mail, function(err, info) {
-        if (err) {
-          logger.warn(log_prefix + err.toString());
-        } else {
-          logger.info(log_prefix + info.messageId);
-        }
-      });
-    } catch (err) {
-      logger.warn(err.toString());
-    }
+    const smtp = require('nodemailer').createTransport(smtp_options);
+    const result = await smtp.sendMail(mail, function(err, info) {
+      if (err) {
+        logger.warn(log_prefix + err.toString());
+      } else {
+        logger.info(log_prefix + info.messageId);
+      }
+    });
   })();
 }
