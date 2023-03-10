@@ -22,7 +22,7 @@ RUN apt-get update \
  && pecl install apcu \
  && docker-php-ext-enable apcu \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring zip \
- && composer install --apcu-autoloader \
+ && COMPOSER_VENDOR_DIR=/usr/local/lib/php/vendor composer install --apcu-autoloader \
  && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
  && apt-get install -y nodejs \
  && npm install \
