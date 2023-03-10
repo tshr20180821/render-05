@@ -48,7 +48,7 @@ __HEREDOC__;
     
     $timestamp = strtotime('+9 hours');
     
-    error_log($log_prefix . 'time : ' . date('Y/m/d H:i'));
+    error_log($log_prefix . 'cron target time : ' . date('Y/m/d H:i'));
     
     $format = [];
     $format[0] = 'i';
