@@ -5,7 +5,8 @@ log4js.configure('log4js.json');
         
 const logger = log4js.getLogger();
 logger.level = 'debug';
-const log_prefix = process.env.DEPLOY_DATETIME + ' ' + process.pid + ' ';
+logger.addContext("DEPLOY_DATETIME", process.env.DEPLOY_DATETIME);
+const log_prefix = '';
 
 logger.info(log_prefix + 'START ' + __filename);
 
