@@ -3,7 +3,8 @@
 FROM php:8.2-apache
 
 RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+
+WORKDIR /var/www/html
 COPY ./package.json ./
 COPY ./composer.json ./
 
@@ -21,7 +22,7 @@ RUN apt-get update \
  && pecl install apcu \
  && docker-php-ext-enable apcu \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring zip \
- && COMPOSER_VENDOR_DIR=/usr/local/lib/php/vendor composer install --apcu-autoloader \
+ && composer install --apcu-autoloader \
  && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
  && apt-get install -y nodejs \
  && npm install \
@@ -32,6 +33,8 @@ RUN apt-get update \
  && apt-get purge -y --auto-remove gcc libc6-dev make \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/app
 
 RUN mkdir -p /var/www/html/auth \
  && mkdir -p /var/www/html/phpmyadmin
