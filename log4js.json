@@ -4,7 +4,7 @@
       "type": "stdout",
       "layout": {
         "type": "pattern",
-        "pattern": "%[%d{yyyy-MM-dd hh:mm:ss} %X{DEPLOY_DATETIME} %z %p %f{1} %l%] %m"
+        "pattern": "%[%d{yyyy-MM-dd hh:mm:ss.SSS} %X{DEPLOY_DATETIME} %z %p %f{1} %l%] %m"
       }
     }
   },
