@@ -1,10 +1,14 @@
 # apache php nodejs
 
+FROM composer:latest AS composer
+
 FROM php:8.2-apache
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY ./package.json ./
+
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # curl : curl -sL https://deb.nodesource.com/setup_18.x | bash -
 # libonig-dev : mbstring
