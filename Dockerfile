@@ -1,6 +1,6 @@
 # apache php nodejs
 
-FROM composer:latest AS composer
+# FROM composer:latest AS composer
 
 FROM php:8.2-apache
 
