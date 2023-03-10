@@ -15,8 +15,7 @@ RUN apt-get update \
  && pecl install apcu \
  && docker-php-ext-enable apcu \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring \
- && pear channel-discover pear.apache.org/log4php \
- && pear install log4php/Apache_log4php \
+ && composer require apache/log4php \
  && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
  && apt-get install -y nodejs \
  && npm install \
