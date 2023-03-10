@@ -26,6 +26,8 @@ export BLOWFISH_SECRET=$(cat /dev//urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | h
 
 export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 
+find / -name Logger.php -print
+
 node start.js &
 
 echo ServerName ${RENDER_EXTERNAL_HOSTNAME} >/etc/apache2/sites-enabled/server_name.conf
