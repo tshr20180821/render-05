@@ -5,7 +5,7 @@ require '/usr/src/app/vendor/autoload.php';
 
 Logger::configure('/usr/src/app/log4php.xml');
 
-$logger = Logger::getLogger();
+$logger = Logger::getLogger('default');
 
 $logger->debug('debug_message');
 
