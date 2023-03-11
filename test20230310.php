@@ -9,4 +9,6 @@ $logger = Logger::getLogger('default');
 
 $logger->debug('debug_message');
 
-echo 'test2';
+file_put_contents("php://stderr", "stderr message!\n");
+
+echo 'test3';
