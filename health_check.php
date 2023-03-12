@@ -1,20 +1,26 @@
 <?php
 
+include('./log.php');
+
+$log = new Log();
+
 $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
 $time_start = microtime(true);
-error_log("START ${requesturi} " . date('Y/m/d H:i:s') . ' ' . $_ENV['DEPLOY_DATETIME']);
+$log->info("START ${requesturi}");
 
 push_atom();
 
-error_log('FINISH ' . substr((microtime(true) - $time_start), 0, 7) . 's');
+$log->info("FINISH " . substr((microtime(true) - $time_start), 0, 7) . 's');
 
 exit();
 
 function push_atom()
 {
-    $log_prefix = '[' . __METHOD__ . ' ' . $_ENV['DEPLOY_DATETIME'] . '] ';
-    error_log($log_prefix . 'BEGIN');
+    $log_->info('BEGIN');
+    
+    $log_->info('REMOTE_ADDR : ' . $_SERVER['REMOTE_ADDR']);
+    $log_->info('HTTP_X_FORWARDED_FOR : ' . $_SERVER['HTTP_X_FORWARDED_FOR']);
     
     header("Content-Type: application/atom+xml");
   
