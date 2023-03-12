@@ -7,7 +7,7 @@ $log = new Log();
 $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
 $time_start = microtime(true);
-$log->info("START ${requesturi} " . date('Y/m/d H:i:s') . ' ' . $_ENV['DEPLOY_DATETIME']);
+$log->info("START ${requesturi}");
 
 try {
     crond($log);
@@ -23,7 +23,7 @@ exit();
 
 function crond($log_)
 {
-    $log_prefix = '[' . __METHOD__ . ' ' . $_ENV['DEPLOY_DATETIME'] . '] ';
+    $log_prefix = '[' . __METHOD__ . '] ';
     $log->info($log_prefix . 'BEGIN');
     
     if ($_SERVER['HTTP_X_DEPLOY_DATETIME'] != $_ENV['DEPLOY_DATETIME']) {
@@ -168,7 +168,7 @@ __HEREDOC__;
 
 function check_duplicate($log_)
 {
-    $log_prefix = '[' . __METHOD__ . ' ' . $_ENV['DEPLOY_DATETIME'] . '] ';
+    $log_prefix = '[' . __METHOD__ . '] ';
     $log_->info($log_prefix . 'BEGIN');
     
     $time = time();
@@ -217,7 +217,7 @@ __HEREDOC__;
 
 function get_pdo($log_)
 {
-    $log_prefix = '[' . __METHOD__ . ' ' . $_ENV['DEPLOY_DATETIME'] . '] ';
+    $log_prefix = '[' . __METHOD__ . '] ';
     $log_->info($log_prefix . 'BEGIN');
     
     $dsn = "mysql:host={$_ENV['DB_SERVER']};dbname={$_ENV['DB_NAME']}";
@@ -229,7 +229,7 @@ function get_pdo($log_)
 
 function init_sqlite($log_)
 {
-    $log_prefix = '[' . __METHOD__ . ' ' . $_ENV['DEPLOY_DATETIME'] . '] ';
+    $log_prefix = '[' . __METHOD__ . '] ';
     $log_->info($log_prefix . 'BEGIN');
     
     $pdo_sqlite = new PDO('sqlite:/tmp/m_cron.db');
@@ -290,7 +290,7 @@ __HEREDOC__;
 
 function get_contents_multi($log_, $urls_, $multi_options_ = null)
 {
-    $log_prefix = '[' . __METHOD__ . ' ' . $_ENV['DEPLOY_DATETIME'] . '] ';
+    $log_prefix = '[' . __METHOD__ . '] ';
     $log_->info($log_prefix . 'BEGIN');
 
     $time_start = microtime(true);
