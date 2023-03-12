@@ -28,7 +28,7 @@ class Log
             $function = '';
         }
         $log_header = date('Y-m-d H:i:s.') . substr(explode(".", (microtime(true) . ""))[1], 0, 3)
-            . ' ' . $_ENV['DEPLOY_DATETIME'] . ' ' . getmypid() . " ${level_} " . basename($array['file']) . ' ' . $array['line'] . ' ' . $array['function'];
+            . ' ' . $_ENV['DEPLOY_DATETIME'] . ' ' . getmypid() . " ${level_} " . $file . ' ' . $line . ' ' . $function;
         file_put_contents('php://stderr', "\033[0;${color_}m${log_header}\033[0m" . ' ' . $message_ . "\n");
     }
 }
