@@ -1,15 +1,9 @@
 <?php
 
-require '/usr/src/app/vendor/autoload.php';
-// require_once('/usr/src/app/vendor/log4php/Logger.php');
+include('./log.php');
 
-Logger::configure('/usr/src/app/log4php.xml');
+$log = new Log();
 
-$logger = Logger::getLogger('default');
+$log->info('message');
 
-$logger->debug('debug_message');
-
-// file_put_contents("php://stderr", "stderr message!\n");
-file_put_contents("php://stderr", "\033[0;32mmessage\033[0m\n");
-
-echo 'test4';
+echo 'test5';
