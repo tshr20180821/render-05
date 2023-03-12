@@ -6,6 +6,7 @@ class Log
     }
     
     public function info($message_) {
+        error_log(print_r(debug_backtrace(), true));
         $this->output($message_, 'INFO', '32', end(debug_backtrace()));
     }
     
