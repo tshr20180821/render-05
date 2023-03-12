@@ -9,13 +9,13 @@ $requesturi = $_SERVER['REQUEST_URI'];
 $time_start = microtime(true);
 $log->info("START ${requesturi}");
 
-push_atom();
+push_atom($log);
 
 $log->info("FINISH " . substr((microtime(true) - $time_start), 0, 7) . 's');
 
 exit();
 
-function push_atom()
+function push_atom($log_)
 {
     $log_->info('BEGIN');
     
