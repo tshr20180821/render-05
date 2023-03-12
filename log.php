@@ -26,7 +26,6 @@ class Log
             $file = '';
             $line = '';
             $function = '';
-            error_log(print_r(debug_backtrace(), true));
         }
         $log_header = date('Y-m-d H:i:s.') . substr(explode(".", (microtime(true) . ""))[1], 0, 3)
             . ' ' . $_ENV['DEPLOY_DATETIME'] . ' ' . trim(getmypid() . " ${level_} ${file} ${line} ${line} ${function}");
