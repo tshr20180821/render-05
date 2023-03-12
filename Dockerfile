@@ -34,7 +34,6 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-
 RUN mkdir -p /var/www/html/auth \
  && mkdir -p /var/www/html/phpmyadmin
 
@@ -57,7 +56,6 @@ COPY ./update_sqlite.php /var/www/html/auth/
 COPY ./health_check.php /var/www/html/auth/
 COPY ./test20230310.php /var/www/html/auth/
 
-COPY ./log4php.xml /usr/src/app/
 COPY ./log4js.json /usr/src/app/
 COPY ./crond.js /usr/src/app/
 COPY ./start.js /usr/src/app/
