@@ -10,6 +10,6 @@ class Log
         $file = $array['file'];
         
         file_put_contents('php://stderr', "\033[0;32" . date('Y-m-d H:i:s.u') .
-                          ' ' . $_ENV['DEPLOY_DATETIME'] . ' ' . getmypid() . ' INFO ' . $array['file'] . ' ' . $array['line'] .  ' ' . $message_ . "\033[0m\n");
+                          ' ' . $_ENV['DEPLOY_DATETIME'] . ' ' . getmypid() . ' INFO ' . $array['file'] . ' ' . $array['line'] . "\033[0m" . ' ' . $message_ . "\n");
     }
 }
