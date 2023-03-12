@@ -16,16 +16,17 @@ class Log
     private function output($message_, $level_, $color_) {
         $array = debug_backtrace();
         array_shift($array);
-        array_shift($array);
-        if (count($array) > 0) {
+        if (count($array) == 1) {
+            $value = array_shift($array);
+            $file = basename($value['file']);
+            $line = $value['line'];
+            $function = '-';
+        } else {
+            array_shift($array);
             $value = array_shift($array);
             $file = basename($value['file']);
             $line = $value['line'];
             $function = $value['function'];
-        } else {
-            $file = '';
-            $line = '';
-            $function = '';
         }
         $log_header = date('Y-m-d H:i:s.') . substr(explode(".", (microtime(true) . ""))[1], 0, 3)
             . ' ' . $_ENV['DEPLOY_DATETIME'] . ' ' . trim(getmypid() . " ${level_} ${file} ${line} ${line} ${function}");
