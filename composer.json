@@ -1,7 +1,6 @@
 {
   "require":
   {
-    "composer-runtime-api": "^2.0",
-    "apache/log4php": "*"
+    "composer-runtime-api": "^2.0"
   }
 }
