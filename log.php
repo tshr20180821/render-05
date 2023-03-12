@@ -6,12 +6,12 @@ class Log
     }
     
     public function info($message_) {
-        error_log(print_r(debug_backtrace(), true));
-        $this->output($message_, 'INFO', '32', end(debug_backtrace()));
+        // error_log(print_r(debug_backtrace(), true));
+        $this->output($message_, 'INFO', '32', debug_backtrace()[1]);
     }
     
     public function warn($message_) {
-        $this->output($message_, 'WARN', '33', end(debug_backtrace()));
+        $this->output($message_, 'WARN', '33', debug_backtrace()[1]);
     }
     
     private function output($message_, $level_, $color_, $array_) {
