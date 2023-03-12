@@ -24,7 +24,7 @@ exit();
 function crond($log_)
 {
     $log_prefix = '[' . __METHOD__ . '] ';
-    $log->info($log_prefix . 'BEGIN');
+    $log_->info($log_prefix . 'BEGIN');
     
     if ($_SERVER['HTTP_X_DEPLOY_DATETIME'] != $_ENV['DEPLOY_DATETIME']) {
         $log_->info($log_prefix . 'VERSION UNMATCH ' . $_SERVER['HTTP_X_DEPLOY_DATETIME']);
