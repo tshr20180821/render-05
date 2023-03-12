@@ -6,4 +6,4 @@ $log = new Log();
 
 $log->info('message');
 
-echo 'test7';
+echo 'test8';
