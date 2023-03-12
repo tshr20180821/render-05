@@ -5,5 +5,6 @@ include('./log.php');
 $log = new Log();
 
 $log->info('message');
+$log->warn('message');
 
-echo 'test8';
+echo 'test9';
