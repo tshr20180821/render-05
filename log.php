@@ -31,9 +31,10 @@ class Log
             $value = array_shift($array);
             $level = strtoupper($value['function']);
             $line = $value['line'];
+            $file = basename($value['file']);
             $function_chain = '';
             foreach (array_reverse($array) as $value) {
-                $file = basename($value['file']);
+                // $file = basename($value['file']);
                 // $line = $value['line'];
                 $function_chain .= '[' . $value['function'] . ']';
             }
