@@ -28,6 +28,7 @@ RUN apt-get update \
  && npm install \
  && npm update -g \
  && npm audit fix \
+ && apt-get upgrade -y \
  && npm cache clean --force \
  && pecl clear-cache \
  && apt-get purge -y --auto-remove gcc libc6-dev make \
