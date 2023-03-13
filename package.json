@@ -4,6 +4,9 @@
     "node": "18.x"
   },
   "dependencies": {
+    "chart.js": "^3.9.1",
+    "chartjs-node-canvas": "*",
+    "chartjs-plugin-annotation": "*",
     "cron": "*",
     "log4js": "*",
     "nodemailer": "*"
