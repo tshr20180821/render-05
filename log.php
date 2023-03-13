@@ -3,11 +3,23 @@
 class Log
 {
     private $colors = [
-        'INFO' => '32',
-        'WARN' => '33',
+        'TRACE' => '34', // blue
+        'DEBUG' => '36', // cyan
+        'INFO' => '32', // green
+        'WARN' => '33', // yellow
+        'ERROR' => '31', // red
+        'FATAL' => '35', // purple
     ];
     
     function __construct() {
+    }
+    
+    public function trace($message_) {
+        $this->output($message_);
+    }
+    
+    public function debug($message_) {
+        $this->output($message_);
     }
     
     public function info($message_) {
@@ -15,6 +27,14 @@ class Log
     }
     
     public function warn($message_) {
+        $this->output($message_);
+    }
+    
+    public function error($message_) {
+        $this->output($message_);
+    }
+    
+    public function fatal($message_) {
         $this->output($message_);
     }
     
