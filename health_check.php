@@ -19,7 +19,7 @@ function push_atom($log_)
 {
     $log_->info('BEGIN');
     
-    $log_->info('REMOTE_ADDR : ' . $_SERVER['REMOTE_ADDR']);
+    // $log_->info('REMOTE_ADDR : ' . $_SERVER['REMOTE_ADDR']);
     $log_->info('HTTP_X_FORWARDED_FOR : ' . $_SERVER['HTTP_X_FORWARDED_FOR']);
     
     header("Content-Type: application/atom+xml");
