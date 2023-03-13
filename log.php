@@ -2,7 +2,7 @@
 
 class Log
 {
-    private $colors = [];
+    public $colors = [];
     
     function __construct() {
         $colors['INFO'] = '32';
