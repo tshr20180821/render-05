@@ -35,6 +35,7 @@ class Log
             }
         }
         error_log($level . ' color code : ' . $this->colors[$level]);
+        error_log(print_r($this->colors, true));
         $log_header = date('Y-m-d H:i:s.') . substr(explode(".", (microtime(true) . ""))[1], 0, 3)
             . ' ' . $_ENV['DEPLOY_DATETIME'] . ' ' . trim(getmypid() . " ${level} ${file} ${line}");
         file_put_contents('php://stderr', "\033[0;" . "32m${log_header}\033[0m ${function_chain} ${message_}\n");
