@@ -51,11 +51,7 @@ COPY .htpasswd /var/www/html/
 RUN chmod 644 /var/www/html/.htpasswd
 
 COPY ./index.html /var/www/html/
-COPY ./log.php /var/www/html/auth/
-COPY ./crond.php /var/www/html/auth/
-COPY ./update_sqlite.php /var/www/html/auth/
-COPY ./health_check.php /var/www/html/auth/
-COPY ./test20230310.php /var/www/html/auth/
+COPY ./auth/*.php /var/www/html/auth/
 
 COPY ./log4js.json /usr/src/app/
 COPY ./crond.js /usr/src/app/
