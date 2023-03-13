@@ -49,9 +49,9 @@ SELECT M1.schedule
  ORDER BY M1.uri
 __HEREDOC__;
     
-    $timestamp = strtotime('+9 hours');
+    $timestamp = strtotime('+9 hours', time());
     
-    $log_->info($log_prefix . 'cron target time : ' . date('Y/m/d H:i'));
+    $log_->info($log_prefix . 'cron target time : ' . date('Y/m/d H:i', $timestamp));
     
     $format = [];
     $format[0] = 'i';
