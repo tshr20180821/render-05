@@ -20,10 +20,8 @@ exit();
 
 class Test20230310
 {
-    private const LIST_YOBI = array('日', '月', '火', '水', '木', '金', '土');
-    
     public function test20230310() {
         $log = new Log();
-        $log->warn(self::LIST_YOBI[0]);
+        $log->warn(substr(explode('.', microtime(true))[1], 0, 3));
     }
 }
