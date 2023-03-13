@@ -54,8 +54,6 @@ class Log
             $file = basename($value['file']);
             $function_chain = '';
             foreach (array_reverse($array) as $value) {
-                // $file = basename($value['file']);
-                // $line = $value['line'];
                 $function_chain .= '[' . $value['function'] . ']';
             }
         }
