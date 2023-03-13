@@ -2,11 +2,9 @@
 
 class Log
 {
-    public $colors = [];
+    public $colors = array('INFO' => '32', 'WARN' => '33');
     
     function __construct() {
-        $colors['INFO'] = '32';
-        $colors['WARN'] = '33';
     }
     
     public function info($message_) {
