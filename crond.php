@@ -246,7 +246,7 @@ CREATE TABLE m_cron (
 __HEREDOC__;
 
     $rc = $pdo_sqlite->exec($sql_create);
-    $log_->info($log_prefix . ' m_cron create table result : ' . $rc);
+    $log_->info($log_prefix . 'm_cron create table result : ' . $rc);
     
     $sql_insert = <<< __HEREDOC__
 INSERT INTO m_cron VALUES(:b_schedule, :b_uri, :b_method, :b_authentication, :b_headers, :b_post_data)
@@ -281,7 +281,7 @@ __HEREDOC__;
             ':b_headers' => $row['headers'],
             ':b_post_data' => $row['post_data'],
         ]);
-        $log_->info($log_prefix . ' insert result : ' . $statement_insert->rowCount() . ' ' . $row['schedule'] . ' ' . $row['uri']);
+        $log_->info($log_prefix . 'insert result : ' . $statement_insert->rowCount() . ' ' . $row['schedule'] . ' ' . $row['uri']);
     }
 
     $pdo = null;
