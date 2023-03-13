@@ -30,10 +30,11 @@ class Log
         } else {
             $value = array_shift($array);
             $level = strtoupper($value['function']);
+            $line = $value['line'];
             $function_chain = '';
             foreach (array_reverse($array) as $value) {
                 $file = basename($value['file']);
-                $line = $value['line'];
+                // $line = $value['line'];
                 $function_chain .= '[' . $value['function'] . ']';
             }
         }
