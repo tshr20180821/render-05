@@ -23,8 +23,8 @@ function check_package($log_)
     $res = file_get_contents($url);
     
     if (preg_match('/<meta name="Keywords" content="(.+?)">/', $res, $matches) == 1) {
-        $log_->info(print_r($matches, true));
+        $log_->debug('apache2 : ' . $matches[1]);
     } else {
-        $log_->info("UNMATCH");
+        $log_->warn("UNMATCH");
     }
 }
