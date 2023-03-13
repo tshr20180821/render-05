@@ -228,10 +228,11 @@ function get_pdo($log_)
 
 function init_sqlite($log_)
 {
-    $log_prefix = '';
-    $log_->info($log_prefix . 'BEGIN');
+    $log_->info('BEGIN');
     
     $pdo_sqlite = new PDO('sqlite:/tmp/m_cron.db');
+    
+    $log_->info('SQLite Version : ' . $pdo_sqlite->query('SELECT sqlite_version()')->fetchColumn());
     
     $sql_create = <<< __HEREDOC__
 CREATE TABLE m_cron (
@@ -245,7 +246,7 @@ CREATE TABLE m_cron (
 __HEREDOC__;
 
     $rc = $pdo_sqlite->exec($sql_create);
-    $log_->info($log_prefix . 'm_cron create table result : ' . $rc);
+    $log_->info('m_cron create table result : ' . $rc);
     
     $sql_insert = <<< __HEREDOC__
 INSERT INTO m_cron VALUES(:b_schedule, :b_uri, :b_method, :b_authentication, :b_headers, :b_post_data)
@@ -254,6 +255,8 @@ __HEREDOC__;
     $statement_insert = $pdo_sqlite->prepare($sql_insert);
 
     $pdo = get_pdo($log_);
+    
+    $log_->info('MySQL Version : ' . $pdo->query('SELECT version()')->fetchColumn());
     
     $sql_select = <<< __HEREDOC__
 SELECT M1.schedule
@@ -280,7 +283,7 @@ __HEREDOC__;
             ':b_headers' => $row['headers'],
             ':b_post_data' => $row['post_data'],
         ]);
-        $log_->info($log_prefix . 'insert result : ' . $statement_insert->rowCount() . ' ' . $row['schedule'] . ' ' . $row['uri']);
+        $log_->info('insert result : ' . $statement_insert->rowCount() . ' ' . $row['schedule'] . ' ' . $row['uri']);
     }
 
     $pdo = null;
