@@ -4,7 +4,7 @@ include('./log.php');
 
 $log = new Log();
 
-echo 'test15';
+echo 'test16';
 
 $c = new Test20230310();
 $c->test20230310();
@@ -30,6 +30,7 @@ class Test20230310
         $http_code = (string)curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         
+        $log->warn('HTTP CODE : ' . $http_code);
         $log->warn($res);
     }
 }
