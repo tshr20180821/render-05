@@ -4,7 +4,7 @@ include('./log.php');
 
 $log = new Log();
 
-echo 'test13';
+echo 'test14';
 
 $c = new Test20230310();
 $c->test20230310();
