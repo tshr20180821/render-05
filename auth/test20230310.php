@@ -2,9 +2,7 @@
 
 include('./log.php');
 
-$log = new Log();
-
-echo 'test17';
+echo 'test18';
 
 $c = new Test20230310();
 $c->test20230310();
@@ -21,7 +19,7 @@ class Test20230310
         // $log->warn(print_r(json_decode($res), true));
         
         $token = json_decode($res)->token;
-        // $log->warn($token);
+        $log->warn($token);
         
         $url = 'https://registry-1.docker.io/v2/php/tags/list';
         $ch = curl_init();
