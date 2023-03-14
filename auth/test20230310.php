@@ -2,7 +2,7 @@
 
 include('./log.php');
 
-echo 'test18';
+echo 'test19';
 
 $c = new Test20230310();
 $c->test20230310();
@@ -24,9 +24,10 @@ class Test20230310
         $url = 'https://registry-1.docker.io/v2/library/php/tags/list';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $token, 'Accept: application/json',]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $url);
         $res = curl_exec($ch);
-        $http_code = (string)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $http_code = (string)curl_getinfo($ch, CURLINFO_HTTP_CODE); 
         curl_close($ch);
         
         $log->warn('HTTP CODE : ' . $http_code);
