@@ -14,14 +14,14 @@ class Test20230310
     public function test20230310() {
         $log = new Log();
         
-        $res = file_get_contents('https://auth.docker.io/token?service=registry.docker.io&scope=repository:php:pull');
+        $res = file_get_contents('https://auth.docker.io/token?service=registry.docker.io&scope=repository:library/php:pull');
         
         // $log->warn(print_r(json_decode($res), true));
         
         $token = json_decode($res)->token;
         $log->warn($token);
         
-        $url = 'https://registry-1.docker.io/v2/php/tags/list';
+        $url = 'https://registry-1.docker.io/v2/library/php/tags/list';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $token, 'Accept: application/json',]);
         curl_setopt($ch, CURLOPT_URL, $url);
