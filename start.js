@@ -9,11 +9,14 @@ logger.addContext("DEPLOY_DATETIME", process.env.DEPLOY_DATETIME);
 
 logger.info('START');
 
-send_mail(process.env.RENDER_EXTERNAL_HOSTNAME + ' START ' + process.env.DEPLOY_DATETIME,
-          process.env.RENDER_EXTERNAL_HOSTNAME + ' START ' + process.env.DEPLOY_DATETIME);
+const mu = require('./MyUtils.js');
+
+mu.send_mail(process.env.RENDER_EXTERNAL_HOSTNAME + ' START ' + process.env.DEPLOY_DATETIME,
+  process.env.RENDER_EXTERNAL_HOSTNAME + ' START ' + process.env.DEPLOY_DATETIME);
 
 logger.info('FINISH');
 
+/*
 function send_mail(subject_, body_)
 {
   if (process.env.MAIL_ADDRESS == undefined) {
@@ -48,3 +51,4 @@ function send_mail(subject_, body_)
     });
   })();
 }
+*/
