@@ -54,6 +54,7 @@ COPY ./index.html /var/www/html/
 COPY ./auth/*.php /var/www/html/auth/
 
 COPY ./log4js.json /usr/src/app/
+COPY ./MyUtils.js /usr/src/app/
 COPY ./crond.js /usr/src/app/
 COPY ./start.js /usr/src/app/
 COPY ./start.sh /usr/src/app/
