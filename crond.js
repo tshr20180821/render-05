@@ -1,4 +1,4 @@
-// package : cron nodemailer log4js
+// package : cron log4js
 
 const log4js = require('log4js');
 log4js.configure('log4js.json');
@@ -6,6 +6,8 @@ log4js.configure('log4js.json');
 const logger = log4js.getLogger();
 logger.level = 'debug';
 logger.addContext('DEPLOY_DATETIME', process.env.DEPLOY_DATETIME);
+
+const mu = require('./MyUtils.js');
 
 const CronJob = require('cron').CronJob;
 try {
@@ -33,7 +35,7 @@ try {
             data_buffer.push(chunk);
           });
           res.on('end', () => {
-            logger.info('RESPONSE BODY : ' + Buffer.concat(data_buffer));
+            logger.info('RESPONSE BODY : ' + Buffer.concat(data_buffer).substring(0, 100));
             var num = Number(Buffer.concat(data_buffer));
             if (!Number.isNaN(num) && Number(process.env.DEPLOY_DATETIME) < num) {
               logger.warn('CRON STOP');
@@ -56,7 +58,7 @@ try {
               ) {
             fs.utimes(send_mail_file, dt, dt);
             
-            send_mail(
+            mu.send_mail(
               'HTTP STATUS CODE : ' + res.statusCode + ' ' + http_options['hostname'],
               'HTTP STATUS CODE : ' + res.statusCode + ' ' + http_options['hostname']);
           }
@@ -75,6 +77,7 @@ try {
   logger.warn(err.toString());
 }
 
+/*
 function send_mail(subject_, body_)
 {
   const smtp_options = {
@@ -105,3 +108,4 @@ function send_mail(subject_, body_)
     });
   })();
 }
+*/
