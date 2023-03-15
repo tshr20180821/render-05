@@ -6,14 +6,13 @@ log4js.configure('log4js.json');
 const logger = log4js.getLogger();
 logger.level = 'debug';
 logger.addContext('DEPLOY_DATETIME', process.env.DEPLOY_DATETIME);
-const log_prefix = '';
 
 const CronJob = require('cron').CronJob;
 try {
   const job = new CronJob(
     '0 * * * * *',
     function() {
-      logger.info(log_prefix + 'START ' + __filename);
+      logger.info('START');
       
       try {
         let http_options = {
@@ -34,22 +33,22 @@ try {
             data_buffer.push(chunk);
           });
           res.on('end', () => {
-            logger.info(log_prefix + 'RESPONSE BODY : ' + Buffer.concat(data_buffer));
+            logger.info('RESPONSE BODY : ' + Buffer.concat(data_buffer));
             var num = Number(Buffer.concat(data_buffer));
             if (!Number.isNaN(num) && Number(process.env.DEPLOY_DATETIME) < num) {
-              logger.warn(log_prefix + 'CRON STOP');
+              logger.warn('CRON STOP');
               this.stop();
             }
           });
           
-          logger.info(log_prefix + 'HTTP STATUS CODE : ' + res.statusCode + ' ' + http_options['hostname']);
+          logger.info('HTTP STATUS CODE : ' + res.statusCode + ' ' + http_options['hostname']);
 
           const fs = require('fs');
           const send_mail_file = '/tmp/SEND_MAIL';
           if (!fs.existsSync(send_mail_file)) {
             fs.closeSync(fs.openSync(send_mail_file, 'w'));
           }
-          logger.info(log_prefix + 'FILE UPDATE TIME : ' + fs.statSync(send_mail_file).mtime);
+          logger.info('FILE UPDATE TIME : ' + fs.statSync(send_mail_file).mtime);
           const dt = new Date();
           if (res.statusCode != 200
               && process.env.MAIL_ADDRESS != undefined
@@ -63,9 +62,9 @@ try {
           }
         }).end();
       } catch (err) {
-        logger.warn(log_prefix + err.toString());
+        logger.warn(err.toString());
       }
-      logger.info(log_prefix + 'FINISH ' + __filename);
+      logger.info('FINISH');
     },
     null,
     true,
@@ -73,7 +72,7 @@ try {
   );
   job.start();
 } catch (err) {
-  logger.warn(log_prefix + err.toString());
+  logger.warn(err.toString());
 }
 
 function send_mail(subject_, body_)
@@ -99,9 +98,9 @@ function send_mail(subject_, body_)
     const smtp = require('nodemailer').createTransport(smtp_options);
     const result = await smtp.sendMail(mail, function(err, info) {
       if (err) {
-        logger.warn(log_prefix + err.toString());
+        logger.warn(err.toString());
       } else {
-        logger.info(log_prefix + info.messageId);
+        logger.info(info.messageId);
       }
     });
   })();
