@@ -18,7 +18,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 # libsqlite3-0 : php sqlite
 # libzip-dev : apache/log4php
 RUN apt-get update \
- && apt-get install -y curl libonig-dev tzdata libsqlite3-0 libzip-dev \
+ && apt-get install -y curl libonig-dev tzdata libsqlite3-0 libzip-dev libzip4 \
  && pecl install apcu \
  && docker-php-ext-enable apcu \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring zip \
