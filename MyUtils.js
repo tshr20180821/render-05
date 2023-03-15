@@ -12,6 +12,11 @@ if (process.env.MAIL_ADDRESS != undefined) {
   logger.addContext("DEPLOY_DATETIME", '');
 }
 
+module.exports.get_logger = function ()
+{
+  return logger;
+}
+
 module.exports.send_mail = function (subject_, body_)
 {
   if (process.env.MAIL_ADDRESS == undefined) {
