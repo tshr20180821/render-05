@@ -35,7 +35,7 @@ try {
             data_buffer.push(chunk);
           });
           res.on('end', () => {
-            logger.info('RESPONSE BODY : ' + Buffer.concat(data_buffer).substring(0, 100));
+            logger.info('RESPONSE BODY : ' + (Buffer.concat(data_buffer)).substring(0, 100));
             var num = Number(Buffer.concat(data_buffer));
             if (!Number.isNaN(num) && Number(process.env.DEPLOY_DATETIME) < num) {
               logger.warn('CRON STOP');
