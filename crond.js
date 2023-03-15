@@ -76,36 +76,3 @@ try {
 } catch (err) {
   logger.warn(err.toString());
 }
-
-/*
-function send_mail(subject_, body_)
-{
-  const smtp_options = {
-    host: process.env.SMTP_SERVER,
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASSWORD,
-    },
-  };
-
-  const mail = {
-    from: process.env.SMTP_USER,
-    to: process.env.MAIL_ADDRESS,
-    subject: subject_,
-    text: body_
-  };
-
-  (async () => {
-    const smtp = require('nodemailer').createTransport(smtp_options);
-    const result = await smtp.sendMail(mail, function(err, info) {
-      if (err) {
-        logger.warn(err.toString());
-      } else {
-        logger.info(info.messageId);
-      }
-    });
-  })();
-}
-*/
