@@ -1,4 +1,4 @@
-// package : nodemailer log4js
+// package : log4js
 
 const log4js = require('log4js');
 log4js.configure('log4js.json');
