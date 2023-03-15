@@ -28,6 +28,7 @@ RUN apt-get update \
   zlib1g-dev \
  && pecl install apcu \
  && docker-php-ext-enable apcu \
+ && docker-php-ext-configure zip --with-zip \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring zip \
  && composer install --apcu-autoloader \
  && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
