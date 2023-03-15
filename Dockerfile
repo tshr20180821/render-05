@@ -22,9 +22,9 @@ RUN apt-get update \
   curl \
   libonig-dev \
   libsqlite3-0 \
-  libzip4 \
   libzip-dev \
   tzdata \
+  zlib1g-dev \
  && pecl install apcu \
  && docker-php-ext-enable apcu \
  && docker-php-ext-configure zip --with-zip \
