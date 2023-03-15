@@ -1,6 +1,6 @@
 <?php
 
-include('./log.php');
+include('/usr/src/app/log.php');
 
 $log = new Log();
 
