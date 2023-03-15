@@ -22,6 +22,7 @@ RUN apt-get update \
   curl \
   libonig-dev \
   libsqlite3-0 \
+  libzip4 \
   libzip-dev \
   tzdata \
  && pecl install apcu \
