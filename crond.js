@@ -1,13 +1,7 @@
-// package : cron log4js
-
-const log4js = require('log4js');
-log4js.configure('log4js.json');
-        
-const logger = log4js.getLogger();
-logger.level = 'debug';
-logger.addContext('DEPLOY_DATETIME', process.env.DEPLOY_DATETIME);
+// package : cron
 
 const mu = require('./MyUtils.js');
+const logger = mu.get_logger();
 
 const CronJob = require('cron').CronJob;
 try {
