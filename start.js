@@ -6,14 +6,13 @@ log4js.configure('log4js.json');
 const logger = log4js.getLogger();
 logger.level = 'debug';
 logger.addContext("DEPLOY_DATETIME", process.env.DEPLOY_DATETIME);
-const log_prefix = '';
 
-logger.info(log_prefix + 'START ' + __filename);
+logger.info('START');
 
 send_mail(process.env.RENDER_EXTERNAL_HOSTNAME + ' START ' + process.env.DEPLOY_DATETIME,
           process.env.RENDER_EXTERNAL_HOSTNAME + ' START ' + process.env.DEPLOY_DATETIME);
 
-logger.info(log_prefix + 'FINISH ' + __filename);
+logger.info('FINISH');
 
 function send_mail(subject_, body_)
 {
@@ -42,9 +41,9 @@ function send_mail(subject_, body_)
     const smtp = require('nodemailer').createTransport(smtp_options);
     const result = await smtp.sendMail(mail, function(err, info) {
       if (err) {
-        logger.warn(log_prefix + err.toString());
+        logger.warn(err.toString());
       } else {
-        logger.info(log_prefix + info.messageId);
+        logger.info(info.messageId);
       }
     });
   })();
