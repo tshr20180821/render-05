@@ -51,7 +51,6 @@ COPY .htpasswd /var/www/html/
 RUN chmod 644 /var/www/html/.htpasswd
 
 COPY ./index.html /var/www/html/
-COPY ./auth/health_check.php /var/www/html/
 COPY ./auth/log.php /usr/src/app/
 COPY ./auth/*.php /var/www/html/auth/
 
