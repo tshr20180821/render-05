@@ -60,7 +60,7 @@ try {
       } catch (err) {
         logger.warn(err.toString());
       }
-      logger.info('FINISH');
+      logger.info('FINISH Heap : ' + process.memoryUsage().heapUsed.toLocaleString() + 'byte');
     },
     null,
     true,
