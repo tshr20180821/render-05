@@ -2,7 +2,7 @@
 
 FROM php:8.2-apache
 
-RUN mkdir -p /usr/src/app
+ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
 COPY ./package.json ./
