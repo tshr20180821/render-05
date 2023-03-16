@@ -14,6 +14,7 @@ hostname -A
 whoami
 free -h
 df -h
+ulimit -n
 # dpkg -l
 
 # npm audit
