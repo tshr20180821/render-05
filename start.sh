@@ -38,4 +38,4 @@ echo ServerName ${RENDER_EXTERNAL_HOSTNAME} >/etc/apache2/sites-enabled/server_n
 
 sleep 3s && ps aux && apt-get update && apt-get -s upgrade &
 
-node crond.js
+node --expose-gc crond.js
