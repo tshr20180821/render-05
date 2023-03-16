@@ -18,7 +18,7 @@ try {
           method: 'GET',
           headers: {
             'Authorization': 'Basic ' + Buffer.from(process.env.BASIC_USER + ':' + process.env.BASIC_PASSWORD).toString('base64'),
-            'User-Agent': 'cron ' + process.pid + ' ' + process.env.DEPLOY_DATETIME,
+            'User-Agent': 'cron ' + process.env.DEPLOY_DATETIME + ' ' + process.pid,
             'X-Deploy-DateTime': process.env.DEPLOY_DATETIME
           }
         };
