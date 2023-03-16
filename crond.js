@@ -62,7 +62,10 @@ try {
       }
       global.gc();
       const memory_usage = process.memoryUsage();
-      logger.info('FINISH Heap Total : ' + memory_usage.heapTotal.toLocaleString() + 'byte Heap Used : ' + memory_usage.heapUsed.toLocaleString() + 'byte');
+      logger.info('FINISH Heap Total : '
+                  + Math.floor(memory_usage.heapTotal / 1024).toLocaleString()
+                  + 'byte Heap Used : '
+                  + Math.floor(memory_usage.heapUsed / 1024).toLocaleString() + 'byte');
     },
     null,
     true,
