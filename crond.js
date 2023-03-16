@@ -60,7 +60,9 @@ try {
       } catch (err) {
         logger.warn(err.toString());
       }
-      logger.info('FINISH Heap : ' + process.memoryUsage().heapUsed.toLocaleString() + 'byte');
+      global.gc();
+      const memory_usage = process.memoryUsage();
+      logger.info('FINISH Heap Total : ' + memory_usage.heapTotal.toLocaleString() + 'byte Heap Used : ' + memory_usage.heapUsed.toLocaleString() + 'byte');
     },
     null,
     true,
