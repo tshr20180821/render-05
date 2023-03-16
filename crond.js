@@ -64,7 +64,7 @@ try {
       const memory_usage = process.memoryUsage();
       logger.info('FINISH Heap Total : '
                   + Math.floor(memory_usage.heapTotal / 1024).toLocaleString()
-                  + 'byte Heap Used : '
+                  + 'byte Used : '
                   + Math.floor(memory_usage.heapUsed / 1024).toLocaleString() + 'byte');
     },
     null,
