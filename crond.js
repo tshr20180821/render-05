@@ -50,7 +50,7 @@ try {
               && process.env.MAIL_ADDRESS != undefined
               && (dt.getTime() - fs.statSync(send_mail_file).mtimeMs) > 5 * 60 * 1000
               ) {
-            fs.utimes(send_mail_file, dt, dt);
+            fs.unlinkSync(send_mail_file);
             
             mu.send_mail(
               'HTTP STATUS CODE : ' + res.statusCode + ' ' + http_options['hostname'],
@@ -65,7 +65,7 @@ try {
           if ((dt.getTime() - fs.statSync(check_apt_file).mtimeMs) > 5 * 60 * 1000) {
             try {
               logger.debug('CHECK POINT 010');
-              fs.utimes(check_apt_file, dt, dt);
+              fs.unlinkSync(check_apt_file);
               logger.debug('CHECK POINT 020');
               const { execSync } = require('child_process');
               logger.debug('CHECK POINT 030');
