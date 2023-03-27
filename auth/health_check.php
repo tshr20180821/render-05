@@ -46,7 +46,7 @@ __HEREDOC__;
     
     $apt_result = '';
     if (file_exists('/tmp/CHECK_APT')) {
-        $apt_result = file_get_contents(''/tmp/CHECK_APT'');
+        $apt_result = file_get_contents('/tmp/CHECK_APT');
     }
     
     $atom = str_replace('__ID__', $_ENV['RENDER_EXTERNAL_HOSTNAME'] . '-' . uniqid(), $atom);
