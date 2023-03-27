@@ -74,7 +74,7 @@ try {
               logger.info(stdout.toString());
               logger.debug('CHECK POINT 050');
             } catch (err1) {
-              logger.warn(err.toString());
+              logger.warn(err1.toString());
             }
           }
         }).end();
