@@ -39,14 +39,20 @@ $atom = <<< __HEREDOC__
    <link href="http://example.org/"/>
    <id>tag:__ID__</id>
    <updated>__UPDATED__</updated>
-   <summary>__FQDN__ __UPDATED__</summary>
+   <summary>__FQDN__ __UPDATED__ __APT_RESULT__</summary>
  </entry>
 </feed>
 __HEREDOC__;
     
+    $apt_result = '';
+    if (file_exists('/tmp/CHECK_APT')) {
+        $apt_result = file_get_contents(''/tmp/CHECK_APT'');
+    }
+    
     $atom = str_replace('__ID__', $_ENV['RENDER_EXTERNAL_HOSTNAME'] . '-' . uniqid(), $atom);
     $atom = str_replace('__FQDN__', $_ENV['RENDER_EXTERNAL_HOSTNAME'], $atom);
     $atom = str_replace('__UPDATED__', date('Y-m-d') . 'T' . date('H:i:s') . '+09', $atom);
+    $atom = str_replace('__APT_RESULT__', $apt_result, $atom);
 
     echo $atom;
 }
