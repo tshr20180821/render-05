@@ -66,8 +66,7 @@ try {
             execSync('chmod 666 ' + check_apt_file);
           }
           logger.info('CHECK APT FILE UPDATE TIME : ' + fs.statSync(check_apt_file).mtime);
-          // if ((dt.getTime() - fs.statSync(check_apt_file).mtimeMs) > 24 * 60 * 60 * 1000) {
-          if ((dt.getTime() - fs.statSync(check_apt_file).mtimeMs) > 5 * 60 * 1000) {
+          if ((dt.getTime() - fs.statSync(check_apt_file).mtimeMs) > 24 * 60 * 60 * 1000) {
             var stdout = execSync('apt-get update');
             logger.info(stdout.toString());
             stdout = execSync('apt-get -s upgrade | grep upgraded');
