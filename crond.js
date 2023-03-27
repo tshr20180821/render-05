@@ -70,7 +70,7 @@ try {
           if ((dt.getTime() - fs.statSync(check_apt_file).mtimeMs) > 5 * 60 * 1000) {
             var stdout = execSync('apt-get update');
             logger.info(stdout.toString());
-            stdout = execSync('apt-get -s upgrade');
+            stdout = execSync('apt-get -s upgrade | grep upgraded');
             logger.info(stdout.toString());
             const fd = fs.openSync(check_apt_file, 'w');
             fs.writeSync(fd, stdout.toString());
