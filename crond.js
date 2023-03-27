@@ -44,7 +44,7 @@ try {
           if (!fs.existsSync(send_mail_file)) {
             fs.closeSync(fs.openSync(send_mail_file, 'w'));
           }
-          logger.info('FILE UPDATE TIME : ' + fs.statSync(send_mail_file).mtime);
+          logger.info('SEND MAIL FILE UPDATE TIME : ' + fs.statSync(send_mail_file).mtime);
           const dt = new Date();
           if (res.statusCode != 200
               && process.env.MAIL_ADDRESS != undefined
@@ -55,6 +55,18 @@ try {
             mu.send_mail(
               'HTTP STATUS CODE : ' + res.statusCode + ' ' + http_options['hostname'],
               'HTTP STATUS CODE : ' + res.statusCode + ' ' + http_options['hostname']);
+          }
+          
+          const check_apt_file = '/tmp/CHECK_APT';
+          if (!fs.existsSync(check_apt_file)) {
+            fs.closeSync(fs.openSync(check_apt_file, 'w'));
+          }
+          logger.info('CHECK APT FILE UPDATE TIME : ' + fs.statSync(check_apt_file).mtime);
+          if ((dt.getTime() - fs.statSync(check_apt_file).mtimeMs) > 5 * 60 * 1000) {
+            fs.utimes(check_apt_file, dt, dt);
+            const { execSync } = require('child_process');
+            const stdout = execSync('apt-get update && apt-get -s upgrade');
+            logger.info(stdout.toString());
           }
         }).end();
       } catch (err) {
