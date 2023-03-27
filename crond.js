@@ -62,7 +62,7 @@ try {
             fs.closeSync(fs.openSync(check_apt_file, 'w'));
           }
           logger.info('CHECK APT FILE UPDATE TIME : ' + fs.statSync(check_apt_file).mtime);
-          if ((dt.getTime() - fs.statSync(check_apt_file).mtimeMs) > 5 * 60 * 1000) {
+          if ((dt.getTime() - fs.statSync(check_apt_file).mtimeMs) > 24 * 60 * 60 * 1000) {
             try {
               logger.debug('CHECK POINT 010');
               fs.unlinkSync(check_apt_file);
