@@ -63,15 +63,19 @@ try {
           }
           logger.info('CHECK APT FILE UPDATE TIME : ' + fs.statSync(check_apt_file).mtime);
           if ((dt.getTime() - fs.statSync(check_apt_file).mtimeMs) > 5 * 60 * 1000) {
-            logger.debug('CHECK POINT 010');
-            fs.utimes(check_apt_file, dt, dt);
-            logger.debug('CHECK POINT 020');
-            const { execSync } = require('child_process');
-            logger.debug('CHECK POINT 030');
-            const stdout = execSync('apt-get update && apt-get -s upgrade');
-            logger.debug('CHECK POINT 040');
-            logger.info(stdout.toString());
-            logger.debug('CHECK POINT 050');
+            try {
+              logger.debug('CHECK POINT 010');
+              fs.utimes(check_apt_file, dt, dt);
+              logger.debug('CHECK POINT 020');
+              const { execSync } = require('child_process');
+              logger.debug('CHECK POINT 030');
+              const stdout = execSync('apt-get update && apt-get -s upgrade');
+              logger.debug('CHECK POINT 040');
+              logger.info(stdout.toString());
+              logger.debug('CHECK POINT 050');
+            } catch (err1) {
+              logger.warn(err.toString());
+            }
           }
         }).end();
       } catch (err) {
