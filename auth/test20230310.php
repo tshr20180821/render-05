@@ -2,7 +2,7 @@
 
 include('./log.php');
 
-echo 'test20';
+echo 'test21';
 
 $c = new Test20230310();
 $c->test20230310();
@@ -13,10 +13,6 @@ class Test20230310
 {
     public function test20230310() {
         $log = new Log();
-        
-        exec('apt-get update && apt-get -s upgrade', $res);
-        $log->warn(print_r($res, true));
-        $log->warn($res);
         
         $res = file_get_contents('https://auth.docker.io/token?service=registry.docker.io&scope=repository:library/php:pull');
         
