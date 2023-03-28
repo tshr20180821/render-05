@@ -39,7 +39,7 @@ $atom = <<< __HEREDOC__
    <link href="http://example.org/"/>
    <id>tag:__ID__</id>
    <updated>__UPDATED__</updated>
-   <summary>__FQDN__ __UPDATED__ __APT_RESULT__</summary>
+   <summary>__FQDN__ __APT_RESULT__</summary>
  </entry>
 </feed>
 __HEREDOC__;
