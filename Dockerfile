@@ -14,22 +14,18 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # curl : curl -sL https://deb.nodesource.com/setup_18.x | bash -
 # libonig-dev : mbstring
-# tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 # libsqlite3-0 : php sqlite
-# libzip-dev : apache/log4php
+# tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 RUN apt-get update \
  && apt-get install -y \
   curl \
   libonig-dev \
   libsqlite3-0 \
-  libzip4 \
-  libzip-dev \
   tzdata \
-  zlib1g-dev \
  && pecl install apcu \
  && docker-php-ext-enable apcu \
  && docker-php-ext-configure zip --with-zip \
- && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring zip \
+ && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring \
  && composer install --apcu-autoloader \
  && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
  && apt-get install -y nodejs \
