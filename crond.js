@@ -61,7 +61,7 @@ try {
           const check_apt_file = '/tmp/CHECK_APT';
           if (!fs.existsSync(check_apt_file)) {
             const fd = fs.openSync(check_apt_file, 'w');
-            fs.writeSync(fd, "uchecked\n");
+            fs.writeSync(fd, 'uchecked');
             fs.closeSync(fd);
             execSync('chmod 666 ' + check_apt_file);
           }
