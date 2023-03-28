@@ -11,7 +11,7 @@ $log->info("START ${requesturi}");
 
 push_atom($log);
 
-$log->info("FINISH " . substr((microtime(true) - $time_start), 0, 7) . 's');
+$log->info('FINISH ' . substr((microtime(true) - $time_start), 0, 7) . 's');
 
 exit();
 
