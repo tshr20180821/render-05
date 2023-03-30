@@ -20,8 +20,6 @@ ulimit -n
 # npm audit
 npm list --depth=0
 
-ls -lang /etc/apache2/sites-enabled/
-
 php -l /var/www/html/auth/crond.php
 node -c crond.js
 node -c start.js
@@ -31,6 +29,9 @@ ls -lang /var/www/html/
 export BLOWFISH_SECRET=$(cat /dev//urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
 export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
+sed s/__DEPLOY_DATETIME__/${DEPLOY_DATETIME}/ /etc/apache2/sites-enabled/apache.conf
+
+cat /etc/apache2/sites-enabled/apache.conf
 
 node start.js &
 
