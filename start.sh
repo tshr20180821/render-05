@@ -4,7 +4,7 @@ set -x
 
 node --version
 php --version
-apache2 -v
+apachectl -V
 apachectl -l
 cat /proc/version
 cat /etc/os-release
