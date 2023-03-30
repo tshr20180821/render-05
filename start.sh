@@ -26,6 +26,7 @@ node -c start.js
 
 ls -lang /var/www/html/
 
+# phpMyAdmin
 export BLOWFISH_SECRET=$(cat /dev//urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
 export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
