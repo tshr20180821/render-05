@@ -5,6 +5,7 @@ set -x
 node --version
 php --version
 apache2 -v
+apachectl -l
 cat /proc/version
 cat /etc/os-release
 strings /etc/localtime
@@ -25,8 +26,6 @@ node -c crond.js
 node -c start.js
 
 ls -lang /var/www/html/
-
-find / -name mod_logio.so -print
 
 # phpMyAdmin
 export BLOWFISH_SECRET=$(cat /dev//urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
