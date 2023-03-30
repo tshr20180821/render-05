@@ -20,6 +20,8 @@ ulimit -n
 # npm audit
 npm list --depth=0
 
+ls -lang /etc/apache2/sites-enabled/
+
 php -l /var/www/html/auth/crond.php
 node -c crond.js
 node -c start.js
