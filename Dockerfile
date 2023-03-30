@@ -12,12 +12,14 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN /usr/bin/composer --version
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
+# binutils : strings
 # curl : curl -sL https://deb.nodesource.com/setup_18.x | bash -
 # libonig-dev : mbstring
 # libsqlite3-0 : php sqlite
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 RUN apt-get update \
  && apt-get install -y \
+  binutils \
   curl \
   libonig-dev \
   libsqlite3-0 \
