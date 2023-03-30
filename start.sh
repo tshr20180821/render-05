@@ -26,6 +26,8 @@ node -c start.js
 
 ls -lang /var/www/html/
 
+find / -name mod_logio.so -print
+
 # phpMyAdmin
 export BLOWFISH_SECRET=$(cat /dev//urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
