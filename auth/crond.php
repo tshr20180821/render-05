@@ -34,6 +34,7 @@ function crond($log_)
         return;
     }
     
+    clearstatcache();
     if (!file_exists('/tmp/m_cron.db')) {
         init_sqlite($log_);
     }
