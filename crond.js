@@ -36,6 +36,9 @@ try {
               this.stop();
             }
           });
+          res.on('error', (err) => {
+            logger.warn(err.toString());
+          });
           
           logger.info('HTTP STATUS CODE : ' + res.statusCode + ' ' + http_options['hostname']);
 
