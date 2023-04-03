@@ -12,9 +12,6 @@ try {
       
       try {
         const http_options = {
-          hostname: process.env.RENDER_EXTERNAL_HOSTNAME,
-          port: 443,
-          path: '/auth/crond.php',
           method: 'GET',
           headers: {
             'Authorization': 'Basic ' + Buffer.from(process.env.BASIC_USER + ':' + process.env.BASIC_PASSWORD).toString('base64'),
@@ -23,8 +20,10 @@ try {
           }
         };
         
+        const url = 'https://' + process.env.RENDER_EXTERNAL_HOSTNAME + '/auth/crond.php';
+        
         var data_buffer = [];
-        require('https').request(http_options, (res) => {
+        require('https').request(url, http_options, (res) => {
           res.on('data', (chunk) => {
             data_buffer.push(chunk);
           });
