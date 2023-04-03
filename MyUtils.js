@@ -18,20 +18,7 @@ module.exports.get_logger = function ()
 }
 
 module.exports.send_slack_message = function (message_)
-{
-  /*
-  const { WebClient } = require('@slack/web-api');
-  const web = new WebClient(process.env.SLACK_TOKEN);
-  
-  (async () => {
-    const result = await web.chat.postMessage({
-      text: message_,
-      channel: process.env.SLACK_CHANNEL,
-    });
-    logger.info(result.ts);
-  })();
-  */
-  
+{  
   const http_options = {
     method: 'POST',
     headers: {
@@ -45,7 +32,7 @@ module.exports.send_slack_message = function (message_)
     channel: process.env.SLACK_CHANNEL
   });
   const request = require('https').request('https://slack.com/api/chat.postMessage', http_options, response => {
-    logger.info(response.statusCode);
+    logger.info('Slack Post Message Result : ' + response.statusCode);
   });
   request.write(post_data);
   request.end();
