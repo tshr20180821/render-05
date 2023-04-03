@@ -39,7 +39,7 @@ try {
             logger.warn(err.toString());
           });
           
-          logger.info('HTTP STATUS CODE : ' + res.statusCode + ' ' + http_options['hostname']);
+          logger.info('HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME);
 
           const fs = require('fs');
           const send_mail_file = '/tmp/SEND_MAIL';
