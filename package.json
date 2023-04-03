@@ -4,6 +4,7 @@
     "node": "18.x"
   },
   "dependencies": {
+    "@slack/web-api": "*",
     "chart.js": "^3.9.1",
     "chartjs-node-canvas": "*",
     "chartjs-plugin-annotation": "*",
