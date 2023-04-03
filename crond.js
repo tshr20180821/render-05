@@ -11,7 +11,7 @@ try {
       logger.info('START');
       
       try {
-        let http_options = {
+        const http_options = {
           hostname: process.env.RENDER_EXTERNAL_HOSTNAME,
           port: 443,
           path: '/auth/crond.php',
