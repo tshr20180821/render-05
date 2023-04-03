@@ -17,6 +17,20 @@ module.exports.get_logger = function ()
   return logger;
 }
 
+module.exports.send_slack_message = function (message_)
+{
+  const { WebClient } = require('@slack/web-api');
+  const web = new WebClient(process.env.SLACK_TOKEN);
+  
+  (async () => {
+    const result = await web.chat.postMessage({
+      text: message_,
+      channel: process.env.SLACK_CHANNEL,
+    });
+    logger.info(result.ts);
+  })();
+}
+
 module.exports.send_mail = function (subject_, body_)
 {
   if (process.env.MAIL_ADDRESS == undefined) {
