@@ -57,8 +57,8 @@ class Log
                 $function_chain .= '[' . $value['function'] . ']';
             }
         }
-        $log_header = date('Y-m-d H:i:s.') . substr(explode('.', microtime(true))[1] . '000' , 0, 3)
-            . ' ' . $_ENV['DEPLOY_DATETIME'] . ' ' . trim(getmypid() . " ${level} ${file} ${line}");
-        file_put_contents('php://stderr', "\033[0;" . self::COLOR_LIST[$level] . "m${log_header}\033[0m ${function_chain} ${message_}\n");
+        $log_datetime = date('Y-m-d H:i:s.') . substr(explode('.', microtime(true))[1] . '000' , 0, 3);
+        $log_header = $_ENV['DEPLOY_DATETIME'] . ' ' . trim(getmypid() . " ${level} ${file} ${line}");
+        file_put_contents('php://stderr', "${log_datetime} \033[0;" . self::COLOR_LIST[$level] . "m${log_header}\033[0m ${function_chain} ${message_}\n");
     }
 }
