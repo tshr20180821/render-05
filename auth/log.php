@@ -63,7 +63,7 @@ class Log
             $mili_sec = substr($mt[1] . '000' , 0, 3);
         }
         $log_datetime = date('Y-m-d H:i:s.') . $mili_sec;
-        $log_header = $_ENV['DEPLOY_DATETIME'] . ' ' . trim(getmypid() . " ${level} ${file} ${line}");
+        $log_header = $_ENV['DEPLOY_DATETIME'] . ' ' . getmypid() . " ${level} ${file} ${line}";
         file_put_contents('php://stderr', "${log_datetime} \033[0;" . self::COLOR_LIST[$level] . "m${log_header}\033[0m ${function_chain} ${message_}\n");
     }
 }
