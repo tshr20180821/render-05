@@ -132,7 +132,7 @@ __HEREDOC__;
         }
         
         // execute
-        $options = [CURLOPT_TIMEOUT => 15];
+        $options = [CURLOPT_TIMEOUT => 30];
 
         if (strlen($headers) > 0) {
             $options += [CURLOPT_HTTPHEADER => unserialize(base64_decode($headers))];
