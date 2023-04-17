@@ -325,8 +325,7 @@ function get_contents_multi($log_, $urls_, $multi_options_ = null)
                     CURLOPT_PATH_AS_IS => true,
                     CURLOPT_TCP_FASTOPEN => true,
                     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_2TLS,
-                    // CURLOPT_TIMEOUT => 25,
-                    CURLOPT_TIMEOUT => 20,
+                    CURLOPT_TIMEOUT => 30,
                    ];
 
         // if (is_null($options_add) === false && array_key_exists(CURLOPT_USERAGENT, $options_add)) {
