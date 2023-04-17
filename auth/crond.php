@@ -206,7 +206,7 @@ __HEREDOC__;
     if ($statement_update->rowCount() != 1) {
         $pdo->rollBack();
         $pdo = null;
-        $log_->info($log_prefix . 'ROLLBACK');
+        $log_->warn($log_prefix . 'ROLLBACK');
         return false;
     }
     
