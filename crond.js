@@ -41,28 +41,14 @@ try {
           
           logger.info('HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME);
 
-          const fs = require('fs');
-          const send_mail_file = '/tmp/SEND_MAIL';
-          if (!fs.existsSync(send_mail_file)) {
-            fs.closeSync(fs.openSync(send_mail_file, 'w'));
-          }
-          logger.info('SEND MAIL FILE UPDATE TIME : ' + fs.statSync(send_mail_file).mtime);
-          const dt = new Date();
           if (res.statusCode != 200
               && process.env.MAIL_ADDRESS != undefined
-              && (dt.getTime() - fs.statSync(send_mail_file).mtimeMs) > 5 * 60 * 1000
               ) {
-            fs.unlinkSync(send_mail_file);
-            
-            /*
-            mu.send_mail(
-              'HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME,
-              'HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME
-            );
-            */
             mu.send_slack_message('HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME);
           }
           
+          const fs = require('fs');
+          const dt = new Date();
           const { execSync } = require('child_process');
           const check_apt_file = '/tmp/CHECK_APT';
           if (!fs.existsSync(check_apt_file)) {
