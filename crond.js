@@ -54,10 +54,13 @@ try {
               ) {
             fs.unlinkSync(send_mail_file);
             
+            /*
             mu.send_mail(
               'HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME,
               'HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME
             );
+            */
+            mu.send_slack_message('HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME);
           }
           
           const { execSync } = require('child_process');
