@@ -55,8 +55,9 @@ try {
             fs.unlinkSync(send_mail_file);
             
             mu.send_mail(
-              'HTTP STATUS CODE : ' + res.statusCode + ' ' + http_options['hostname'],
-              'HTTP STATUS CODE : ' + res.statusCode + ' ' + http_options['hostname']);
+              'HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME,
+              'HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME
+            );
           }
           
           const { execSync } = require('child_process');
