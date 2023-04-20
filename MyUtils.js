@@ -27,15 +27,17 @@ module.exports.send_slack_message = function (message_)
     }
   };
   
-  const post_data = JSON.stringify({
-    text: message_,
-    channel: process.env.SLACK_CHANNEL
+  [process.env.SLACK_CHANNEL_01, process.env.SLACK_CHANNEL_02].forEach(channel => {
+    var post_data = JSON.stringify({
+      text: message_,
+      channel: channel
+    });
+    var request = require('https').request('https://slack.com/api/chat.postMessage', http_options, response => {
+      logger.info('Slack Post Message Result : ' + response.statusCode);
+    });
+    request.write(post_data);
+    request.end();
   });
-  const request = require('https').request('https://slack.com/api/chat.postMessage', http_options, response => {
-    logger.info('Slack Post Message Result : ' + response.statusCode);
-  });
-  request.write(post_data);
-  request.end();
 }
 
 module.exports.send_mail = function (subject_, body_)
