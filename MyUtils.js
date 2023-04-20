@@ -18,7 +18,9 @@ module.exports.get_logger = function ()
 }
 
 module.exports.send_slack_message = function (message_)
-{  
+{
+  const sleep_ms = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  
   const http_options = {
     method: 'POST',
     headers: {
@@ -37,6 +39,7 @@ module.exports.send_slack_message = function (message_)
     });
     request.write(post_data);
     request.end();
+    sleep_ms(1000);
   });
 }
 
