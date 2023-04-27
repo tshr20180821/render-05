@@ -16,6 +16,7 @@ $log->debug($res);
 
 $pdo = null;
 
-$res = preg_replace('/COLLATE .+? /', ' ', $res);
+$res = preg_replace('/COLLATE .+? /', '', $res);
+$res = str_replace('DEFAULT NULL', ''. $res);
 
 $log->debug($res);
