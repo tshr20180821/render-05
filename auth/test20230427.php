@@ -10,6 +10,12 @@ $options = [
 ];
 $pdo = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $options);
 
-$log->debug($pdo->query("SHOW CREATE TABLE `m_cron`")->fetchColumn(1));
+$res = $pdo->query("SHOW CREATE TABLE `m_cron`")->fetchColumn(1);
+
+$log->debug($res);
 
 $pdo = null;
+
+$res = preg_replace('/COLLATE .+? /', ' ', $res);
+
+$log->debug($res);
