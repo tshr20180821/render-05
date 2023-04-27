@@ -27,4 +27,12 @@ $res = preg_replace('/varchar\(\d+\)/', 'TEXT', $res);
 $res = preg_replace('/tinyint\(\d+\)/', 'INTEGER', $res);
 $res = str_replace('`', '', $res);
 
+$create_table = $res;
+
 $log->debug($res);
+
+$res = preg_replace('/(INTEGER|TEXT|NOT|NULL)/', ' ', $res);
+$res = preg_replace('/CREATE TABLE (\w+) (.+),\s+PRIMARY KEY.+/s', 'SELECT ${2} FROM ${1}', $res);
+
+$log->debug($res);
+
