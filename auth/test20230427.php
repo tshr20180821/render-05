@@ -10,7 +10,7 @@ $options = [
 ];
 $pdo = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $options);
 
-$res = $pdo->query("SHOW CREATE TABLE `m_server`")->fetchColumn(1);
+$res = $pdo->query("SHOW CREATE TABLE `m_env`")->fetchColumn(1);
 
 $log->debug($res);
 
