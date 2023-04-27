@@ -39,7 +39,7 @@ $select = $res;
 $log->debug($res);
 
 $tmp = '';
-$column_count = explode(',', $res);
+$column_count = count(explode(',', $res));
 for ($i = 0; $i < $column_count; $i++) {
     $tmp .= ':b_v' . $i . ',';
 }
