@@ -45,6 +45,6 @@ for ($i = 0; $i < $column_count; $i++) {
 }
 $tmp = trim($tmp, ',');
 
-$res = preg_replace('/FROM (\w+)/s', 'INSERT INTO ${1} VALUES(' . $tmp . ')', $res);
+$res = preg_replace('/.+FROM (\w+)/s', 'INSERT INTO ${1} VALUES(' . $tmp . ')', $res);
 
 $log->debug($res);
