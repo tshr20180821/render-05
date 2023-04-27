@@ -21,6 +21,7 @@ $res = preg_replace('/COLLATE \w+/', '', $res);
 $res = preg_replace('/ CHARACTER SET \w+ /', ' ', $res);
 $res = str_replace('DEFAULT NULL', '', $res);
 $res = str_replace('AUTO_INCREMENT', '', $res);
+$res = preg_replace("/ DEFAULT ('|\w)+/", '', $res);
 $res = str_replace(' int ', ' INTEGER ', $res);
 $res = preg_replace('/varchar\(\d+\)/', 'TEXT', $res);
 $res = preg_replace('/tinyint\(\d+\)/', 'INTEGER', $res);
