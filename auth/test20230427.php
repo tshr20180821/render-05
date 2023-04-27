@@ -34,5 +34,17 @@ $log->debug($res);
 $res = preg_replace('/(INTEGER|TEXT|NOT|NULL)/', ' ', $res);
 $res = preg_replace('/CREATE TABLE (\w+) \((.+),\s+PRIMARY KEY.+/s', 'SELECT ${2} FROM ${1}', $res);
 
+$select = $res;
+
 $log->debug($res);
 
+$tmp = '';
+$column_count = explode(',', $res);
+for ($i = 0; $i < $column_count; $i++) {
+    $tmp .= ':b_v' . $i . ',';
+}
+$tmp = trim($tmp, ',');
+
+$res = preg_replace('/FROM (\w+)/', 'INSERT INTO ${1} VALUES(' . $tmp . ')', $res);
+
+$log->debug($res);
