@@ -35,6 +35,7 @@ RUN apt-get update \
  && npm install \
  && npm update -g \
  && npm audit fix \
+ && apt-get update \
  && apt-get upgrade -y \
  && npm cache clean --force \
  && pecl clear-cache \
