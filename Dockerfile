@@ -1,6 +1,6 @@
 # apache php nodejs
 
-FROM php:8.2-rc-apache
+FROM php:8.2-apache
 
 ENV NODE_ENV=production
 
