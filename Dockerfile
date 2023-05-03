@@ -18,7 +18,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 # libsqlite3-0 : php sqlite
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 RUN apt-get update \
- && apt-get install -y \
+ && apt-get install -y --no-install-recommends \
   binutils \
   curl \
   libonig-dev \
@@ -35,8 +35,7 @@ RUN apt-get update \
  && npm install \
  && npm update -g \
  && npm audit fix \
- && apt-get update \
- && apt-get upgrade -y \
+ && apt-get upgrade -y --no-install-recommends \
  && npm cache clean --force \
  && pecl clear-cache \
  && apt-get purge -y --auto-remove gcc libc6-dev make \
