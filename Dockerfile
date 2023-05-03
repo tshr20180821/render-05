@@ -31,7 +31,7 @@ RUN apt-get update \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring \
  && composer install --apcu-autoloader \
  && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
- && apt-get install -y nodejs \
+ && apt-get install -y --no-install-recommends nodejs \
  && npm install \
  && npm update -g \
  && npm audit fix \
