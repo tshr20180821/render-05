@@ -35,7 +35,7 @@ $atom = <<< __HEREDOC__
  </author>
  <id>tag:__FQDN__</id>
  <entry>
-   <title>Health Check __UPDATED__</title>
+   <title>__DEPLOY_DATETIME__</title>
    <link href="http://example.org/"/>
    <id>tag:__ID__</id>
    <updated>__UPDATED__</updated>
@@ -49,6 +49,7 @@ __HEREDOC__;
         $apt_result = trim(file_get_contents('/tmp/CHECK_APT')). ' ' . date('Y/m/d H:i:s', filemtime('/tmp/CHECK_APT'));
     }
     
+    $atom = str_replace('__DEPLOY_DATETIME__', $_ENV['DEPLOY_DATETIME'], $atom);
     $atom = str_replace('__ID__', $_ENV['RENDER_EXTERNAL_HOSTNAME'] . '-' . uniqid(), $atom);
     $atom = str_replace('__FQDN__', $_ENV['RENDER_EXTERNAL_HOSTNAME'], $atom);
     $atom = str_replace('__UPDATED__', date('Y-m-d') . 'T' . date('H:i:s') . '+09', $atom);
