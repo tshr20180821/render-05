@@ -35,6 +35,18 @@ sed -i s/__DEPLOY_DATETIME__/${DEPLOY_DATETIME}/ /etc/apache2/sites-enabled/apac
 
 cat /etc/apache2/sites-enabled/apache.conf
 
+echo "Apache\n" >/tmp/VERSION.txt
+apachectl -V >>/tmp/VERSION.txt
+echo -e "PHP\n" >>/tmp/VERSION.txt
+php --version >>/tmp/VERSION.txt
+echo "Node.js\n" >>/tmp/VERSION.txt
+node --version >>/tmp/VERSION.txt
+
+VERSION=$(/tmp/VERSION.txt)
+
+curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
+  -d "text=${VERSION}" -d "channel=${SLACK_CHANNEL_02}" https://slack.com/api/chat.postMessage >/dev/null
+
 node start.js &
 
 echo ServerName ${RENDER_EXTERNAL_HOSTNAME} >/etc/apache2/sites-enabled/server_name.conf
