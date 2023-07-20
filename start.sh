@@ -35,11 +35,11 @@ sed -i s/__DEPLOY_DATETIME__/${DEPLOY_DATETIME}/ /etc/apache2/sites-enabled/apac
 
 cat /etc/apache2/sites-enabled/apache.conf
 
-echo "Apache\n" >VERSION.txt
-apachectl -V >>VERSION.txt
-echo -e "PHP\n" >>VERSION.txt
-php --version >>VERSION.txt
-echo "Node.js\n" >>VERSION.txt
+echo "Apache" >VERSION.txt
+apachectl -V | head -n 1 >>VERSION.txt
+echo -e "PHP" >>VERSION.txt
+php --version | head -n 1 >>VERSION.txt
+echo "Node.js" >>VERSION.txt
 node --version >>VERSION.txt
 
 VERSION=$(cat VERSION.txt)
