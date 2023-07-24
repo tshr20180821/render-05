@@ -56,12 +56,13 @@ curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
 
 # node start.js &
 
+wait
+apt-get -y upgrade
+
 echo ServerName ${RENDER_EXTERNAL_HOSTNAME} >/etc/apache2/sites-enabled/server_name.conf
 
 . /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND &
 
-wait
-apt-get -y upgrade
 # sleep 3s && ps aux && apt-get update && apt-get -s upgrade &
 sleep 3s && ps aux &
 
