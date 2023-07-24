@@ -37,6 +37,9 @@ sed -i s/__DEPLOY_DATETIME__/${DEPLOY_DATETIME}/ /etc/apache2/sites-enabled/apac
 
 cat /etc/apache2/sites-enabled/apache.conf
 
+wait
+apt-get -y upgrade
+
 echo "${RENDER_EXTERNAL_HOSTNAME} START ${DEPLOY_DATETIME}" >VERSION.txt
 echo "Apache" >>VERSION.txt
 apachectl -V | head -n 1 >>VERSION.txt
@@ -55,9 +58,6 @@ curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
   -d "text=${VERSION}" -d "channel=${SLACK_CHANNEL_02}" https://slack.com/api/chat.postMessage >/dev/null &
 
 # node start.js &
-
-wait
-apt-get -y upgrade
 
 echo ServerName ${RENDER_EXTERNAL_HOSTNAME} >/etc/apache2/sites-enabled/server_name.conf
 
