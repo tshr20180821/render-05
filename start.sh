@@ -2,6 +2,8 @@
 
 set -x
 
+apt-get update &
+
 node --version
 php --version
 apachectl -V
@@ -58,6 +60,8 @@ echo ServerName ${RENDER_EXTERNAL_HOSTNAME} >/etc/apache2/sites-enabled/server_n
 
 . /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND &
 
+wait
+apt-get -y upgrade
 # sleep 3s && ps aux && apt-get update && apt-get -s upgrade &
 sleep 3s && ps aux &
 
