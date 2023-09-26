@@ -21,7 +21,7 @@ class Log
             $sql_create = <<< __HEREDOC__
 CREATE TABLE t_log (
     seq INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    datetime DEFAULT CURRENT_TIMESTAMP,
+    datetime TIMESTAMP DEFAULT (DATETIME('now','localtime')),
     pid TEXT NOT NULL,
     level TEXT NOT NULL,
     file TEXT NOT NULL,
