@@ -11,7 +11,7 @@ COPY ./composer.json ./
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN /usr/bin/composer --version
 ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV NODE_MAJOR=18
+ENV NODE_MAJOR=20
 
 # binutils : strings
 # ca-certificates : node.js
