@@ -37,6 +37,7 @@ RUN apt-get update \
  && composer install --apcu-autoloader \
  && mkdir -p /etc/apt/keyrings \
  && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" \
+ && apt-get update \
  && apt-get install -y nodejs \
  && npm install \
  && npm update -g \
