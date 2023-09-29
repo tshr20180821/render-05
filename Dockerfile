@@ -11,16 +11,21 @@ COPY ./composer.json ./
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN /usr/bin/composer --version
 ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV NODE_MAJOR=18
 
 # binutils : strings
-# curl : curl -sL https://deb.nodesource.com/setup_18.x | bash -
+# ca-certificates : node.js
+# curl : node.js
+# gnupg : node.js
 # libonig-dev : mbstring
 # libsqlite3-0 : php sqlite
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
   binutils \
+  ca-certificates \
   curl \
+  gnupg \
   libonig-dev \
   libsqlite3-0 \
   libzip-dev \
@@ -30,7 +35,8 @@ RUN apt-get update \
  && docker-php-ext-configure zip --with-zip \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring \
  && composer install --apcu-autoloader \
- && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
+ && mkdir -p /etc/apt/keyrings \
+ && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" \
  && apt-get install -y nodejs \
  && npm install \
  && npm update -g \
