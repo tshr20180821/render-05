@@ -6,7 +6,7 @@ log4js.configure('log4js.json');
 const logger = log4js.getLogger();
 logger.level = 'debug';
 
-if (process.env.MAIL_ADDRESS != undefined) {
+if (process.env.DEPLOY_DATETIME != undefined) {
   logger.addContext("DEPLOY_DATETIME", process.env.DEPLOY_DATETIME);
 } else {
   logger.addContext("DEPLOY_DATETIME", '');
