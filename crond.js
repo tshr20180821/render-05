@@ -83,10 +83,15 @@ try {
                                                  headers: {
                                                    "content-type": "text/plain",
                                                  }
+                                               },
+                                               response => {
+                                                 if (response.statusCode != 200) {
+                                                   logger.info(message);
+                                                 }
                                                });
       request.write(message);
       request.end();
-      logger.info(message);
+      // logger.info(message);
     },
     null,
     true,
