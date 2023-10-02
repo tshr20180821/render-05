@@ -6,7 +6,7 @@ $log = new Log();
 
 $requesturi = $_SERVER['REQUEST_URI'];
 $time_start = microtime(true);
-$log->info("START ${requesturi}");
+$log->info("START {$requesturi}");
 
 update_sqlite($log);
 
