@@ -6,7 +6,7 @@ $log = new Log();
 
 $requesturi = $_SERVER['REQUEST_URI'];
 $time_start = microtime(true);
-$log->info("START ${requesturi}");
+$log->info("START {$requesturi}");
 
 try {
     crond($log);
@@ -308,7 +308,7 @@ function get_contents_multi($log_, $urls_, $multi_options_ = null)
         foreach ($multi_options_ as $key => $value) {
             $rc = curl_multi_setopt($mh, $key, $value);
             if ($rc === false) {
-                $log_->info($log_prefix . "curl_multi_setopt : ${key} ${value}");
+                $log_->info($log_prefix . "curl_multi_setopt : {$key} {$value}");
             }
         }
     }
@@ -334,14 +334,14 @@ function get_contents_multi($log_, $urls_, $multi_options_ = null)
         foreach ($options as $key => $value) {
             $rc = curl_setopt($ch, $key, $value);
             if ($rc == false) {
-                $log_->info($log_prefix . "curl_setopt : ${key} ${value}");
+                $log_->info($log_prefix . "curl_setopt : {$key} {$value}");
             }
         }
         if (is_null($options_add) === false) {
             foreach ($options_add as $key => $value) {
                 $rc = curl_setopt($ch, $key, $value);
                 if ($rc == false) {
-                    $log_->info($log_prefix . "curl_setopt : ${key} ${value}");
+                    $log_->info($log_prefix . "curl_setopt : {$key} {$value}");
                 }
             }
         }
@@ -367,7 +367,7 @@ function get_contents_multi($log_, $urls_, $multi_options_ = null)
         $ch = $list_ch[$url];
         $res = curl_getinfo($ch);
         $http_code = (string)$res['http_code'];
-        $log_->info($log_prefix . "CURL Result ${http_code} : ${url}");
+        $log_->info($log_prefix . "CURL Result {$http_code} : {$url}");
         if ($http_code[0] == '2') {
             $result = curl_multi_getcontent($ch);
             $results[$url] = $result;
@@ -392,10 +392,10 @@ function get_contents_multi($log_, $urls_, $multi_options_ = null)
 
     $total_time = substr((microtime(true) - $time_start), 0, 7) . 'sec';
 
-    // $log_->info("${log_prefix}urls :");
+    // $log_->info("{$log_prefix}urls :");
     // $this->logging_object(array_keys($results), $log_prefix);
-    $log_->info("${log_prefix}Total Time : [${total_time}]");
-    $log_->info("${log_prefix}memory_get_usage : " . number_format(memory_get_usage()) . 'byte');
+    $log_->info("{$log_prefix}Total Time : [{$total_time}]");
+    $log_->info("{$log_prefix}memory_get_usage : " . number_format(memory_get_usage()) . 'byte');
 
     return $results;
 }
