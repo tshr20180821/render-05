@@ -7,7 +7,7 @@ $log = new Log();
 $pid = getmypid();
 $requesturi = $_SERVER['REQUEST_URI'];
 $time_start = microtime(true);
-$log->info("START ${requesturi}");
+$log->info("START {$requesturi}");
 
 push_atom($log);
 
