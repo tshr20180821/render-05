@@ -25,6 +25,7 @@ class Log
         curl_setopt($this->_ch, CURLOPT_POST, 1);
         curl_setopt($this->_ch, CURLOPT_HTTPHEADER, ['Content-Type: text/plain; charset=utf-8',]);
         curl_setopt($this->_ch, CURLOPT_TCP_KEEPALIVE, 1);
+        curl_setopt($this->_ch, CURLOPT_RETURNTRANSFER, 1);
 
         clearstatcache();
         if (!file_exists('/tmp/sqlitelog.db')) {
@@ -112,7 +113,7 @@ __HEREDOC__;
         $log_header = $_ENV['DEPLOY_DATETIME'] . ' ' . getmypid() . " {$level} {$file} {$line}";
 
         curl_setopt($this->_ch, CURLOPT_POSTFIELDS, "{$log_datetime} {$log_header} {$function_chain} {$message_}");
-        $res = curl_exec($this->_ch);
+        curl_exec($this->_ch);
         $http_code = (string)curl_getinfo($this->_ch, CURLINFO_HTTP_CODE);
         if ($level != 'INFO' || time() - $this->_deploy_datetime < 60 * 5 || $http_code != '200') {
             file_put_contents('php://stderr', "{$log_datetime} \033[0;" . self::COLOR_LIST[$level] . "m{$log_header}\033[0m {$function_chain} {$message_}\n");
