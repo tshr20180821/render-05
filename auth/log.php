@@ -110,7 +110,7 @@ __HEREDOC__;
             $milli_sec = substr($mt[1] . '000' , 0, 3);
         }
         $log_datetime = date('Y-m-d H:i:s.') . $milli_sec;
-        $log_header = $_ENV['DEPLOY_DATETIME'] . ' ' . getmypid() . " {$level} {$file} {$line}";
+        $log_header = $_ENV['RENDER_EXTERNAL_HOSTNAME'] . ' ' . $_ENV['DEPLOY_DATETIME'] . ' ' . getmypid() . " {$level} {$file} {$line}";
 
         curl_setopt($this->_ch, CURLOPT_POSTFIELDS, "{$log_datetime} {$log_header} {$function_chain} {$message_}");
         curl_exec($this->_ch);
