@@ -17,7 +17,7 @@ module.exports.get_logger = function ()
   return logger;
 }
 
-class MyLog {
+module.exports = class MyLog {
   request = null;
   constructor() {
       this.request = require('https').request('https://logs-01.loggly.com/inputs/' + process.env.LOGGLY_TOKEN
