@@ -6,7 +6,6 @@
   "dependencies": {
     "cron": "*",
     "log4js": "*",
-    "nodemailer": "*",
-    "winston-loggly-bulk": "*"
+    "nodemailer": "*"
   }
 }
