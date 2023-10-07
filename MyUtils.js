@@ -17,6 +17,7 @@ module.exports.get_logger = function ()
   return logger;
 }
 
+/*
 module.exports = class MyLog {
   request = null;
   constructor() {
@@ -40,6 +41,7 @@ module.exports = class MyLog {
     this.request.end();
   }
 }
+*/
 
 module.exports.send_slack_message = function (message_)
 {
