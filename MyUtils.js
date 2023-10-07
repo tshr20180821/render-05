@@ -12,13 +12,7 @@ if (process.env.DEPLOY_DATETIME != undefined) {
   logger.addContext("DEPLOY_DATETIME", '');
 }
 
-module.exports.get_logger = function ()
-{
-  return logger;
-}
-
-/*
-module.exports = class MyLog {
+class MyLog {
   request = null;
   constructor() {
       this.request = require('https').request('https://logs-01.loggly.com/inputs/' + process.env.LOGGLY_TOKEN
@@ -41,7 +35,12 @@ module.exports = class MyLog {
     this.request.end();
   }
 }
-*/
+
+module.exports.get_logger = function ()
+{
+  // return logger;
+  return new MyLog();
+}
 
 module.exports.send_slack_message = function (message_)
 {
