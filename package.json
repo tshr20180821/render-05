@@ -1,7 +1,7 @@
 {
   "name": "node-js-cli",
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "dependencies": {
     "cron": "*",
