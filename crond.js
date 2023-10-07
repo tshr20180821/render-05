@@ -1,7 +1,8 @@
 // package : cron
 
 const mu = require('./MyUtils.js');
-const logger = mu.get_logger();
+// const logger = mu.get_logger();
+const logger = new mu.MyLog();
 
 const CronJob = require('cron').CronJob;
 try {
@@ -77,6 +78,7 @@ try {
                   + Math.floor(memory_usage.heapTotal / 1024).toLocaleString()
                   + 'KB Used : '
                   + Math.floor(memory_usage.heapUsed / 1024).toLocaleString() + 'KB';
+      /*
       const request = require('https').request('https://logs-01.loggly.com/inputs/' + process.env.LOGGLY_TOKEN + '/tag/' + process.env.RENDER_EXTERNAL_HOSTNAME + '/',
                                                {
                                                  method: "POST",
@@ -91,7 +93,8 @@ try {
                                                });
       request.write(message);
       request.end();
-      // logger.info(message);
+      */
+      logger.info(message);
     },
     null,
     true,
