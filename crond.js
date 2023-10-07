@@ -2,7 +2,6 @@
 
 const mu = require('./MyUtils.js');
 const logger = mu.get_logger();
-// const logger = new mu.MyLog();
 
 const CronJob = require('cron').CronJob;
 try {
