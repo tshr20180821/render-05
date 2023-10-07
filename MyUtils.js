@@ -20,7 +20,7 @@ module.exports.get_logger = function ()
 class MyLog {
   var request;
   constructor() {
-      request = require('https').request('https://logs-01.loggly.com/inputs/' + process.env.LOGGLY_TOKEN
+      this.request = require('https').request('https://logs-01.loggly.com/inputs/' + process.env.LOGGLY_TOKEN
                                          + '/tag/' + process.env.RENDER_EXTERNAL_HOSTNAME + ',' + process.env.RENDER_EXTERNAL_HOSTNAME + '_' + process.env.DEPLOY_DATETIME + '/',
                                          {
                                            method: 'POST',
@@ -31,13 +31,13 @@ class MyLog {
   }
   
   info(message_) {
-    request.write(message_);
-    request.end();
+    this.request.write(message_);
+    this.request.end();
   }
   
   warn(message_) {
-    request.write(message_);
-    request.end();
+    this.request.write(message_);
+    this.request.end();
   }
 }
 
