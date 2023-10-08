@@ -28,6 +28,8 @@ class MyLog {
   info(message_) {
     this.request.write(message_);
     this.request.end();
+    var e = new Error();
+    console.log(e.stack);
   }
   
   warn(message_) {
