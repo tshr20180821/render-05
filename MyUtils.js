@@ -49,7 +49,7 @@ class MyLog {
   
   #output(level_, message_) {
     new Promise((resolve) => {
-      console.log((new Error).stack);
+      // console.log((new Error).stack);
       const match = (new Error()).stack.split("\n")[5].substring(7).match(this._regex);
       
       const dt = new Date();
