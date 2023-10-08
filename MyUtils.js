@@ -40,8 +40,8 @@ class MyLog {
 
 module.exports.get_logger = function ()
 {
-  // return logger;
-  return new MyLog();
+  return logger;
+  // return new MyLog();
 }
 
 module.exports.send_slack_message = function (message_)
