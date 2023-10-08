@@ -1,5 +1,7 @@
 // package : nodemailer log4js
 
+const https = require("https");
+
 const log4js = require('log4js');
 log4js.configure('log4js.json');
 
@@ -14,30 +16,52 @@ if (process.env.DEPLOY_DATETIME != undefined) {
 
 class MyLog {
   _regex;
-  _request;
+  _loggly_options;
+  
   constructor() {
     this._regex = /(.+) .+\/(.+?):(\d+)/;
-    
-    this._request = require('https').request('https://logs-01.loggly.com/inputs/' + process.env.LOGGLY_TOKEN
-                                             + '/tag/' + process.env.RENDER_EXTERNAL_HOSTNAME + ',' + process.env.RENDER_EXTERNAL_HOSTNAME + '_' + process.env.DEPLOY_DATETIME + '/',
-                                             {
-                                               method: 'POST',
-                                               headers: {
-                                                 'content-type': 'text/plain; charset=utf-8',
-                                               }
-                                             });
+
+    this._loggly_options = {
+      protocol: 'https:',
+      port: 443,
+      hostname: 'logs-01.loggly.com',
+      path: '/inputs/' + process.env.LOGGLY_TOKEN
+        + '/tag/' + process.env.RENDER_EXTERNAL_HOSTNAME + ',' + process.env.RENDER_EXTERNAL_HOSTNAME + '_' + process.env.DEPLOY_DATETIME + '/',
+      method: 'POST',
+      headers: {
+        'content-type': 'text/plain; charset=utf-8',
+      }
+    };
+    this._loggly_options.agent = new https.Agent({ keepAlive: true });
   }
   
   info(message_) {
-    this._request.write(message_);
-    this._request.end();
-    var e = new Error();
-    console.log(e.stack.split("\n")[1]);
+    this.#output('INFO', message_);
   }
   
   warn(message_) {
-    this._request.write(message_);
-    this._request.end();
+    this.#output(message_);
+  }
+  
+  #output(level_, message_) {
+    try {
+      new Promise((resolve) => {
+        const match = (new Error()).stack.split("\n")[3].substring(7).match(this._regex);
+        
+        const dt = new Date();
+        const log_header = dt.getFullYear() + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2) + ' '
+          + ('0' + dt.getHours()).slice(-2) + ':' +  ('0' + dt.getMinutes()).slice(-2) + ':' +  ('0' + dt.getSeconds()).slice(-2) + '.'
+          + ('00' + dt.getMilliseconds()).slice(-3) + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME + ' ' + process.env.DEPLOY_DATETIME + ' '
+          + process.pid + ' ' + level_ + ' ' + match[2] + ' ' + match[3] + ' [' + match[1] + ']';
+        console.log(log_header + ' ' + message_);
+        const request = https.request(this._loggly_options);
+        request.write(log_header + ' ' + message_);
+        request.end();
+        resolve();
+      });
+    } catch (err) {
+      console.log(err.toString());
+    }
   }
 }
 
