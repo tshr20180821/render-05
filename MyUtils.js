@@ -17,6 +17,7 @@ if (process.env.DEPLOY_DATETIME != undefined) {
 class MyLog {
   _regex;
   _loggly_options;
+  _deploy_datetime; // unix time
   
   constructor() {
     this._regex = /(.+) .+\/(.+?):(\d+)/;
@@ -33,6 +34,9 @@ class MyLog {
       }
     };
     this._loggly_options.agent = new https.Agent({ keepAlive: true });
+    
+    var tmp = process.env.DEPLOY_DATETIME.match(/.{2}/g);
+    this._deploy_datetime = (new Date(tmp[0] + tmp[1], Number(tmp[2]) - 1, tmp[3], tmp[4], tmp[5], tmp[6])).getTime();
   }
   
   info(message_) {
@@ -52,10 +56,12 @@ class MyLog {
         + ('0' + dt.getHours()).slice(-2) + ':' +  ('0' + dt.getMinutes()).slice(-2) + ':' +  ('0' + dt.getSeconds()).slice(-2) + '.'
         + ('00' + dt.getMilliseconds()).slice(-3) + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME + ' ' + process.env.DEPLOY_DATETIME + ' '
         + process.pid + ' ' + level_ + ' ' + match[2] + ' ' + match[3] + ' [' + match[1] + ']';
-      console.log(log_header + ' ' + message_);
       const request = https.request(this._loggly_options);
       request.write(log_header + ' ' + message_);
       request.end();
+      if (level != 'INFO' || dt.getTime() - this._deploy_datetime < 60 * 5) {
+        console.log(log_header + ' ' + message_);
+      }
       resolve();
     });
   }
