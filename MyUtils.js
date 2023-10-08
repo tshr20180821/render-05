@@ -13,16 +13,19 @@ if (process.env.DEPLOY_DATETIME != undefined) {
 }
 
 class MyLog {
+  _regex;
   _request;
   constructor() {
-      this._request = require('https').request('https://logs-01.loggly.com/inputs/' + process.env.LOGGLY_TOKEN
-                                         + '/tag/' + process.env.RENDER_EXTERNAL_HOSTNAME + ',' + process.env.RENDER_EXTERNAL_HOSTNAME + '_' + process.env.DEPLOY_DATETIME + '/',
-                                         {
-                                           method: 'POST',
-                                           headers: {
-                                             'content-type': 'text/plain; charset=utf-8',
-                                           }
-                                         });
+    this._regex = /(.+) .+\/(.+?):(\d+)/;
+    
+    this._request = require('https').request('https://logs-01.loggly.com/inputs/' + process.env.LOGGLY_TOKEN
+                                             + '/tag/' + process.env.RENDER_EXTERNAL_HOSTNAME + ',' + process.env.RENDER_EXTERNAL_HOSTNAME + '_' + process.env.DEPLOY_DATETIME + '/',
+                                             {
+                                               method: 'POST',
+                                               headers: {
+                                                 'content-type': 'text/plain; charset=utf-8',
+                                               }
+                                             });
   }
   
   info(message_) {
