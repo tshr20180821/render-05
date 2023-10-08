@@ -13,9 +13,9 @@ if (process.env.DEPLOY_DATETIME != undefined) {
 }
 
 class MyLog {
-  request = null;
+  _request;
   constructor() {
-      this.request = require('https').request('https://logs-01.loggly.com/inputs/' + process.env.LOGGLY_TOKEN
+      this._request = require('https').request('https://logs-01.loggly.com/inputs/' + process.env.LOGGLY_TOKEN
                                          + '/tag/' + process.env.RENDER_EXTERNAL_HOSTNAME + ',' + process.env.RENDER_EXTERNAL_HOSTNAME + '_' + process.env.DEPLOY_DATETIME + '/',
                                          {
                                            method: 'POST',
@@ -26,15 +26,15 @@ class MyLog {
   }
   
   info(message_) {
-    this.request.write(message_);
-    this.request.end();
+    this._request.write(message_);
+    this._request.end();
     var e = new Error();
     console.log(e.stack);
   }
   
   warn(message_) {
-    this.request.write(message_);
-    this.request.end();
+    this._request.write(message_);
+    this._request.end();
   }
 }
 
