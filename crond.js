@@ -77,22 +77,6 @@ try {
                   + Math.floor(memory_usage.heapTotal / 1024).toLocaleString()
                   + 'KB Used : '
                   + Math.floor(memory_usage.heapUsed / 1024).toLocaleString() + 'KB';
-      /*
-      const request = require('https').request('https://logs-01.loggly.com/inputs/' + process.env.LOGGLY_TOKEN + '/tag/' + process.env.RENDER_EXTERNAL_HOSTNAME + '/',
-                                               {
-                                                 method: "POST",
-                                                 headers: {
-                                                   "content-type": "text/plain",
-                                                 }
-                                               },
-                                               response => {
-                                                 if (response.statusCode != 200) {
-                                                   logger.info(message);
-                                                 }
-                                               });
-      request.write(message);
-      request.end();
-      */
       logger.info(message);
     },
     null,
