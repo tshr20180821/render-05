@@ -31,8 +31,8 @@ class MyLog {
   info(message_) {
     this._request.write(message_);
     this._request.end();
-    // var e = new Error();
-    // console.log(e.stack);
+    var e = new Error();
+    console.log(e.stack.split("\n")[1]);
   }
   
   warn(message_) {
@@ -43,8 +43,8 @@ class MyLog {
 
 module.exports.get_logger = function ()
 {
-  return logger;
-  // return new MyLog();
+  // return logger;
+  return new MyLog();
 }
 
 module.exports.send_slack_message = function (message_)
