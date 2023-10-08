@@ -44,7 +44,7 @@ class MyLog {
   }
   
   warn(message_) {
-    this.#output(message_);
+    this.#output('WARN', message_);
   }
   
   #output(level_, message_) {
