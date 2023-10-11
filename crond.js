@@ -3,6 +3,8 @@
 const mu = require('./MyUtils.js');
 const logger = mu.get_logger();
 
+const https = require("https");
+
 const CronJob = require('cron').CronJob;
 try {
   const job = new CronJob(
@@ -11,7 +13,7 @@ try {
       logger.info('START');
       
       try {
-        const http_options = {
+        var http_options = {
           method: 'GET',
           headers: {
             'Authorization': 'Basic ' + Buffer.from(process.env.BASIC_USER + ':' + process.env.BASIC_PASSWORD).toString('base64'),
@@ -19,11 +21,12 @@ try {
             'X-Deploy-DateTime': process.env.DEPLOY_DATETIME
           }
         };
+        http_options.agent = new https.Agent({ keepAlive: true });
         
         const url = 'https://' + process.env.RENDER_EXTERNAL_HOSTNAME + '/auth/crond.php';
         
         var data_buffer = [];
-        require('https').request(url, http_options, (res) => {
+        https.request(url, http_options, (res) => {
           res.on('data', (chunk) => {
             data_buffer.push(chunk);
           });
