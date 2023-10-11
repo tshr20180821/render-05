@@ -44,6 +44,7 @@ try {
           if (res.statusCode != 200
               && process.env.MAIL_ADDRESS != undefined
               ) {
+            // https://process.env.RENDER_EXTERNAL_HOSTNAME/cdn-cgi/trace
             mu.send_slack_message('HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME);
           }
           
