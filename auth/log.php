@@ -40,7 +40,8 @@ CREATE TABLE t_log (
     file TEXT NOT NULL,
     line TEXT NOT NULL,
     function TEXT NOT NULL,
-    message TEXT
+    message TEXT,
+    status INTEGER NOT NULL
 )
 __HEREDOC__;
 
@@ -50,8 +51,8 @@ __HEREDOC__;
         }
 
         $sql_insert = <<< __HEREDOC__
-INSERT INTO t_log (pid, level, file, line, function, message)
-  VALUES (:b_pid, :b_level, :b_file, :b_line, :b_function, :b_message);
+INSERT INTO t_log (pid, level, file, line, function, message, status)
+  VALUES (:b_pid, :b_level, :b_file, :b_line, :b_function, :b_message, 0);
 __HEREDOC__;
 
         $this->_statement_insert = $pdo->prepare($sql_insert);
