@@ -60,9 +60,12 @@ class MyLog {
       const request = https.request(this._loggly_options);
       request.write(log_header + ' ' + message_);
       request.end();
+      /*
       if (level_ != 'INFO' || dt.getTime() - this._deploy_datetime < 60 * 5 * 1000) {
         console.log(log_header + ' ' + message_);
       }
+      */
+      console.log(log_header + ' ' + message_);
       resolve();
     });
   }
