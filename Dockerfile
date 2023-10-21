@@ -62,7 +62,8 @@ COPY ./apache.conf /etc/apache2/sites-enabled/
 
 # basic auth
 COPY .htpasswd /var/www/html/
-RUN chmod 644 /var/www/html/.htpasswd
+RUN chmod +x /usr/src/app/log.sh \
+ && chmod 644 /var/www/html/.htpasswd
 
 COPY ./index.html /var/www/html/
 COPY ./auth/log.php /usr/src/app/
