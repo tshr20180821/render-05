@@ -37,6 +37,7 @@ sed -i s/__RENDER_EXTERNAL_HOSTNAME__/${RENDER_EXTERNAL_HOSTNAME}/ /etc/apache2/
 sed -i s/__DEPLOY_DATETIME__/${DEPLOY_DATETIME}/ /etc/apache2/sites-enabled/apache.conf
 
 cat /etc/apache2/sites-enabled/apache.conf
+rm -f /usr/src/app/*.java
 
 wait
 apt-get -y upgrade
