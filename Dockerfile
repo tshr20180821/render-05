@@ -59,6 +59,7 @@ RUN a2dissite -q 000-default.conf \
  && a2enmod -q authz_groupfile rewrite
 
 COPY ./apache.conf /etc/apache2/sites-enabled/
+COPY ./log.sh /usr/src/app/
 
 # basic auth
 COPY .htpasswd /var/www/html/
