@@ -55,9 +55,8 @@ RUN mkdir -p /var/www/html/auth \
 
 COPY ./php.ini ${PHP_INI_DIR}/
 
-RUN a2dissite -q 000-default.conf
-# RUN a2enmod -q authz_groupfile rewrite
-RUN a2enmod -q authz_groupfile
+RUN a2dissite -q 000-default.conf \
+ && a2enmod -q authz_groupfile rewrite
 
 COPY ./apache.conf /etc/apache2/sites-enabled/
 
