@@ -25,6 +25,7 @@ RUN apt-get update \
   binutils \
   ca-certificates \
   curl \
+  default-jdk \
   gnupg \
   libonig-dev \
   libsqlite3-0 \
