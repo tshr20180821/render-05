@@ -5,8 +5,7 @@ FROM php:8.2-apache
 ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
-COPY ./package.json ./
-COPY ./composer.json ./
+COPY ./app/* ./
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN /usr/bin/composer --version
