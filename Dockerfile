@@ -5,7 +5,7 @@ FROM php:8.2-apache
 ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
-COPY ./app/* ./
+COPY ./app/* /usr/src/app/
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN /usr/bin/composer --version
@@ -59,7 +59,6 @@ RUN a2dissite -q 000-default.conf \
  && a2enmod -q authz_groupfile rewrite
 
 COPY ./apache.conf /etc/apache2/sites-enabled/
-COPY ./log.sh /usr/src/app/
 
 # basic auth
 COPY .htpasswd /var/www/html/
@@ -69,12 +68,6 @@ RUN chmod +x /usr/src/app/log.sh \
 COPY ./index.html /var/www/html/
 COPY ./auth/log.php /usr/src/app/
 COPY ./auth/*.php /var/www/html/auth/
-
-COPY ./log4js.json /usr/src/app/
-COPY ./MyUtils.js /usr/src/app/
-COPY ./crond.js /usr/src/app/
-COPY ./start.js /usr/src/app/
-COPY ./start.sh /usr/src/app/
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
