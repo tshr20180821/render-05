@@ -15,26 +15,33 @@ import java.util.logging.Logger;
 public final class LogOperation {
     private static Logger _logger;
     private static LogOperation _log_operation = new LogOperation();
+    private static Connection _conn;
+    private static PreparedStatement _ps;
+    private static ExecutorService _executorService;
 
     private LogOperation() {}
 
     public static LogOperation getInstance(Logger logger_) {
         _logger = logger_;
+        _executorService = Executors.newFixedThreadPool(2);
+        try {
+            Class.forName("org.sqlite.JDBC");
+            _conn = DriverManager.getConnection("jdbc:sqlite:/tmp/sqlitelog.db");
+            _ps = _conn.prepareStatement("SELECT seq, process_datetime, pid, level, file, line, function, message FROM t_log WHERE status = 0", ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+        } catch (Exception e) {
+            _logger.warning("Exception");
+            e.printStackTrace();
+        }
         return _log_operation;
     }
 
-    public boolean execute() {
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
+    // 1 : record exists / 0 : record none / -1 : error
+    public final int execute() {
         List<Future<Integer>> futures = new ArrayList<>();
 
-        boolean is_record_exists = false;
-        Connection conn = null;
-        PreparedStatement ps = null;
+        int rc = 0;
         try {
-            Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection("jdbc:sqlite:/tmp/sqlitelog.db");
-            ps = conn.prepareStatement("SELECT seq, process_datetime, pid, level, file, line, function, message FROM t_log WHERE status = 0", ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = _ps.executeQuery();
             while (rs.next()) {
                 int seq = rs.getInt("seq");
                 String process_datetime = rs.getString("process_datetime");
@@ -45,46 +52,38 @@ public final class LogOperation {
                 String function = rs.getString("function");
                 String message = rs.getString("message");
 
-                futures.add(executorService.submit(new LogglySend(_logger, seq, process_datetime, pid, level, file, line, function, message)));
-                is_record_exists = true;
+                futures.add(_executorService.submit(new LogglySend(_logger, seq, process_datetime, pid, level, file, line, function, message)));
+                Thread.sleep(100);
+                rc = 1;
             }
         } catch (SQLException e) {
+            rc = -1;
             _logger.warning("SQLException");
             e.printStackTrace();
         } catch (Exception e) {
+            rc = -1;
             _logger.warning("Exception");
             e.printStackTrace();
-        } finally {
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-                _logger.warning("Exception");
-                e.printStackTrace();
-            }
         }
 
         for (Future<Integer> future : futures) {
             try {
                 future.get();
             } catch (InterruptedException e) {
+                rc = -1;
                 _logger.warning("InterruptedException");
                 e.printStackTrace();
             } catch (ExecutionException e) {
+                rc = -1;
                 _logger.warning("ExecutionException");
                 e.printStackTrace();
             } catch (Exception e) {
+                rc = -1;
                 _logger.warning("Exception");
                 e.printStackTrace();
             }
         }
 
-        executorService.shutdown();
-
-        return is_record_exists;
+        return rc;
     }
 }
