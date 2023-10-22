@@ -20,9 +20,11 @@ public final class LogglySend implements Callable<Integer> {
     private String _function;
     private String _message;
 
-    private LogglySend() {}
+    private LogglySend() {
+    }
 
-    public LogglySend(Logger logger_, int seq_, String process_datetime_, String pid_, String level_, String file_, String line_, String function_, String message_) {
+    public LogglySend(Logger logger_, int seq_, String process_datetime_, String pid_, String level_, String file_,
+            String line_, String function_, String message_) {
         this._logger = logger_;
         this._seq = seq_;
         this._process_datetime = process_datetime_;
@@ -48,9 +50,9 @@ public final class LogglySend implements Callable<Integer> {
         try {
             var render_external_hostname = System.getenv("RENDER_EXTERNAL_HOSTNAME");
             var deploy_datetime = System.getenv("DEPLOY_DATETIME");
-            var url = new URL("https://logs-01.loggly.com/inputs/" + System.getenv("LOGGLY_TOKEN")
-                + "/tag/" + render_external_hostname + "," + render_external_hostname + '_' + deploy_datetime + "/");
-            var conn = (HttpURLConnection)url.openConnection();
+            var url = new URL("https://logs-01.loggly.com/inputs/" + System.getenv("LOGGLY_TOKEN") + "/tag/"
+                    + render_external_hostname + "," + render_external_hostname + '_' + deploy_datetime + "/");
+            var conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             // conn.setDoInput(true);
             conn.setDoOutput(true);
@@ -58,9 +60,10 @@ public final class LogglySend implements Callable<Integer> {
             conn.connect();
             var ps = new PrintStream(conn.getOutputStream());
             /*
-            var log_message = this._process_datetime + " " + render_external_hostname + " " + deploy_datetime
-                + " " + this._pid + " " + this._level + " " + this._file + " " + this._line + " " + this._function + " " + this._message;
-                */
+             * var log_message = this._process_datetime + " " + render_external_hostname +
+             * " " + deploy_datetime + " " + this._pid + " " + this._level + " " +
+             * this._file + " " + this._line + " " + this._function + " " + this._message;
+             */
             var sb = new StringBuffer(17);
             sb.append(String.format("%08d", this._seq));
             sb.append(" ");

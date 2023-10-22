@@ -19,7 +19,8 @@ public final class LogOperation {
     private static PreparedStatement _ps;
     private static ExecutorService _executorService;
 
-    private LogOperation() {}
+    private LogOperation() {
+    }
 
     public static LogOperation getInstance(Logger logger_) {
         _logger = logger_;
@@ -27,7 +28,9 @@ public final class LogOperation {
         try {
             Class.forName("org.sqlite.JDBC");
             _conn = DriverManager.getConnection("jdbc:sqlite:/tmp/sqlitelog.db");
-            _ps = _conn.prepareStatement("SELECT seq, process_datetime, pid, level, file, line, function, message FROM t_log WHERE status = 0", ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            _ps = _conn.prepareStatement(
+                    "SELECT seq, process_datetime, pid, level, file, line, function, message FROM t_log WHERE status = 0",
+                    ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
         } catch (Exception e) {
             _logger.warning("Exception");
             e.printStackTrace();
@@ -52,7 +55,8 @@ public final class LogOperation {
                 String function = rs.getString("function");
                 String message = rs.getString("message");
 
-                futures.add(_executorService.submit(new LogglySend(_logger, seq, process_datetime, pid, level, file, line, function, message)));
+                futures.add(_executorService.submit(
+                        new LogglySend(_logger, seq, process_datetime, pid, level, file, line, function, message)));
                 Thread.sleep(100);
                 rc = 1;
             }
