@@ -35,7 +35,7 @@ public final class LogglySend implements Callable<Integer> {
     }
 
     @Override
-    public Integer call() throws Exception {
+    public final Integer call() throws Exception {
         this._logger.info("START " + this._seq + " " + this._process_datetime + " " + this._message);
         this.sendLoggly();
         this._logger.info("HALF POINT " + this._seq);
@@ -44,7 +44,7 @@ public final class LogglySend implements Callable<Integer> {
         return 0;
     }
 
-    private void sendLoggly() {
+    private final void sendLoggly() {
         try {
             var render_external_hostname = System.getenv("RENDER_EXTERNAL_HOSTNAME");
             var deploy_datetime = System.getenv("DEPLOY_DATETIME");
@@ -91,7 +91,7 @@ public final class LogglySend implements Callable<Integer> {
         }
     }
 
-    private void updateLogTable() {
+    private final void updateLogTable() {
         Connection conn = null;
         PreparedStatement ps = null;
         try {
