@@ -46,6 +46,8 @@ CREATE TABLE t_log (
 __HEREDOC__;
 
             $rc = $pdo->exec($sql_create);
+
+            exec('cd /usr/src/app && java -classpath .:sqlite-jdbc-3.43.2.0.jar:slf4j-api-2.0.9.jar:slf4j-nop-2.0.9.jar -Duser.timezone=Asia/Tokyo -Dfile.encoding=UTF-8 -verbose:gc LogOperationMain &');
         } else {
             $pdo = new PDO('sqlite:/tmp/sqlitelog.db', NULL, NULL, array(PDO::ATTR_PERSISTENT => TRUE));
         }
@@ -113,9 +115,11 @@ __HEREDOC__;
         $log_datetime = date('Y-m-d H:i:s.') . $milli_sec;
         $log_header = $_ENV['RENDER_EXTERNAL_HOSTNAME'] . ' ' . $_ENV['DEPLOY_DATETIME'] . ' ' . getmypid() . " {$level} {$file} {$line}";
 
+        /*
         curl_setopt($this->_ch, CURLOPT_POSTFIELDS, "{$log_datetime} {$log_header} {$function_chain} {$message_}");
         curl_exec($this->_ch);
         $http_code = (string)curl_getinfo($this->_ch, CURLINFO_HTTP_CODE);
+        */
         /*
         if ($level != 'INFO' || time() - $this->_deploy_datetime < 60 * 5 || $http_code != '200') {
             file_put_contents('php://stderr', "{$log_datetime} \033[0;" . self::COLOR_LIST[$level] . "m{$log_header}\033[0m {$function_chain} {$message_}\n");
