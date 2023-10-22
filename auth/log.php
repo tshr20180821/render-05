@@ -34,7 +34,8 @@ class Log
             $sql_create = <<< __HEREDOC__
 CREATE TABLE t_log (
     seq INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    datetime TIMESTAMP DEFAULT (DATETIME('now','localtime')),
+    regist_datetime TIMESTAMP DEFAULT (DATETIME('now','localtime')),
+    process_datetime TEXT NOT NULL,
     pid TEXT NOT NULL,
     level TEXT NOT NULL,
     file TEXT NOT NULL,
@@ -53,8 +54,8 @@ __HEREDOC__;
         }
 
         $sql_insert = <<< __HEREDOC__
-INSERT INTO t_log (pid, level, file, line, function, message, status)
-  VALUES (:b_pid, :b_level, :b_file, :b_line, :b_function, :b_message, 0);
+INSERT INTO t_log (process_datetime, pid, level, file, line, function, message, status)
+  VALUES (:b_process_datetime, :b_pid, :b_level, :b_file, :b_line, :b_function, :b_message, 0);
 __HEREDOC__;
 
         $this->_statement_insert = $pdo->prepare($sql_insert);
@@ -128,7 +129,8 @@ __HEREDOC__;
         file_put_contents('php://stderr', "{$log_datetime} \033[0;" . self::COLOR_LIST[$level] . "m{$log_header}\033[0m {$function_chain} {$message_}\n");
         
         $this->_statement_insert->execute(
-            [':b_pid' => getmypid(),
+            [':b_process_datetime' => $log_datetime,
+             ':b_pid' => getmypid(),
              ':b_level' => $level,
              ':b_file' => $file,
              ':b_line' => $line,
