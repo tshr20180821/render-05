@@ -23,7 +23,7 @@ public final class LogOperation {
 
     public static LogOperation getInstance(Logger logger_) {
         _logger = logger_;
-        _executorService = Executors.newFixedThreadPool(2);
+        _executorService = Executors.newFixedThreadPool(4);
         try {
             Class.forName("org.sqlite.JDBC");
             _conn = DriverManager.getConnection("jdbc:sqlite:/tmp/sqlitelog.db");
