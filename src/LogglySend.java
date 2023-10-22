@@ -62,6 +62,8 @@ public final class LogglySend implements Callable<Integer> {
                 + " " + this._pid + " " + this._level + " " + this._file + " " + this._line + " " + this._function + " " + this._message;
                 */
             var sb = new StringBuffer(17);
+            sb.append(String.format("%08d", this._seq));
+            sb.append(" ");
             sb.append(this._process_datetime);
             sb.append(" ");
             sb.append(render_external_hostname);
