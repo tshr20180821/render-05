@@ -23,7 +23,8 @@ public final class LogOperationMain {
             LogOperation logOperation = LogOperation.getInstance(logger);
             int i = 0;
             for (;;) {
-                if (LogOperation.getInstance(logger).execute() == false) {
+                int rc = logOperation.execute();
+                if (rc == 0) {
                     Thread.sleep(1000);
                     if (++i % 60 == 0) {
                         i = 0;
@@ -35,6 +36,8 @@ public final class LogOperationMain {
                         logger.info(sb.toString());
                         Runtime.getRuntime().gc();
                     }
+                } else if (rc == -1) {
+                    break;
                 }
             }
         } catch (BindException e) {
