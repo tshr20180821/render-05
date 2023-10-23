@@ -40,18 +40,18 @@ public final class LogOperationMain {
                     }
                 } else if (rc == -1) {
                     ss.close();
-                    for (int i = 0; i < 2; i++) {
+                    for (int j = 0; i < 2; i++) {
                         var sb = new StringBuffer();
                         sb.append("curl -sS -X POST -H 'Authorization: Bearer ");
                         sb.append(System.getenv("SLACK_TOKEN"));
-                        sb.append("' -d 'text=✖ ");
+                        sb.append("' -d 'text=");
                         sb.append(System.getenv("RENDER_EXTERNAL_HOSTNAME"));
                         sb.append(" Socket Close' -d 'channel=");
-                        sb.append(System.getenv("SLACK_CHANNEL_0" . (i + 1).toString()));
+                        sb.append(System.getenv("SLACK_CHANNEL_0" + String.valueOf(j + 1)));
                         sb.append("' https://slack.com/api/chat.postMessage >/dev/null");
                         Process p = Runtime.getRuntime().exec(sb.toString());
                         p.waitFor();
-                        p.destory();
+                        p.destroy();
                     }
                     break;
                 }
