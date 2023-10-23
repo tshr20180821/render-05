@@ -52,6 +52,7 @@ public final class LogOperationMain {
                         Process p = Runtime.getRuntime().exec(sb.toString());
                         p.waitFor();
                         p.destroy();
+                        Thread.sleep(1000);
                     }
                     break;
                 }
