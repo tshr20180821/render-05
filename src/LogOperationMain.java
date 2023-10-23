@@ -18,8 +18,9 @@ public final class LogOperationMain {
         String pid_host = ManagementFactory.getRuntimeMXBean().getName();
         String start_datetime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         logger.info("START " + pid_host + " " + System.getProperty("user.name"));
+        ServerSocket ss;
         try {
-            var ss = new ServerSocket(LOCK_PORT);
+            ss = new ServerSocket(LOCK_PORT);
             logger.info("availableProcessors : " + (Runtime.getRuntime()).availableProcessors());
             LogOperation logOperation = LogOperation.getInstance(logger);
             int i = 0;
@@ -38,6 +39,7 @@ public final class LogOperationMain {
                         Runtime.getRuntime().gc();
                     }
                 } else if (rc == -1) {
+                    ss.close();
                     break;
                 }
             }
