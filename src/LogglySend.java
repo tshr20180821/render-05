@@ -1,6 +1,8 @@
-import java.io.PrintStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -48,25 +50,9 @@ public final class LogglySend implements Callable<Integer> {
 
     private final void sendLoggly() {
         try {
-            var render_external_hostname = System.getenv("RENDER_EXTERNAL_HOSTNAME");
-            var deploy_datetime = System.getenv("DEPLOY_DATETIME");
-            var url = new URL("https://logs-01.loggly.com/inputs/" + System.getenv("LOGGLY_TOKEN") + "/tag/"
-                    + render_external_hostname + "," + render_external_hostname + '_' + deploy_datetime + "/");
-            var conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            // conn.setDoInput(true);
-            conn.setDoOutput(true);
-            conn.setRequestProperty("Content-Type", "text/plain; charset=utf-8");
-            conn.connect();
-            var ps = new PrintStream(conn.getOutputStream());
-            /*
-             * var log_message = this._process_datetime + " " + render_external_hostname +
-             * " " + deploy_datetime + " " + this._pid + " " + this._level + " " +
-             * this._file + " " + this._line + " " + this._function + " " + this._message;
-             */
-            var sb = new StringBuffer(17);
-            sb.append(String.format("%08d", this._seq));
-            sb.append(" ");
+            String render_external_hostname = System.getenv("RENDER_EXTERNAL_HOSTNAME");
+            String deploy_datetime = System.getenv("DEPLOY_DATETIME");
+            var sb = new StringBuilder(17);
             sb.append(this._process_datetime);
             sb.append(" ");
             sb.append(render_external_hostname);
@@ -84,14 +70,26 @@ public final class LogglySend implements Callable<Integer> {
             sb.append(this._function);
             sb.append(" ");
             sb.append(this._message);
-            var log_message = sb.toString();
-            ps.print(sb.toString());
-            ps.close();
-            if (conn.getResponseCode() != 200) {
-                this._logger.warning("ERROR" + " " + conn.getResponseCode() + " " + this._seq + " " + sb.toString());
+            HttpRequest.BodyPublisher post_data = HttpRequest.BodyPublishers.ofString(sb.toString());
+            HttpClient client = HttpClient.newHttpClient();
+            String uri = "https://logs-01.loggly.com/inputs/" + System.getenv("LOGGLY_TOKEN") + "/tag/"
+                    + render_external_hostname + "," + render_external_hostname + '_' + deploy_datetime + "/";
+            HttpRequest request = HttpRequest.newBuilder(URI.create(uri))
+                    .header("Content-Type", "text/plain; charset=utf-8")
+                    .POST(HttpRequest.BodyPublishers.ofString(sb.toString()))
+                    .build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200) {
+                _logger.warning(response.statusCode() + " " + response.body() + "\n" + this._seq + " " + sb.toString());
+                LogOperationMain.send_slack_message(response.statusCode() + " " + response.body() + "\n" + this._seq + " " + sb.toString());
             }
+        } catch (IOException e) {
+            this._logger.warning("IOException");
+            LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
+            e.printStackTrace();
         } catch (Exception e) {
             this._logger.warning("Exception");
+            LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
             e.printStackTrace();
         }
     }
@@ -105,11 +103,17 @@ public final class LogglySend implements Callable<Integer> {
             ps = conn.prepareStatement("UPDATE t_log SET status = 1 WHERE seq = ?");
             ps.setInt(1, this._seq);
             ps.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            _logger.warning("ClassNotFoundException");
+            LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
+            e.printStackTrace();
         } catch (SQLException e) {
-            this._logger.warning("SQLException");
+            this._logger.warning("SQLException " + this._seq);
+            LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
             e.printStackTrace();
         } catch (Exception e) {
-            this._logger.warning("Exception");
+            this._logger.warning("Exception " + this._seq);
+            LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
             e.printStackTrace();
         } finally {
             try {
@@ -121,6 +125,7 @@ public final class LogglySend implements Callable<Integer> {
                 }
             } catch (Exception e) {
                 this._logger.warning("Exception");
+                LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
                 e.printStackTrace();
             }
         }
