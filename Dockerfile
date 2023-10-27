@@ -25,7 +25,8 @@ ENV NODE_MAJOR=20
 # libsqlite3-0 : php sqlite
 # libzip-dev : docker-php-ext-configure zip --with-zip
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
-RUN apt-get update \
+RUN chmod +x /tmp/gpg \
+ && apt-get update \
  && apt-get install -y --no-install-recommends \
   binutils \
   ca-certificates \
