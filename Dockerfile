@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY ./app/* /usr/src/app/
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-RUN /usr/bin/composer --version
+
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV NODE_MAJOR=20
 
@@ -36,6 +36,7 @@ RUN apt-get update \
  && docker-php-ext-enable apcu \
  && docker-php-ext-configure zip --with-zip \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring \
+ && /usr/bin/composer --version \
  && composer install --apcu-autoloader \
  && mkdir -p /etc/apt/keyrings \
  && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
