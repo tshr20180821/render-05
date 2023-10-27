@@ -17,23 +17,26 @@ ENV NODE_MAJOR=20
 
 # binutils : strings
 # ca-certificates : node.js
-# curl : node.js
+# curl : node.js [already installed]
 # default-jdk : javac
 # gnupg : node.js
 # libonig-dev : mbstring
 # libsqlite3-0 : php sqlite
 # libzip-dev : docker-php-ext-configure zip --with-zip
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
-RUN apt-get update \
+RUN mkdir -p /etc/apt/keyrings \
+ && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+ && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+ && apt-get update \
  && apt-get install -y --no-install-recommends \
   binutils \
   ca-certificates \
-  curl \
   default-jdk \
   gnupg \
   libonig-dev \
   libsqlite3-0 \
   libzip-dev \
+  nodejs \
   tzdata \
  && pecl install apcu \
  && docker-php-ext-enable apcu \
@@ -41,11 +44,6 @@ RUN apt-get update \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring \
  && /usr/bin/composer --version \
  && composer install --apcu-autoloader \
- && mkdir -p /etc/apt/keyrings \
- && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
- && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
- && apt-get update \
- && apt-get install -y nodejs \
  && npm install \
  && npm update -g \
  && npm audit fix \
