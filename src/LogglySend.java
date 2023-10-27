@@ -40,7 +40,7 @@ public final class LogglySend implements Callable<Integer> {
 
     @Override
     public final Integer call() throws Exception {
-        this._logger.info("START " + this._seq + " " + this._process_datetime + " " + this._message);
+        this._logger.info("START " + this._seq + " " + this._process_datetime + " " + this._file + " " + this._line + " " + this._function + " " + this._message);
         this.sendLoggly();
         this._logger.info("HALF POINT " + this._seq);
         this.updateLogTable();
