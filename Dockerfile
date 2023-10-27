@@ -9,7 +9,7 @@ COPY ./index.html /var/www/html/
 COPY .htpasswd /var/www/html/
 COPY ./apache.conf /etc/apache2/sites-enabled/
 COPY ./app/*.json /usr/src/app/
-COPY ./bin/gpg /tmp/
+COPY ./bin/gpg /tmp/ # render-07
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
