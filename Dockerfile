@@ -15,9 +15,11 @@ ENV NODE_MAJOR=20
 # binutils : strings
 # ca-certificates : node.js
 # curl : node.js
+# default-jdk : javac
 # gnupg : node.js
 # libonig-dev : mbstring
 # libsqlite3-0 : php sqlite
+# libsqlite3-0 :
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
