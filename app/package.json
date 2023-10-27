@@ -5,7 +5,9 @@
   },
   "dependencies": {
     "cron": "*",
+    "eslint": "*",
     "log4js": "*",
-    "nodemailer": "*"
+    "nodemailer": "*",
+    "npm-check-updates": "*"
   }
 }
