@@ -47,7 +47,8 @@ RUN apt-get update \
  && apt-get update \
  && apt-get install -y nodejs \
  && npm install \
- && npm update -g eslint \
+ && npm install -g eslint \
+ && npm update -g \
  && npm audit fix \
  && apt-get upgrade -y --no-install-recommends \
  && npm cache clean --force \
