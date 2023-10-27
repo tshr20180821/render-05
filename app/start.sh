@@ -30,6 +30,7 @@ php -l /var/www/html/auth/log.php
 php -l /var/www/html/auth/update_sqlite.php
 node -c crond.js
 npm init @eslint/config
+eslint --init
 eslint /usr/src/app/MyUtils.js
 eslint /usr/src/app/crond.js
 find / -name eslint -print
