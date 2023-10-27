@@ -32,7 +32,6 @@ node -c crond.js
 eslint --init
 eslint /usr/src/app/MyUtils.js
 eslint /usr/src/app/crond.js
-# find / -name eslint -print
 
 ls -lang /var/www/html/
 
