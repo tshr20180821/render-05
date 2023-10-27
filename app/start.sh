@@ -29,11 +29,11 @@ php -l /var/www/html/auth/health_check.php
 php -l /var/www/html/auth/log.php
 php -l /var/www/html/auth/update_sqlite.php
 node -c crond.js
-npm init @eslint/config
-eslint --init
-eslint /usr/src/app/MyUtils.js
-eslint /usr/src/app/crond.js
-find / -name eslint -print
+# npm init @eslint/config
+/usr/src/app/node_modules/.bin/eslint --init
+/usr/src/app/node_modules/.bin/eslint /usr/src/app/MyUtils.js
+/usr/src/app/node_modules/.bin/eslint /usr/src/app/crond.js
+# find / -name eslint -print
 
 ls -lang /var/www/html/
 
