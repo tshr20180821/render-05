@@ -28,10 +28,13 @@ ENV NODE_MAJOR=20
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 RUN chmod +x /tmp/gpg \
  && mkdir -p /etc/apt/keyrings \
+ && curl -fsSL https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA2166B8DE8BDC3367D1901C11EE2FF37CA8DA16B | /tmp/gpg --dearmor -o /etc/apt/keyrings/apt-fast.gpg \
+ && echo "deb [signed-by=/etc/apt/keyrings/apt-fast.gpg] http://ppa.launchpad.net/apt-fast/stable/ubuntu jammy main" | tee /etc/apt/sources.list.d/apt-fast.list \
  && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | /tmp/gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
  && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
  && apt-get update \
- && apt-get install -y --no-install-recommends \
+ && apt-get install -y --no-install-recommends apt-fast \
+ && apt-fast install -y --no-install-recommends \
   binutils \
   ca-certificates \
   curl \
