@@ -5,6 +5,8 @@ set -x
 apt-get update &
 time javac /usr/src/app/*.java &
 
+dpkg -l
+
 # node --version
 # php --version
 # apachectl -V
