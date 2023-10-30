@@ -109,6 +109,9 @@ public final class LogglySend implements Callable<Integer> {
             e.printStackTrace();
         } catch (SQLException e) {
             this._logger.warning("SQLException " + this._seq);
+            this._logger.warning("-- e.getMessage() START --");
+            this._logger.warning(e.getMessage());
+            this._logger.warning("-- e.getMessage() FINISH --");
             LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
             e.printStackTrace();
         } catch (Exception e) {
