@@ -70,13 +70,12 @@ RUN mkdir -p /etc/apt/keyrings \
  && curl -L -O https://repo1.maven.org/maven2/org/slf4j/slf4j-nop/2.0.9/slf4j-nop-2.0.9.jar
 
 COPY ./app/* /usr/src/app/
+COPY --chmod=755 ./app/log.sh /usr/src/app/
 COPY ./auth/log.php /usr/src/app/
 COPY ./config.inc.php /var/www/html/phpmyadmin/
 
 COPY ./auth/*.php /var/www/html/auth/
 COPY ./src/*.java /usr/src/app/
-
-RUN chmod +x /usr/src/app/log.sh
 
 # CMD ["bash","/usr/src/app/start.sh"]
 ENTRYPOINT ["bash","/usr/src/app/start.sh"]
