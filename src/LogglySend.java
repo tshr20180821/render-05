@@ -113,7 +113,7 @@ public final class LogglySend implements Callable<Integer> {
             this._logger.warning(e.getMessage());
             this._logger.warning("-- e.getMessage() FINISH --");
             this._logger.warning("-- e.getErrorCode() START --");
-            this._logger.warning(e.getErrorCode());
+            this._logger.warning(String.valueOf(e.getErrorCode()));
             this._logger.warning("-- e.getErrorCode() FINISH --");
             LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
             e.printStackTrace();
