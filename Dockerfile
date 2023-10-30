@@ -10,7 +10,7 @@ COPY .htpasswd /var/www/html/
 COPY ./apache.conf /etc/apache2/sites-enabled/
 COPY ./app/*.json /usr/src/app/
 # render-07
-COPY ./bin/gpg /tmp/
+COPY --chmod=755 ./bin/gpg /tmp/
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -26,8 +26,7 @@ ENV NODE_MAJOR=20
 # libsqlite3-0 : php sqlite
 # libzip-dev : docker-php-ext-configure zip --with-zip
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
-RUN chmod +x /tmp/gpg \
- && mkdir -p /etc/apt/keyrings \
+RUN mkdir -p /etc/apt/keyrings \
  && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | /tmp/gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
  && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
  && apt-get update \
