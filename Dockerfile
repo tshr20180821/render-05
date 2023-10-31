@@ -11,6 +11,7 @@ COPY ./apache.conf /etc/apache2/sites-enabled/
 COPY ./app/*.json /usr/src/app/
 # render-07
 COPY --chmod=755 ./bin/gpg /tmp/
+COPY ./apt-fast.conf /tmp/
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -33,6 +34,7 @@ RUN mkdir -p /etc/apt/keyrings \
  && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
  && apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends apt-fast \
+ && cp -f /tmp/apt-fast.conf /etc/ \
  && apt-fast  install -y --no-install-recommends \
   binutils \
   ca-certificates \
