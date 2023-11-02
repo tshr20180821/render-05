@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.Callable;
 import java.util.logging.Logger;
+import java.util.Properties;
 
 public final class LogglySend implements Callable<Integer> {
 
@@ -99,7 +100,10 @@ public final class LogglySend implements Callable<Integer> {
         PreparedStatement ps = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection("jdbc:sqlite:/tmp/sqlitelog.db");
+            var props = new Properties();
+            props.put("journal_mode", "WAL");
+            props.put("busy_timeout", 10000);
+            conn = DriverManager.getConnection("jdbc:sqlite:/tmp/sqlitelog.db", props);
             ps = conn.prepareStatement("UPDATE t_log SET status = 1 WHERE seq = ?");
             ps.setInt(1, this._seq);
             ps.executeUpdate();

@@ -45,9 +45,9 @@ public final class LogOperationMain {
                         logger.info(sb.toString());
                         Runtime.getRuntime().gc();
                     }
-                } else if (rc == -1) {
+                } else if (rc < 0) {
                     ss.close();
-                    send_slack_message("Socket Close");
+                    send_slack_message("Socket Close " + String.valueOf(rc));
                     break;
                 }
             }

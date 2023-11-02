@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.Properties;
 
 public final class LogOperation {
     private static Logger _logger;
@@ -27,7 +28,10 @@ public final class LogOperation {
         _executorService = Executors.newFixedThreadPool(2);
         try {
             Class.forName("org.sqlite.JDBC");
-            _conn = DriverManager.getConnection("jdbc:sqlite:/tmp/sqlitelog.db");
+            var props = new Properties();
+            props.put("journal_mode", "WAL");
+            props.put("busy_timeout", 10000);
+            _conn = DriverManager.getConnection("jdbc:sqlite:/tmp/sqlitelog.db", props);
             _ps = _conn.prepareStatement(
                     "SELECT seq, process_datetime, pid, level, file, line, function, message FROM t_log WHERE status = 0 ORDER BY seq",
                     ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
@@ -47,7 +51,7 @@ public final class LogOperation {
         return _log_operation;
     }
 
-    // 1 : record exists / 0 : record none / -1 : error
+    // 1 : record exists / 0 : record none / < 0 : error
     public final int execute() {
         List<Future<Integer>> futures = new ArrayList<>();
 
@@ -75,12 +79,12 @@ public final class LogOperation {
             LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
             e.printStackTrace();
         } catch (SQLException e) {
-            rc = -1;
+            rc = -2;
             _logger.warning("SQLException");
             LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
             e.printStackTrace();
         } catch (Exception e) {
-            rc = -1;
+            rc = -3;
             _logger.warning("Exception");
             LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
             e.printStackTrace();
@@ -90,17 +94,17 @@ public final class LogOperation {
             try {
                 future.get();
             } catch (InterruptedException e) {
-                rc = -1;
+                rc = -4;
                 _logger.warning("InterruptedException");
                 LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
                 e.printStackTrace();
             } catch (ExecutionException e) {
-                rc = -1;
+                rc = -5;
                 _logger.warning("ExecutionException");
                 LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
                 e.printStackTrace();
             } catch (Exception e) {
-                rc = -1;
+                rc = -6;
                 _logger.warning("Exception");
                 LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
                 e.printStackTrace();
