@@ -81,6 +81,7 @@ COPY ./config.inc.php /var/www/html/phpmyadmin/
 
 COPY ./auth/*.php /var/www/html/auth/
 COPY ./src/*.java /usr/src/app/
+RUN javac /usr/src/app/*.java
 
 # CMD ["bash","/usr/src/app/start.sh"]
 ENTRYPOINT ["bash","/usr/src/app/start.sh"]
