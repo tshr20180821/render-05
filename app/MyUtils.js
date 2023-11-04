@@ -40,7 +40,7 @@ class MyLog {
         + ('00' + dt.getMilliseconds()).slice(-3) + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME + ' ' + process.env.DEPLOY_DATETIME + ' '
         + process.pid + ' ' + level_ + ' ' + match[2] + ' ' + match[3] + ' [' + match[1] + ']';
       console.log(log_header + ' ' + message_);
-      loggly_options = {
+      const loggly_options = {
         protocol: 'https:',
         port: 443,
         hostname: 'logs-01.loggly.com',
