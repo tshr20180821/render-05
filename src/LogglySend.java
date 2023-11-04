@@ -74,7 +74,7 @@ public final class LogglySend implements Callable<Integer> {
             HttpRequest.BodyPublisher post_data = HttpRequest.BodyPublishers.ofString(sb.toString());
             HttpClient client = HttpClient.newHttpClient();
             String uri = "https://logs-01.loggly.com/inputs/" + System.getenv("LOGGLY_TOKEN") + "/tag/"
-                    + render_external_hostname + "," + render_external_hostname + '_' + deploy_datetime + "/";
+                    + render_external_hostname + "," + render_external_hostname + '_' + deploy_datetime + "," + this._level + "/";
             HttpRequest request = HttpRequest.newBuilder(URI.create(uri))
                     .header("Content-Type", "text/plain; charset=utf-8")
                     .POST(HttpRequest.BodyPublishers.ofString(sb.toString()))
