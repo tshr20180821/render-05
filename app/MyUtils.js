@@ -16,23 +16,9 @@ if (process.env.DEPLOY_DATETIME != undefined) {
 
 class MyLog {
   _regex;
-  _loggly_options;
   
   constructor() {
     this._regex = /(.+) .+\/(.+?):(\d+)/;
-
-    this._loggly_options = {
-      protocol: 'https:',
-      port: 443,
-      hostname: 'logs-01.loggly.com',
-      path: '/inputs/' + process.env.LOGGLY_TOKEN
-        + '/tag/' + process.env.RENDER_EXTERNAL_HOSTNAME + ',' + process.env.RENDER_EXTERNAL_HOSTNAME + '_' + process.env.DEPLOY_DATETIME + '/',
-      method: 'POST',
-      headers: {
-        'content-type': 'text/plain; charset=utf-8',
-      }
-    };
-    this._loggly_options.agent = new https.Agent({ keepAlive: true });
   }
   
   info(message_) {
@@ -54,7 +40,19 @@ class MyLog {
         + ('00' + dt.getMilliseconds()).slice(-3) + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME + ' ' + process.env.DEPLOY_DATETIME + ' '
         + process.pid + ' ' + level_ + ' ' + match[2] + ' ' + match[3] + ' [' + match[1] + ']';
       console.log(log_header + ' ' + message_);
-      const request = https.request(this._loggly_options);
+      loggly_options = {
+        protocol: 'https:',
+        port: 443,
+        hostname: 'logs-01.loggly.com',
+        path: '/inputs/' + process.env.LOGGLY_TOKEN
+          + '/tag/' + process.env.RENDER_EXTERNAL_HOSTNAME + ',' + process.env.RENDER_EXTERNAL_HOSTNAME + '_' + process.env.DEPLOY_DATETIME + ',' + level_ + '/',
+        method: 'POST',
+        headers: {
+          'content-type': 'text/plain; charset=utf-8',
+        }
+      };
+      loggly_options.agent = new https.Agent({ keepAlive: true });
+      const request = https.request(loggly_options);
       request.write(log_header + ' ' + message_);
       request.end();
       resolve();
