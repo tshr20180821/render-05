@@ -3,7 +3,7 @@
 set -x
 
 apt-get update &
-time javac /usr/src/app/*.java &
+# time javac /usr/src/app/*.java &
 
 dpkg -l
 
