@@ -12,20 +12,8 @@ class Log
     ];
 
     private $_statement_insert; // pdo prepare statement
-    private $_deploy_datetime; // unix time
-    private $_ch; // curl channel
     
     function __construct() {
-        $this->_deploy_datetime = strtotime(substr($_ENV['DEPLOY_DATETIME'], 0, 4) . '/' . substr($_ENV['DEPLOY_DATETIME'], 4, 2) . '/' . substr($_ENV['DEPLOY_DATETIME'], 6, 2)
-             . ' ' . substr($_ENV['DEPLOY_DATETIME'], 8, 2) . ':' . substr($_ENV['DEPLOY_DATETIME'], 10, 2) . ':' . substr($_ENV['DEPLOY_DATETIME'], 12, 2));
-
-        $this->_ch = curl_init();
-        curl_setopt($this->_ch, CURLOPT_URL, 'https://logs-01.loggly.com/inputs/' . $_ENV['LOGGLY_TOKEN']
-                    . '/tag/' . $_ENV['RENDER_EXTERNAL_HOSTNAME'] . ',' . $_ENV['RENDER_EXTERNAL_HOSTNAME'] . '_' . $_ENV['DEPLOY_DATETIME'] . '/');
-        curl_setopt($this->_ch, CURLOPT_POST, 1);
-        curl_setopt($this->_ch, CURLOPT_HTTPHEADER, ['Content-Type: text/plain; charset=utf-8',]);
-        curl_setopt($this->_ch, CURLOPT_TCP_KEEPALIVE, 1);
-        curl_setopt($this->_ch, CURLOPT_RETURNTRANSFER, 1);
 
         clearstatcache();
         if (!file_exists('/tmp/sqlitelog.db')) {
@@ -48,10 +36,12 @@ __HEREDOC__;
 
             $rc = $pdo->exec($sql_create);
 
-            exec('cd /usr/src/app && java -classpath .:sqlite-jdbc-3.43.2.0.jar:slf4j-api-2.0.9.jar:slf4j-nop-2.0.9.jar -Duser.timezone=Asia/Tokyo -Dfile.encoding=UTF-8 -verbose:gc LogOperationMain &');
+            exec('cd /usr/src/app && java -classpath .:sqlite-jdbc-3.43.2.0.jar:slf4j-api-2.0.9.jar:slf4j-nop-2.0.9.jar -Duser.timezone=Asia/Tokyo -Dfile.encoding=UTF-8 LogOperationMain &');
         } else {
             $pdo = new PDO('sqlite:/tmp/sqlitelog.db', NULL, NULL, array(PDO::ATTR_PERSISTENT => TRUE));
         }
+        $pdo->exec('PRAGMA journal_mode = WAL;');
+        $pdo->exec('PRAGMA busy_timeout = 10000;');
 
         $sql_insert = <<< __HEREDOC__
 INSERT INTO t_log (process_datetime, pid, level, file, line, function, message, status)
@@ -59,10 +49,6 @@ INSERT INTO t_log (process_datetime, pid, level, file, line, function, message, 
 __HEREDOC__;
 
         $this->_statement_insert = $pdo->prepare($sql_insert);
-    }
-
-    function __destruct() {
-        curl_close($this->_ch);
     }
 
     public function trace($message_) {
@@ -116,16 +102,6 @@ __HEREDOC__;
         $log_datetime = date('Y-m-d H:i:s.') . $milli_sec;
         $log_header = $_ENV['RENDER_EXTERNAL_HOSTNAME'] . ' ' . $_ENV['DEPLOY_DATETIME'] . ' ' . getmypid() . " {$level} {$file} {$line}";
 
-        /*
-        curl_setopt($this->_ch, CURLOPT_POSTFIELDS, "{$log_datetime} {$log_header} {$function_chain} {$message_}");
-        curl_exec($this->_ch);
-        $http_code = (string)curl_getinfo($this->_ch, CURLINFO_HTTP_CODE);
-        */
-        /*
-        if ($level != 'INFO' || time() - $this->_deploy_datetime < 60 * 5 || $http_code != '200') {
-            file_put_contents('php://stderr', "{$log_datetime} \033[0;" . self::COLOR_LIST[$level] . "m{$log_header}\033[0m {$function_chain} {$message_}\n");
-        }
-        */
         file_put_contents('php://stderr', "{$log_datetime} \033[0;" . self::COLOR_LIST[$level] . "m{$log_header}\033[0m {$function_chain} {$message_}\n");
         
         $this->_statement_insert->execute(
