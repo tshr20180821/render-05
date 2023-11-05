@@ -35,11 +35,12 @@ class MyLog {
       const match = (new Error()).stack.split("\n")[5].substring(7).match(this._regex);
       
       const dt = new Date();
-      const log_header = dt.getFullYear() + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2) + ' '
+      const datetime = dt.getFullYear() + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2) + ' '
         + ('0' + dt.getHours()).slice(-2) + ':' +  ('0' + dt.getMinutes()).slice(-2) + ':' +  ('0' + dt.getSeconds()).slice(-2) + '.'
-        + ('00' + dt.getMilliseconds()).slice(-3) + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME + ' ' + process.env.DEPLOY_DATETIME + ' '
+        + ('00' + dt.getMilliseconds()).slice(-3);
+      const log_header = process.env.RENDER_EXTERNAL_HOSTNAME + ' ' + process.env.DEPLOY_DATETIME + ' '
         + process.pid + ' ' + level_ + ' ' + match[2] + ' ' + match[3] + ' [' + match[1] + ']';
-      console.log(log_header + ' ' + message_);
+      console.log(datetime + ' \x1b[35m' + log_header + '\x1b[0m ' + message_);
       const loggly_options = {
         protocol: 'https:',
         port: 443,
@@ -53,7 +54,7 @@ class MyLog {
       };
       loggly_options.agent = new https.Agent({ keepAlive: true });
       const request = https.request(loggly_options);
-      request.write(log_header + ' ' + message_);
+      request.write(datetime + ' ' + log_header + ' ' + message_);
       request.end();
       resolve();
     });
