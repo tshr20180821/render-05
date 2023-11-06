@@ -46,7 +46,7 @@ class MyLog {
         port: 443,
         hostname: 'logs-01.loggly.com',
         path: '/inputs/' + process.env.LOGGLY_TOKEN
-          + '/tag/' + process.env.RENDER_EXTERNAL_HOSTNAME + ',' + process.env.RENDER_EXTERNAL_HOSTNAME + '_' + process.env.DEPLOY_DATETIME + ',' + level_ + ',' + 'nodejs/',
+          + '/tag/' + process.env.RENDER_EXTERNAL_HOSTNAME + ',' + process.env.RENDER_EXTERNAL_HOSTNAME + '_' + process.env.DEPLOY_DATETIME + ',' + level_ + ',nodejs/',
         method: 'POST',
         headers: {
           'content-type': 'text/plain; charset=utf-8',
