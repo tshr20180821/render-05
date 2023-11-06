@@ -28,7 +28,7 @@ public final class LogOperationMain {
         try {
             ss = new ServerSocket(LOCK_PORT);
             send_slack_message("Socket Open");
-            logger.info("availableProcessors : " + (Runtime.getRuntime()).availableProcessors());
+            logger.info("availableProcessors : " + (Runtime.getRuntime()).availableProcessors() + " FIXED_THREAD_POOL : " + System.getenv("FIXED_THREAD_POOL"));
             LogOperation logOperation = LogOperation.getInstance(logger);
             int i = 0;
             for (;;) {
@@ -53,7 +53,12 @@ public final class LogOperationMain {
             }
         } catch (BindException e) {
             logger.warning("BindException");
-            e.printStackTrace();
+            if (e.getMessage() == "Address already in use") {
+                logger.warning(e.getMessage());
+            } else {
+                send_slack_message(get_stack_trace(e));
+                e.printStackTrace();
+            }
         } catch (InterruptedException e) {
             logger.warning("InterruptedException");
             send_slack_message(get_stack_trace(e));

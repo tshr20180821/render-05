@@ -25,7 +25,7 @@ public final class LogOperation {
 
     public static LogOperation getInstance(Logger logger_) {
         _logger = logger_;
-        _executorService = Executors.newFixedThreadPool(2);
+        _executorService = Executors.newFixedThreadPool(Integer.parseInt(System.getenv("FIXED_THREAD_POOL")));
         try {
             Class.forName("org.sqlite.JDBC");
             var props = new Properties();
@@ -33,7 +33,7 @@ public final class LogOperation {
             props.put("busy_timeout", 10000);
             _conn = DriverManager.getConnection("jdbc:sqlite:/tmp/sqlitelog.db", props);
             _ps = _conn.prepareStatement(
-                    "SELECT seq, process_datetime, pid, level, file, line, function, message FROM t_log WHERE status = 0 ORDER BY seq",
+                    "SELECT seq, process_datetime, pid, level, file, line, function, message, tags FROM t_log WHERE status = 0 ORDER BY seq",
                     ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
         } catch (ClassNotFoundException e) {
             _logger.warning("ClassNotFoundException");
@@ -67,9 +67,10 @@ public final class LogOperation {
                 String line = rs.getString("line");
                 String function = rs.getString("function");
                 String message = rs.getString("message");
+                String tags = rs.getString("tags");
 
                 futures.add(_executorService.submit(
-                        new LogglySend(_logger, seq, process_datetime, pid, level, file, line, function, message)));
+                        new LogglySend(_logger, seq, process_datetime, pid, level, file, line, function, message, tags)));
                 Thread.sleep(100);
                 rc = 1;
             }
