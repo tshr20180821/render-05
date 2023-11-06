@@ -30,6 +30,7 @@ CREATE TABLE t_log (
     line TEXT NOT NULL,
     function TEXT NOT NULL,
     message TEXT,
+    tags TEXT,
     status INTEGER NOT NULL
 )
 __HEREDOC__;
@@ -44,8 +45,8 @@ __HEREDOC__;
         $pdo->exec('PRAGMA busy_timeout = 10000;');
 
         $sql_insert = <<< __HEREDOC__
-INSERT INTO t_log (process_datetime, pid, level, file, line, function, message, status)
-  VALUES (:b_process_datetime, :b_pid, :b_level, :b_file, :b_line, :b_function, :b_message, 0);
+INSERT INTO t_log (process_datetime, pid, level, file, line, function, message, tags, status)
+  VALUES (:b_process_datetime, :b_pid, :b_level, :b_file, :b_line, :b_function, :b_message, 'php', 0);
 __HEREDOC__;
 
         $this->_statement_insert = $pdo->prepare($sql_insert);
