@@ -22,11 +22,16 @@ ENV NODE_MAJOR=20
 # ca-certificates : node.js
 # curl : node.js
 # default-jdk : javac
+# libmemcached-dev : pecl memcached
 # gnupg : node.js
 # libonig-dev : mbstring
 # libsqlite3-0 : php sqlite
+# libssl-dev : pecl memcached
 # libzip-dev : docker-php-ext-configure zip --with-zip
+# memcached : memcached
+# nodejs : nodejs
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+# zlib1g-dev : pecl memcached
 RUN mkdir -p /etc/apt/keyrings \
  && curl -fsSL 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA2166B8DE8BDC3367D1901C11EE2FF37CA8DA16B' | /tmp/gpg --dearmor -o /etc/apt/keyrings/apt-fast.gpg \
  && echo "deb [signed-by=/etc/apt/keyrings/apt-fast.gpg] http://ppa.launchpad.net/apt-fast/stable/ubuntu jammy main" | tee /etc/apt/sources.list.d/apt-fast.list \
@@ -40,13 +45,19 @@ RUN mkdir -p /etc/apt/keyrings \
   ca-certificates \
   curl \
   default-jdk \
+  libmemcached-dev \
   libonig-dev \
   libsqlite3-0 \
+  libssl-dev \
   libzip-dev \
+  memcached \
   nodejs \
   tzdata \
+  zlib1g-dev \
  && pecl install apcu \
  && docker-php-ext-enable apcu \
+ && pecl install memcached \
+ && docker-php-ext-enable memcached \
  && docker-php-ext-configure zip --with-zip \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring \
  && /usr/bin/composer --version \
