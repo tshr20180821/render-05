@@ -93,19 +93,21 @@ public final class LogOperation {
 
         for (Future<Integer> future : futures) {
             try {
-                future.get();
+                if(future.get().equals(0) == false) {
+                    rc = -4;
+                }
             } catch (InterruptedException e) {
-                rc = -4;
+                rc = -5;
                 _logger.warning("InterruptedException");
                 LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
                 e.printStackTrace();
             } catch (ExecutionException e) {
-                rc = -5;
+                rc = -6;
                 _logger.warning("ExecutionException");
                 LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
                 e.printStackTrace();
             } catch (Exception e) {
-                rc = -6;
+                rc = -7;
                 _logger.warning("Exception");
                 LogOperationMain.send_slack_message(LogOperationMain.get_stack_trace(e));
                 e.printStackTrace();

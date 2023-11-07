@@ -52,10 +52,10 @@ public final class LogOperationMain {
                 }
             }
         } catch (BindException e) {
-            logger.warning("BindException");
-            if (e.getMessage() == "Address already in use") {
-                logger.warning(e.getMessage());
+            if (e.getMessage().equals("Address already in use")) {
+                logger.info("BindException : " + e.getMessage());
             } else {
+                logger.warning("BindException");
                 send_slack_message(get_stack_trace(e));
                 e.printStackTrace();
             }
