@@ -54,9 +54,9 @@ RUN mkdir -p /etc/apt/keyrings \
   nodejs \
   tzdata \
   zlib1g-dev \
- && pecl install apcu \
+ && MAKEFLAGS="-j $(nproc)" pecl install apcu \
  && docker-php-ext-enable apcu \
- && pecl install memcached \
+ && MAKEFLAGS="-j $(nproc)" pecl install memcached \
  && docker-php-ext-enable memcached \
  && docker-php-ext-configure zip --with-zip \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli mbstring \
