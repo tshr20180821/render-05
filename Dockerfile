@@ -89,7 +89,6 @@ RUN mkdir -p /etc/apt/keyrings \
 
 COPY ./app/* /usr/src/app/
 COPY --chmod=755 ./app/log.sh /usr/src/app/
-COPY ./auth/log.php /usr/src/app/
 COPY ./config.inc.php /var/www/html/phpmyadmin/
 
 COPY ./auth/*.php /var/www/html/auth/
