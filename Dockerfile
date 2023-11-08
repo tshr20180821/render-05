@@ -23,7 +23,7 @@ ENV NODE_MAJOR=20
 # binutils : strings
 # ca-certificates : node.js
 # curl : node.js
-# default-jdk : javac
+# default-jre : java
 # libmemcached-dev : pecl memcached
 # gnupg : node.js
 # libonig-dev : mbstring
@@ -46,7 +46,7 @@ RUN mkdir -p /etc/apt/keyrings \
   binutils \
   ca-certificates \
   curl \
-  default-jdk \
+  default-jre \
   libmemcached-dev \
   libonig-dev \
   libsqlite3-0 \
@@ -92,8 +92,6 @@ COPY --chmod=755 ./app/log.sh /usr/src/app/
 COPY ./config.inc.php /var/www/html/phpmyadmin/
 
 COPY ./auth/*.php /var/www/html/auth/
-COPY ./src/*.java /usr/src/app/
-RUN javac /usr/src/app/*.java
 
 # CMD ["bash","/usr/src/app/start.sh"]
 ENTRYPOINT ["bash","/usr/src/app/start.sh"]
