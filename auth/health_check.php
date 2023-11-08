@@ -9,18 +9,20 @@ $requesturi = $_SERVER['REQUEST_URI'];
 $time_start = microtime(true);
 $log->info("START {$requesturi}");
 
-push_atom($log);
+push_atom();
 
 $log->info('FINISH ' . substr((microtime(true) - $time_start), 0, 7) . 's');
 
 exit();
 
-function push_atom($log_)
+function push_atom()
 {
-    $log_->info('BEGIN');
+    global $log;
+
+    $log->info('BEGIN');
     
-    // $log_->info('REMOTE_ADDR : ' . $_SERVER['REMOTE_ADDR']);
-    $log_->info('HTTP_X_FORWARDED_FOR : ' . $_SERVER['HTTP_X_FORWARDED_FOR']);
+    // $log->info('REMOTE_ADDR : ' . $_SERVER['REMOTE_ADDR']);
+    $log->info('HTTP_X_FORWARDED_FOR : ' . $_SERVER['HTTP_X_FORWARDED_FOR']);
     
     header("Content-Type: application/atom+xml");
   

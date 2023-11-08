@@ -1,6 +1,6 @@
 <?php
 
-include('./log.php');
+include('/usr/src/app/log.php');
 
 $log = new Log();
 
@@ -9,7 +9,7 @@ $time_start = microtime(true);
 $log->info("START {$requesturi}");
 
 try {
-    crond($log);
+    crond();
     header("Content-Type: text/plain");
     echo $_ENV['DEPLOY_DATETIME'];
 } catch (Exception $ex) {
@@ -20,23 +20,24 @@ $log->info('FINISH ' . substr((microtime(true) - $time_start), 0, 7) . 's');
 
 exit();
 
-function crond($log_)
+function crond()
 {
-    $log_prefix = '';
-    $log_->info($log_prefix . 'BEGIN');
+    global $log;
+    
+    $log->info('BEGIN');
     
     if ($_SERVER['HTTP_X_DEPLOY_DATETIME'] != $_ENV['DEPLOY_DATETIME']) {
-        $log_->warn($log_prefix . 'VERSION UNMATCH ' . $_SERVER['HTTP_X_DEPLOY_DATETIME']);
+        $log->warn('VERSION UNMATCH ' . $_SERVER['HTTP_X_DEPLOY_DATETIME']);
         return;
     }
     
-    if (check_duplicate($log_) == false) {
+    if (check_duplicate() == false) {
         return;
     }
     
     clearstatcache();
     if (!file_exists('/tmp/m_cron.db')) {
-        init_sqlite($log_);
+        init_sqlite();
     }
     
     $sql_select = <<< __HEREDOC__
@@ -50,10 +51,9 @@ SELECT M1.schedule
  ORDER BY M1.uri
 __HEREDOC__;
     
-    // $timestamp = strtotime('+9 hours', time());
     $timestamp = time();
     
-    $log_->info($log_prefix . 'cron target time : ' . date('Y/m/d H:i', $timestamp));
+    $log->info('cron target time : ' . date('Y/m/d H:i', $timestamp));
     
     $format = [];
     $format[0] = 'i';
@@ -79,7 +79,7 @@ __HEREDOC__;
     $pdo = null;
     
     foreach ($tasks as list($schedules, $uri, $method, $authentication, $headers, $post_data)) {
-        $log_->info($log_prefix . $schedules . ' ' . $uri);
+        $log->info($schedules . ' ' . $uri);
         $schedule = explode(' ', $schedules);
         
         if (count($schedule) != 5) {
@@ -132,7 +132,10 @@ __HEREDOC__;
         }
         
         // execute
-        $options = [CURLOPT_TIMEOUT => 30];
+        $options = [
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_USERAGENT => date('Y/m/d H:i', $timestamp),
+        ];
 
         if (strlen($headers) > 0) {
             $options += [CURLOPT_HTTPHEADER => unserialize(base64_decode($headers))];
@@ -152,7 +155,7 @@ __HEREDOC__;
     }
     
     if (count($urls) == 0) {
-        $log_->info($log_prefix . 'NO TARGET');
+        $log->info('NO TARGET');
         return;
     }
     
@@ -162,27 +165,28 @@ __HEREDOC__;
         CURLMOPT_MAXCONNECTS => 20,
     ];
     
-    $log_->info(print_r($urls, true));
+    $log->info(print_r($urls, true));
     
-    get_contents_multi($log_, $urls, $multi_options);
+    get_contents_multi($urls, $multi_options);
 }
 
-function check_duplicate($log_)
+function check_duplicate()
 {
-    $log_prefix = '';
-    $log_->info($log_prefix . 'BEGIN');
+    global $log;
+
+    $log->info('BEGIN');
     
     $time = time();
     
     clearstatcache();
     $lock_file = '/tmp/crond_php_' . date('i', $time);
     if (file_exists($lock_file) == true && ($time - filemtime($lock_file)) < 300) {
-        $log_->info($log_prefix . 'EXISTS LOCK FILE');
+        $log->info($'EXISTS LOCK FILE');
         return false;
     }
     touch($lock_file);
     
-    $pdo = get_pdo($log_);
+    $pdo = get_pdo();
     
     // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
@@ -206,20 +210,21 @@ __HEREDOC__;
     if ($statement_update->rowCount() != 1) {
         $pdo->rollBack();
         $pdo = null;
-        $log_->warn($log_prefix . 'ROLLBACK');
+        $log->warn('ROLLBACK');
         return false;
     }
     
     $pdo->commit();
     $pdo = null;
-    $log_->info($log_prefix . 'COMMIT');
+    $log->info('COMMIT');
     return true;
 }
 
-function get_pdo($log_)
+function get_pdo()
 {
-    $log_prefix = '';
-    $log_->info($log_prefix . 'BEGIN');
+    global $log;
+
+    $log->info('BEGIN');
     
     $dsn = "mysql:host={$_ENV['DB_SERVER']};dbname={$_ENV['DB_NAME']}";
     $options = array(
@@ -228,13 +233,15 @@ function get_pdo($log_)
     return new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $options);
 }
 
-function init_sqlite($log_)
+function init_sqlite()
 {
-    $log_->info('BEGIN');
+    global $log;
+
+    $log->info('BEGIN');
     
     $pdo_sqlite = new PDO('sqlite:/tmp/m_cron.db');
     
-    $log_->info('SQLite Version : ' . $pdo_sqlite->query('SELECT sqlite_version()')->fetchColumn());
+    $log->info('SQLite Version : ' . $pdo_sqlite->query('SELECT sqlite_version()')->fetchColumn());
     
     $sql_create = <<< __HEREDOC__
 CREATE TABLE m_cron (
@@ -248,7 +255,7 @@ CREATE TABLE m_cron (
 __HEREDOC__;
 
     $rc = $pdo_sqlite->exec($sql_create);
-    $log_->info('m_cron create table result : ' . $rc);
+    $log->info('m_cron create table result : ' . $rc);
     
     $sql_insert = <<< __HEREDOC__
 INSERT INTO m_cron VALUES(:b_schedule, :b_uri, :b_method, :b_authentication, :b_headers, :b_post_data)
@@ -256,9 +263,9 @@ __HEREDOC__;
 
     $statement_insert = $pdo_sqlite->prepare($sql_insert);
 
-    $pdo = get_pdo($log_);
+    $pdo = get_pdo();
     
-    $log_->info('MySQL Version : ' . $pdo->query('SELECT version()')->fetchColumn());
+    $log->info('MySQL Version : ' . $pdo->query('SELECT version()')->fetchColumn());
     
     $sql_select = <<< __HEREDOC__
 SELECT M1.schedule
@@ -285,17 +292,18 @@ __HEREDOC__;
             ':b_headers' => $row['headers'],
             ':b_post_data' => $row['post_data'],
         ]);
-        $log_->info('insert result : ' . $statement_insert->rowCount() . ' ' . $row['schedule'] . ' ' . $row['uri']);
+        $log->info('insert result : ' . $statement_insert->rowCount() . ' ' . $row['schedule'] . ' ' . $row['uri']);
     }
 
     $pdo = null;
     $pdo_sqlite = null;
 }
 
-function get_contents_multi($log_, $urls_, $multi_options_ = null)
+function get_contents_multi($urls_, $multi_options_ = null)
 {
-    $log_prefix = '';
-    $log_->info($log_prefix . 'BEGIN');
+    global $log;
+
+    $log->info('BEGIN');
 
     $time_start = microtime(true);
 
@@ -308,13 +316,13 @@ function get_contents_multi($log_, $urls_, $multi_options_ = null)
         foreach ($multi_options_ as $key => $value) {
             $rc = curl_multi_setopt($mh, $key, $value);
             if ($rc === false) {
-                $log_->info($log_prefix . "curl_multi_setopt : {$key} {$value}");
+                $log->info("curl_multi_setopt : {$key} {$value}");
             }
         }
     }
 
     foreach ($urls_ as $url => $options_add) {
-        $log_->info($log_prefix . 'CURL MULTI Add $url : ' . $url);
+        $log->info('CURL MULTI Add $url : ' . $url);
         $ch = curl_init();
         $options = [CURLOPT_URL => $url,
                     // CURLOPT_USERAGENT => getenv('USER_AGENT'),
@@ -334,14 +342,14 @@ function get_contents_multi($log_, $urls_, $multi_options_ = null)
         foreach ($options as $key => $value) {
             $rc = curl_setopt($ch, $key, $value);
             if ($rc == false) {
-                $log_->info($log_prefix . "curl_setopt : {$key} {$value}");
+                $log->info("curl_setopt : {$key} {$value}");
             }
         }
         if (is_null($options_add) === false) {
             foreach ($options_add as $key => $value) {
                 $rc = curl_setopt($ch, $key, $value);
                 if ($rc == false) {
-                    $log_->info($log_prefix . "curl_setopt : {$key} {$value}");
+                    $log->info("curl_setopt : {$key} {$value}");
                 }
             }
         }
@@ -360,42 +368,28 @@ function get_contents_multi($log_, $urls_, $multi_options_ = null)
         }
         $rc = curl_multi_exec($mh, $active);
     }
-    $log_->info($log_prefix . 'loop count : ' . $count);
+    $log->info('loop count : ' . $count);
 
     $results = [];
     foreach (array_keys($urls_) as $url) {
         $ch = $list_ch[$url];
         $res = curl_getinfo($ch);
         $http_code = (string)$res['http_code'];
-        $log_->info($log_prefix . "CURL Result {$http_code} : {$url}");
+        $log->info("CURL Result {$http_code} : {$url}");
         if ($http_code[0] == '2') {
             $result = curl_multi_getcontent($ch);
             $results[$url] = $result;
         }
         curl_multi_remove_handle($mh, $ch);
         curl_close($ch);
-
-        // if (apcu_exists('HTTP_STATUS') === true) {
-        //     $dic_http_status = apcu_fetch('HTTP_STATUS');
-        // } else {
-        //     $dic_http_status = [];
-        // }
-        // if (array_key_exists($http_code, $dic_http_status) === true) {
-        //     $dic_http_status[$http_code]++;
-        // } else {
-        //     $dic_http_status[$http_code] = 1;
-        // }
-        // apcu_store('HTTP_STATUS', $dic_http_status);
     }
 
     curl_multi_close($mh);
 
     $total_time = substr((microtime(true) - $time_start), 0, 7) . 'sec';
 
-    // $log_->info("{$log_prefix}urls :");
-    // $this->logging_object(array_keys($results), $log_prefix);
-    $log_->info("{$log_prefix}Total Time : [{$total_time}]");
-    $log_->info("{$log_prefix}memory_get_usage : " . number_format(memory_get_usage()) . 'byte');
+    $log->info("Total Time : [{$total_time}]");
+    $log->info("memory_get_usage : " . number_format(memory_get_usage()) . 'byte');
 
     return $results;
 }
