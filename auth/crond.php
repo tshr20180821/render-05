@@ -181,7 +181,7 @@ function check_duplicate()
     clearstatcache();
     $lock_file = '/tmp/crond_php_' . date('i', $time);
     if (file_exists($lock_file) == true && ($time - filemtime($lock_file)) < 300) {
-        $log->info($'EXISTS LOCK FILE');
+        $log->info('EXISTS LOCK FILE');
         return false;
     }
     touch($lock_file);
