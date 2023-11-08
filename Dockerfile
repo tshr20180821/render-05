@@ -1,7 +1,5 @@
 FROM php:8.2-apache
 
-ENV NODE_ENV=production
-
 WORKDIR /usr/src/app
 
 COPY ./php.ini ${PHP_INI_DIR}/
@@ -15,7 +13,11 @@ COPY ./apt-fast.conf /tmp/
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+ENV CFLAGS="-O2 -march=native -mtune=native -fomit-frame-pointer"
+ENV CXXFLAGS="$CFLAGS"
+ENV LDFLAGS="-fuse-ld=gold"
 ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV NODE_ENV=production
 ENV NODE_MAJOR=20
 
 # binutils : strings
