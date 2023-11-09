@@ -20,7 +20,6 @@ ENV NODE_MAJOR=20
 # curl : node.js
 # default-jre : java
 # libmemcached-dev : pecl memcached
-# gnupg : node.js
 # libonig-dev : mbstring
 # libsqlite3-0 : php sqlite
 # libssl-dev : pecl memcached
