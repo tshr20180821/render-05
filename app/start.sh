@@ -31,6 +31,7 @@ node -c crond.js
 # find / -name eslint -print
 
 ls -lang /var/www/html/
+ls -lang /usr/local/lib/php/extensions/no-debug-non-zts-20220829/
 
 # phpMyAdmin
 export BLOWFISH_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
