@@ -69,7 +69,7 @@ RUN dpkg -l \
  && apt-get upgrade -y --no-install-recommends \
  && npm cache clean --force \
  && pecl clear-cache \
- && apt-get purge -y --auto-remove gcc libc6-dev make \
+ && apt-get purge -y --auto-remove gcc gcc-12-base gpgv libc6-dev libonig-dev make \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /var/www/html/auth \
