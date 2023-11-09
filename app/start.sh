@@ -19,7 +19,8 @@ ulimit -n
 # npm audit
 npm list --depth=0
 
-/usr/bin/memcached &
+# /usr/bin/memcached &
+cat /etc/passwd
 
 php -l /var/www/html/auth/crond.php
 php -l /var/www/html/auth/health_check.php
