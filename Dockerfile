@@ -29,7 +29,8 @@ ENV NODE_MAJOR=20
 # nodejs : nodejs
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 # zlib1g-dev : pecl memcached
-RUN curl -sSo /tmp/gpg https://raw.githubusercontent.com/tshr20180821/render-07/main/app/gpg \
+RUN dpkg -l \
+ && curl -sSo /tmp/gpg https://raw.githubusercontent.com/tshr20180821/render-07/main/app/gpg \
  && chmod +x /tmp/gpg \
  && mkdir -p /etc/apt/keyrings \
  && curl -fsSL 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA2166B8DE8BDC3367D1901C11EE2FF37CA8DA16B' | /tmp/gpg --dearmor -o /etc/apt/keyrings/apt-fast.gpg \
