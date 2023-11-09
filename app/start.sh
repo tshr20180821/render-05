@@ -60,7 +60,7 @@ curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
  && sleep 1s \
  && curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
   -d "text=${VERSION}" -d "channel=${SLACK_CHANNEL_02}" https://slack.com/api/chat.postMessage >/dev/null &
-. /etc/apache2/envvars >/dev/null
+. /etc/apache2/envvars >/dev/null 2>&1
 exec /usr/sbin/apache2 -DFOREGROUND &
 
 sleep 3s && ps aux &
