@@ -20,8 +20,7 @@ ulimit -n
 npm list --depth=0
 
 /usr/bin/memcached --help
-# /usr/bin/memcached &
-cat /etc/passwd
+/usr/bin/memcached -u memcache &
 
 php -l /var/www/html/auth/crond.php
 php -l /var/www/html/auth/health_check.php
