@@ -2,8 +2,6 @@
 
 set -x
 
-apt-get update &
-
 dpkg -l
 
 cat /proc/version
@@ -46,10 +44,6 @@ echo ServerName ${RENDER_EXTERNAL_HOSTNAME} >/etc/apache2/sites-enabled/server_n
 . /etc/apache2/envvars
 
 cat /etc/apache2/sites-enabled/apache.conf
-
-wait
-rm -f /usr/src/app/*.java
-apt-get -y upgrade
 
 echo "${RENDER_EXTERNAL_HOSTNAME} START ${DEPLOY_DATETIME}" >VERSION.txt
 echo "Apache" >>VERSION.txt
