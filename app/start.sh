@@ -19,6 +19,7 @@ ulimit -n
 # npm audit
 npm list --depth=0
 
+/usr/bin/memcached --help
 # /usr/bin/memcached &
 cat /etc/passwd
 
