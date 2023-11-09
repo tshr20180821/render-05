@@ -7,11 +7,11 @@ COPY ./index.html /var/www/html/
 COPY --chmod=644 .htpasswd /var/www/html/
 COPY ./apache.conf /etc/apache2/sites-enabled/
 COPY ./apt-fast.conf /tmp/
+COPY ./package.json /usr/src/app
 
 ENV CFLAGS="-O2 -march=native -mtune=native -fomit-frame-pointer"
 ENV CXXFLAGS="$CFLAGS"
 ENV LDFLAGS="-fuse-ld=gold"
-ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV NODE_ENV=production
 ENV NODE_MAJOR=20
 
@@ -57,7 +57,7 @@ RUN curl -sSo /tmp/gpg https://raw.githubusercontent.com/tshr20180821/render-07/
  && docker-php-ext-enable apcu \
  && MAKEFLAGS="-j $(nproc)" pecl install memcached \
  && docker-php-ext-enable memcached \
- && docker-php-ext-configure zip --with-zip \
+ && docker-php-ext-configure zip --with-zip >/dev/null \
  && docker-php-ext-install -j$(nproc) \
   pdo_mysql \
   mysqli \
