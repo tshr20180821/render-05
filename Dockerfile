@@ -88,8 +88,8 @@ RUN curl -sSo /tmp/gpg https://raw.githubusercontent.com/tshr20180821/render-07/
  && chown www-data:www-data /var/www/html/phpmyadmin -R
 
 COPY ./config.inc.php /var/www/html/phpmyadmin/
-COPY --chmod=755 ./app/log.sh /usr/src/app/
 COPY ./app/* /usr/src/app/
+COPY --chmod=755 ./app/log.sh /usr/src/app/
 
 COPY ./auth/*.php /var/www/html/auth/
 
