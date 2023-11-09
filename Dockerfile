@@ -43,7 +43,7 @@ RUN curl -sSo /tmp/gpg https://raw.githubusercontent.com/tshr20180821/render-07/
   binutils \
   ca-certificates \
   curl \
-  default-jre \
+  default-jre-headless \
   libmemcached-dev \
   libonig-dev \
   libsqlite3-0 \
