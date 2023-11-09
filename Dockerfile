@@ -7,7 +7,7 @@ COPY ./index.html /var/www/html/
 COPY --chmod=644 .htpasswd /var/www/html/
 COPY ./apache.conf /etc/apache2/sites-enabled/
 COPY ./apt-fast.conf /tmp/
-COPY ./package.json /usr/src/app
+COPY ./app/package.json /usr/src/app
 
 ENV CFLAGS="-O2 -march=native -mtune=native -fomit-frame-pointer"
 ENV CXXFLAGS="$CFLAGS"
