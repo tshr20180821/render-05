@@ -66,7 +66,7 @@ exec /usr/sbin/apache2 -DFOREGROUND &
 
 sleep 3s && ps aux sleep 3s && ps aux sleep 3s && ps aux sleep 3s && ps aux &
 
-find / -size +50M | xargs ls -l | sort -rn &
+# find / -size +50M | xargs ls -l | sort -rn &
 
 # forever start -c ”node --expose-gc" crond.js
 node --expose-gc crond.js
