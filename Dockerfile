@@ -1,6 +1,14 @@
 FROM php:8.2-apache
 
+EXPOSE 80
+
 WORKDIR /usr/src/app
+
+ENV CFLAGS="-O2 -march=native -mtune=native -fomit-frame-pointer"
+ENV CXXFLAGS="$CFLAGS"
+ENV LDFLAGS="-fuse-ld=gold"
+ENV NODE_ENV=production
+ENV NODE_MAJOR=20
 
 COPY ./php.ini ${PHP_INI_DIR}/
 COPY ./index.html /var/www/html/
@@ -9,11 +17,7 @@ COPY ./apache.conf /etc/apache2/sites-enabled/
 COPY ./apt-fast.conf /tmp/
 COPY ./app/package.json /usr/src/app
 
-ENV CFLAGS="-O2 -march=native -mtune=native -fomit-frame-pointer"
-ENV CXXFLAGS="$CFLAGS"
-ENV LDFLAGS="-fuse-ld=gold"
-ENV NODE_ENV=production
-ENV NODE_MAJOR=20
+ENV SQLITE_JDBC_VERSION="3.43.2.2"
 
 # binutils : strings
 # ca-certificates : node.js
@@ -78,7 +82,7 @@ RUN dpkg -l \
  && a2enmod -q authz_groupfile rewrite \
  && ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
  && curl -sS \
-  -LO https://github.com/xerial/sqlite-jdbc/releases/download/3.43.2.2/sqlite-jdbc-3.43.2.2.jar \
+  -LO https://github.com/xerial/sqlite-jdbc/releases/download/$SQLITE_JDBC_VERSION/sqlite-jdbc-$SQLITE_JDBC_VERSION.jar \
   -LO https://repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar \
   -LO https://repo1.maven.org/maven2/org/slf4j/slf4j-nop/2.0.9/slf4j-nop-2.0.9.jar \
   -O https://raw.githubusercontent.com/tshr20180821/render-07/main/app/LogOperation.jar \
