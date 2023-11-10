@@ -37,7 +37,9 @@ __HEREDOC__;
 
             $rc = $pdo->exec($sql_create);
 
-            exec('cd /usr/src/app && java -classpath .:sqlite-jdbc-3.43.2.0.jar:slf4j-api-2.0.9.jar:slf4j-nop-2.0.9.jar:LogOperation.jar -Duser.timezone=Asia/Tokyo -Dfile.encoding=UTF-8 LogOperationMain &');
+            // exec('cd /usr/src/app && java -classpath jar/* -Duser.timezone=Asia/Tokyo -Dfile.encoding=UTF-8 LogOperationMain &');
+            exec('cd /usr/src/app && java -classpath .:sqlite-jdbc-' . $_ENV['SQLITE_JDBC_VERSION']
+                 . '.jar:slf4j-api-2.0.9.jar:slf4j-nop-2.0.9.jar:LogOperation.jar -Duser.timezone=Asia/Tokyo -Dfile.encoding=UTF-8 LogOperationMain &');
         } else {
             $pdo = new PDO('sqlite:/tmp/sqlitelog.db', NULL, NULL, array(PDO::ATTR_PERSISTENT => TRUE));
         }
@@ -101,13 +103,14 @@ __HEREDOC__;
             $milli_sec = substr($mt[1] . '000' , 0, 3);
         }
         $log_datetime = date('Y-m-d H:i:s.') . $milli_sec;
-        $log_header = $_ENV['RENDER_EXTERNAL_HOSTNAME'] . ' ' . $_ENV['DEPLOY_DATETIME'] . ' ' . getmypid() . " {$level} {$file} {$line}";
+        $pid = getmypid();
+        $log_header = $_ENV['RENDER_EXTERNAL_HOSTNAME'] . ' ' . $_ENV['DEPLOY_DATETIME'] . " {$pid} {$level} {$file} {$line}";
 
         file_put_contents('php://stderr', "{$log_datetime} \033[0;" . self::COLOR_LIST[$level] . "m{$log_header}\033[0m {$function_chain} {$message_}\n");
         
         $this->_statement_insert->execute(
             [':b_process_datetime' => $log_datetime,
-             ':b_pid' => getmypid(),
+             ':b_pid' => $pid,
              ':b_level' => $level,
              ':b_file' => $file,
              ':b_line' => $line,
