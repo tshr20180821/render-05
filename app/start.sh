@@ -27,8 +27,6 @@ export SASL_CONF_PATH=/tmp/memcached.conf
 echo "mech_list: plain cram-md5" >/tmp/memcached.conf
 # /usr/sbin/saslauthd -a sasldb -V
 /usr/sbin/saslauthd -a sasldb
-
-# /usr/bin/memcached --help
 /usr/bin/memcached -S -v -B binary -d -u memcached
 
 php -l /var/www/html/auth/crond.php
