@@ -15,6 +15,8 @@ whoami
 df -h
 ulimit -n
 
+export PROCESSOR_NAME=$(cat /proc/cpuinfo | grep "model name" | head -n 1 | cut -c 14-)
+
 # npm audit
 npm list --depth=0
 
