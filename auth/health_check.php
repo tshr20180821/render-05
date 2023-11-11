@@ -41,7 +41,7 @@ $atom = <<< __HEREDOC__
    <link href="http://example.org/"/>
    <id>tag:__ID__</id>
    <updated>__UPDATED__</updated>
-   <summary>__FQDN__ __APT_RESULT__ Log Size : __LOG_SIZE__MB</summary>
+   <summary>__FQDN__ __APT_RESULT__ Log Size : __LOG_SIZE__MB __PROCESSOR_NAME__</summary>
  </entry>
 </feed>
 __HEREDOC__;
@@ -63,6 +63,7 @@ __HEREDOC__;
     $atom = str_replace('__UPDATED__', date('Y-m-d') . 'T' . date('H:i:s') . '+09', $atom);
     $atom = str_replace('__APT_RESULT__', $apt_result, $atom);
     $atom = str_replace('__LOG_SIZE__', number_format($file_size), $atom);
+    $atom = str_replace('__PROCESSOR_NAME__', $_ENV['__PROCESSOR_NAME__'], $atom);
 
     echo $atom;
 }
