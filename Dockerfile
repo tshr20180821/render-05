@@ -50,11 +50,13 @@ RUN dpkg -l \
   default-jre-headless \
   libmemcached-dev \
   libonig-dev \
+  libsasl2-modules \
   libsqlite3-0 \
   libssl-dev \
   libzip-dev \
   memcached \
   nodejs \
+  sasl2-bin \
   tzdata \
   zlib1g-dev \
  && MAKEFLAGS="-j $(nproc)" pecl install apcu >/dev/null \
