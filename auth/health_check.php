@@ -63,7 +63,7 @@ __HEREDOC__;
     $atom = str_replace('__UPDATED__', date('Y-m-d') . 'T' . date('H:i:s') . '+09', $atom);
     $atom = str_replace('__APT_RESULT__', $apt_result, $atom);
     $atom = str_replace('__LOG_SIZE__', number_format($file_size), $atom);
-    $atom = str_replace('__PROCESSOR_NAME__', $_ENV['__PROCESSOR_NAME__'], $atom);
+    $atom = str_replace('__PROCESSOR_NAME__', $_ENV['PROCESSOR_NAME'], $atom);
 
     echo $atom;
 }
