@@ -30,6 +30,7 @@ echo "mech_list: plain cram-md5" >/tmp/memcached.conf
 # /usr/sbin/saslauthd -a sasldb -V
 /usr/sbin/saslauthd -a sasldb -n 2 -V
 /usr/bin/memcached -S -v -B binary -d -u memcached
+testsaslauthd -u memcached -p ${SASL_PASSWORD}
 
 php -l /var/www/html/auth/crond.php
 php -l /var/www/html/auth/health_check.php
