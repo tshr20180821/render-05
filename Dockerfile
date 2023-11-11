@@ -22,7 +22,7 @@ ENV SQLITE_JDBC_VERSION="3.43.2.2"
 # binutils : strings
 # ca-certificates : node.js
 # curl : node.js
-# default-jre : java
+# default-jre-headless : java
 # libmemcached-dev : pecl memcached
 # libonig-dev : mbstring
 # libsqlite3-0 : php sqlite
