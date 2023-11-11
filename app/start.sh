@@ -14,13 +14,21 @@ whoami
 # free -h
 df -h
 ulimit -n
-# dpkg -l
 
 # npm audit
 npm list --depth=0
 
-/usr/bin/memcached --help
-/usr/bin/memcached -vvv -d -u memcache
+useradd memcached -G sasl
+echo ${RENDER_EXTERNAL_HOSTNAME} | saslpasswd2 -p -a memcached -c memcached
+chown memcached:memcached /etc/sasldb2
+# sasldblistusers2
+export SASL_CONF_PATH=/tmp/memcached.conf
+echo "mech_list: plain cram-md5" >/tmp/memcached.conf
+# /usr/sbin/saslauthd -a sasldb -V
+/usr/sbin/saslauthd -a sasldb
+
+# /usr/bin/memcached --help
+/usr/bin/memcached -S -v -B binary -d -u memcached
 
 php -l /var/www/html/auth/crond.php
 php -l /var/www/html/auth/health_check.php
