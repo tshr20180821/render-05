@@ -25,11 +25,13 @@ ENV SQLITE_JDBC_VERSION="3.43.2.2"
 # default-jre-headless : java
 # libmemcached-dev : pecl memcached
 # libonig-dev : mbstring
+# libsasl2-modules : sasl
 # libsqlite3-0 : php sqlite
 # libssl-dev : pecl memcached
 # libzip-dev : docker-php-ext-configure zip --with-zip
 # memcached : memcached
 # nodejs : nodejs
+# sasl2-bin : sasl
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 # zlib1g-dev : pecl memcached
 RUN dpkg -l \
@@ -41,9 +43,9 @@ RUN dpkg -l \
  && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | /tmp/gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
  && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
  && apt-get -q update \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends apt-fast time \
+ && DEBIAN_FRONTEND=noninteractive apt-get -q install -y --no-install-recommends apt-fast time \
  && cp -f /tmp/apt-fast.conf /etc/ \
- && apt-fast  install -y --no-install-recommends \
+ && apt-fast install -y --no-install-recommends \
   binutils \
   ca-certificates \
   curl \
@@ -61,7 +63,7 @@ RUN dpkg -l \
   zlib1g-dev \
  && MAKEFLAGS="-j $(nproc)" pecl install apcu >/dev/null \
  && docker-php-ext-enable apcu \
- && MAKEFLAGS="-j $(nproc)" pecl install memcached --enable-memcached-sasl \
+ && MAKEFLAGS="-j $(nproc)" pecl install memcached --enable-memcached-sasl >/dev/null \
  && docker-php-ext-enable memcached \
  && docker-php-ext-configure zip --with-zip >/dev/null \
  && docker-php-ext-install -j$(nproc) \
@@ -75,7 +77,7 @@ RUN dpkg -l \
  && apt-get upgrade -y --no-install-recommends \
  && npm cache clean --force \
  && pecl clear-cache \
- && apt-get purge -y --auto-remove gcc gpgv libc6-dev libonig-dev make \
+ && apt-get -q purge -y --auto-remove gcc gpgv libc6-dev libonig-dev make \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /var/www/html/auth \
@@ -87,17 +89,11 @@ RUN dpkg -l \
   -LO https://github.com/xerial/sqlite-jdbc/releases/download/$SQLITE_JDBC_VERSION/sqlite-jdbc-$SQLITE_JDBC_VERSION.jar \
   -LO https://repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar \
   -LO https://repo1.maven.org/maven2/org/slf4j/slf4j-nop/2.0.9/slf4j-nop-2.0.9.jar \
-  -O https://raw.githubusercontent.com/tshr20180821/render-07/main/app/LogOperation.jar \
-  -o /tmp/phpMyAdmin.tar.xz https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.tar.xz \
- && tar xf /tmp/phpMyAdmin.tar.xz --strip-components=1 -C /var/www/html/phpmyadmin \
- && rm /tmp/phpMyAdmin.tar.xz \
- && chown www-data:www-data /var/www/html/phpmyadmin -R
+  -O https://raw.githubusercontent.com/tshr20180821/render-07/main/app/LogOperation.jar
 
-COPY ./config.inc.php /var/www/html/phpmyadmin/
 COPY ./app/* /usr/src/app/
 COPY --chmod=755 ./app/log.sh /usr/src/app/
 
 COPY ./auth/*.php /var/www/html/auth/
 
-# CMD ["bash","/usr/src/app/start.sh"]
 ENTRYPOINT ["bash","/usr/src/app/start.sh"]

@@ -11,49 +11,6 @@ class Log
         'FATAL' => '35', // purple
     ];
 
-    private $_statement_insert; // pdo prepare statement
-    
-    function __construct() {
-
-        clearstatcache();
-        if (!file_exists('/tmp/sqlitelog.db')) {
-            $pdo = new PDO('sqlite:/tmp/sqlitelog.db', NULL, NULL, array(PDO::ATTR_PERSISTENT => TRUE));
-
-            $sql_create = <<< __HEREDOC__
-CREATE TABLE t_log (
-    seq INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    regist_datetime TIMESTAMP DEFAULT (DATETIME('now','localtime')),
-    process_datetime TEXT NOT NULL,
-    pid TEXT NOT NULL,
-    level TEXT NOT NULL,
-    file TEXT NOT NULL,
-    line TEXT NOT NULL,
-    function TEXT NOT NULL,
-    message TEXT,
-    tags TEXT,
-    status INTEGER NOT NULL
-)
-__HEREDOC__;
-
-            $rc = $pdo->exec($sql_create);
-
-            // exec('cd /usr/src/app && java -classpath jar/* -Duser.timezone=Asia/Tokyo -Dfile.encoding=UTF-8 LogOperationMain &');
-            exec('cd /usr/src/app && java -classpath .:sqlite-jdbc-' . $_ENV['SQLITE_JDBC_VERSION']
-                 . '.jar:slf4j-api-2.0.9.jar:slf4j-nop-2.0.9.jar:LogOperation.jar -Duser.timezone=Asia/Tokyo -Dfile.encoding=UTF-8 LogOperationMain &');
-        } else {
-            $pdo = new PDO('sqlite:/tmp/sqlitelog.db', NULL, NULL, array(PDO::ATTR_PERSISTENT => TRUE));
-        }
-        $pdo->exec('PRAGMA journal_mode = WAL;');
-        $pdo->exec('PRAGMA busy_timeout = 10000;');
-
-        $sql_insert = <<< __HEREDOC__
-INSERT INTO t_log (process_datetime, pid, level, file, line, function, message, tags, status)
-  VALUES (:b_process_datetime, :b_pid, :b_level, :b_file, :b_line, :b_function, :b_message, 'php', 0);
-__HEREDOC__;
-
-        $this->_statement_insert = $pdo->prepare($sql_insert);
-    }
-
     public function trace($message_) {
         $this->output($message_);
     }
@@ -107,16 +64,5 @@ __HEREDOC__;
         $log_header = $_ENV['RENDER_EXTERNAL_HOSTNAME'] . ' ' . $_ENV['DEPLOY_DATETIME'] . " {$pid} {$level} {$file} {$line}";
 
         file_put_contents('php://stderr', "{$log_datetime} \033[0;" . self::COLOR_LIST[$level] . "m{$log_header}\033[0m {$function_chain} {$message_}\n");
-        
-        $this->_statement_insert->execute(
-            [':b_process_datetime' => $log_datetime,
-             ':b_pid' => $pid,
-             ':b_level' => $level,
-             ':b_file' => $file,
-             ':b_line' => $line,
-             ':b_function' => $function_chain,
-             ':b_message' => $message_,
-            ]
-        );
     }
 }

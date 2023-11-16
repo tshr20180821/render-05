@@ -45,11 +45,23 @@ $atom = <<< __HEREDOC__
  </entry>
 </feed>
 __HEREDOC__;
-    
+
+    /*
     $apt_result = '';
     if (file_exists('/tmp/CHECK_APT')) {
         $apt_result = trim(file_get_contents('/tmp/CHECK_APT')). ' ' . date('Y/m/d H:i:s', filemtime('/tmp/CHECK_APT'));
     }
+    */
+
+    $apt_result = '';
+    $mc = new Memcached();
+    $mc->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
+    $mc->setSaslAuthData('memcached', getenv('SASL_PASSWORD'));
+    $mc->addServer('127.0.0.1', 11211);
+    if ($mc->get('CHECK_APT') !== false) {
+        $apt_result = $mc->get('CHECK_APT');
+    }
+    $mc->quit();
     
     $file_size = 0;
     if (file_exists('/tmp/sqlitelog.db')) {
