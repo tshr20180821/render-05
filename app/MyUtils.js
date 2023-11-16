@@ -17,10 +17,12 @@ if (process.env.DEPLOY_DATETIME != undefined) {
 }
 
 class MyLog {
-    _regex;
+    _regex1;
+    _regex2;
 
     constructor() {
-        this._regex = /(.+) .+\/(.+?):(\d+)/;
+        this._regex1 = /(.+) .+\/(.+?):(\d+)/;
+        this._regex2 = /(\/)(.+?):(\d+)/;
     }
 
     info(message_) {
@@ -34,19 +36,12 @@ class MyLog {
     #output(level_, message_) {
         new Promise((resolve) => {
             try {
-                const new_err = new Error();
                 // console.log((new Error).stack);
-                const match = new_err.stack.split("\n")[5].substring(7).match(this._regex);
-                console.log(match);
-                console.log(new_err.stack);
-                /*
+                const target_line = (new Error()).stack.split("\n")[5].substring(7);
+                var match = target_line.match(this._regex1);
                 if (match == null) {
-                    console.log(new_err.stack);
-                }
-                */
-
-                if (message_ == null) {
-                    message_ = "null";
+                    match = target_line.match(this._regex2);
+                    match[1] = "-";
                 }
                 
                 const dt = new Date();
@@ -71,12 +66,6 @@ class MyLog {
                     keepAlive: true
                 });
 
-                /*
-                mc.get('LOGGLY_WAIT', function (err, val) {
-                    if (val == null) {
-                    }
-                }
-                */
                 const request = https.request(loggly_options);
                 request.write(datetime + ' ' + log_header + ' ' + message_);
                 request.end();
