@@ -155,17 +155,19 @@ function check_package_update() {
             var rc = 0;
             var check_apt = '';
             console.log('CHECK POINT 030');
-            mc.get('CHECK_APT', function (err1, val) {
-                console.log('CHECK POINT 040');
-                if (val == null) {
-                    console.log('CHECK POINT 050');
-                    rc = -1;
-                } else {
-                     console.log('CHECK POINT 060');
-                     check_apt = val;
-                     rc = 1;
-                }
-                console.log('CHECK POINT 070');
+            var promise = new Promise((resolve) => {
+                mc.get('CHECK_APT', function (err1, val) {
+                    console.log('CHECK POINT 040');
+                    if (val == null) {
+                        console.log('CHECK POINT 050');
+                        rc = -1;
+                    } else {
+                        console.log('CHECK POINT 060');
+                        check_apt = val;
+                        rc = 1;
+                    }
+                    console.log('CHECK POINT 070');
+                });
             });
             console.log('CHECK POINT 080 ' + rc);
 
