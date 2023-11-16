@@ -7,7 +7,7 @@ cat /etc/apache2/mods-enabled/mpm_prefork.conf
 
 ls /usr/local/lib/php/extensions/no-debug-non-zts-20220829/ -lang
 
-echo "extension = memcached.so" >/usr/local/etc/php/conf.d/memcached.ini
+echo "extension = /usr/local/lib/php/extensions/no-debug-non-zts-20220829/memcached.so" >/usr/local/etc/php/conf.d/memcached.ini
 php --ini
 
 # memcached sasl
