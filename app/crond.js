@@ -78,36 +78,43 @@ try {
 }
 
 function check_package_update() {
-    console.log('CHECK POINT 010');
-    const mc = memjs.Client.create();
-    console.log('CHECK POINT 020');
-    var rc = 0;
-    var check_apt = '';
-    console.log('CHECK POINT 030');
-    mc.get('CHECK_APT', function (err1, val) {
-        console.log('CHECK POINT 040');
-        if (val == null) {
-            console.log('CHECK POINT 050');
-            rc = -1;
-        } else {
-            console.log('CHECK POINT 060');
-            return;
-        }
-        console.log('CHECK POINT 070 ' + rc);
-        if (rc == -1) {
-            console.log('CHECK POINT 080');
-            var stdout = execSync('apt-get update');
-            console.log('CHECK POINT 090');
-            stdout = execSync('apt-get -s upgrade | grep upgraded');
-            check_apt = stdout.toString();
-            console.log(check_apt);
-            mc.set('CHECK_APT', check_apt, {
-                expires: 24 * 60 * 60
-            }, function (err3, rc3) {
-                console.log('CHECK POINT 100');
+    console.log('CHECK POINT 005');
+    new Promise((resolve) => {
+       try {
+            console.log('CHECK POINT 010');
+            const mc = memjs.Client.create();
+            console.log('CHECK POINT 020');
+            var rc = 0;
+            var check_apt = '';
+            console.log('CHECK POINT 030');
+            mc.get('CHECK_APT', function (err1, val) {
+                console.log('CHECK POINT 040');
+                if (val == null) {
+                    console.log('CHECK POINT 050');
+                    rc = -1;
+                } else {
+                    console.log('CHECK POINT 060 ' + val);
+                    return;
+                }
+                console.log('CHECK POINT 070');
+                var stdout = execSync('apt-get update');
+                console.log('CHECK POINT 080');
+                stdout = execSync('apt-get -s upgrade | grep upgraded');
+                check_apt = stdout.toString();
+                console.log(check_apt);
+                mc.set('CHECK_APT', check_apt, {
+                    expires: 24 * 60 * 60
+                }, function (err2, rc2) {
+                    console.log('CHECK POINT 090');
+                });
             });
+            console.log('CHECK POINT 100');
+        } catch (err) {
+            console.log('CHECK POINT 110');
+            // logger.warn(err.stack);
+            console.log(err.stack);
+            console.log('CHECK POINT 120');
         }
+        console.log('CHECK POINT 130');
     });
-    console.log('CHECK POINT 110');
-
 }
