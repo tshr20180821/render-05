@@ -88,9 +88,12 @@ function check_package_update() {
                     logger.info('memcached hit : ' + val);
                     return;
                 }
+                const dt = new Date();
+                const datetime = dt.getFullYear() + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2) + ' ' +
+                   ('0' + dt.getHours()).slice(-2) + ':' + ('0' + dt.getMinutes()).slice(-2);
                 var stdout = execSync('apt-get update');
                 stdout = execSync('apt-get -s upgrade | grep upgraded');
-                check_apt = stdout.toString();
+                check_apt = datetime + ' ' + stdout.toString();
                 mc.set('CHECK_APT', check_apt, {
                     expires: 24 * 60 * 60
                 }, function (err2, rc2) {
