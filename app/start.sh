@@ -5,6 +5,8 @@ set -x
 ls -lang /etc/apache2/mods-enabled/
 cat /etc/apache2/mods-enabled/mpm_prefork.conf
 
+php --ini
+
 # memcached sasl
 useradd memcached -G sasl
 export SASL_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
