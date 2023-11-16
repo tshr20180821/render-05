@@ -38,9 +38,12 @@ class MyLog {
                 // console.log((new Error).stack);
                 const match = new_err.stack.split("\n")[5].substring(7).match(this._regex);
                 console.log(match);
+                console.log(new_err.stack);
+                /*
                 if (match == null) {
                     console.log(new_err.stack);
                 }
+                */
 
                 if (message_ == null) {
                     message_ = "null";
