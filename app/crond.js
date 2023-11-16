@@ -77,47 +77,37 @@ try {
     logger.warn(err.stack);
 }
 
-async function check_package_update() {
+function check_package_update() {
     console.log('CHECK POINT 010');
     const mc = memjs.Client.create();
     console.log('CHECK POINT 020');
     var rc = 0;
     var check_apt = '';
     console.log('CHECK POINT 030');
-    await mc.get('CHECK_APT', function (err1, val) {
+    mc.get('CHECK_APT', function (err1, val) {
         console.log('CHECK POINT 040');
         if (val == null) {
             console.log('CHECK POINT 050');
             rc = -1;
         } else {
             console.log('CHECK POINT 060');
-            check_apt = val;
             return;
         }
-        console.log('CHECK POINT 070');
-    });
-
-    console.log('CHECK POINT 080 ' + rc);
-    if (rc == -1) {
-        console.log('CHECK POINT 085');
-        await mc.set('CHECK_APT', 'dummy', {
-            expires: 10 * 60
-        }, function (err2, rc2) {
+        console.log('CHECK POINT 070 ' + rc);
+        if (rc == -1) {
+            console.log('CHECK POINT 080');
+            var stdout = execSync('apt-get update');
             console.log('CHECK POINT 090');
-        });
-    }
-    console.log('CHECK POINT 120');
-    var stdout = execSync('apt-get update');
-    console.log('CHECK POINT 130');
-    stdout = execSync('apt-get -s upgrade | grep upgraded');
-    check_apt = stdout.toString();
-    console.log(check_apt);
-    
-    mc.set('CHECK_APT', stdout.toString(), {
-        expires: 24 * 60 * 60
-    }, function (err3, rc3) {
-        console.log('CHECK POINT 150');
+            stdout = execSync('apt-get -s upgrade | grep upgraded');
+            check_apt = stdout.toString();
+            console.log(check_apt);
+            mc.set('CHECK_APT', check_apt, {
+                expires: 24 * 60 * 60
+            }, function (err3, rc3) {
+                console.log('CHECK POINT 100');
+            });
+        }
     });
-    console.log('CHECK POINT 160');
+    console.log('CHECK POINT 110');
 
 }
