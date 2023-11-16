@@ -5,6 +5,7 @@ set -x
 ls -lang /etc/apache2/mods-enabled/
 cat /etc/apache2/mods-enabled/mpm_prefork.conf
 
+echo "extension = memcached.so" >/usr/local/etc/php/conf.d/memcached.ini
 php --ini
 
 # memcached sasl
