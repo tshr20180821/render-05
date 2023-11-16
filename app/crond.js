@@ -167,8 +167,9 @@ function check_package_update() {
                 }
                 console.log('CHECK POINT 070');
             }).then( function() {
+                console.log('CHECK POINT 080 ' + rc);
                 if (rc == -1) {
-                    console.log('CHECK POINT 080 ' + rc);
+                    console.log('CHECK POINT 085');
                     promise = new Promise((resolve) => {
                         mc.set('CHECK_APT', 'dummy', {
                             expires: 10 * 60
