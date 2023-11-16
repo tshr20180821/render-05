@@ -155,46 +155,49 @@ function check_package_update() {
             var rc = 0;
             var check_apt = '';
             console.log('CHECK POINT 030');
-            var promise = new Promise((resolve) => {
-                mc.get('CHECK_APT', function (err1, val) {
-                    console.log('CHECK POINT 040');
-                    if (val == null) {
-                        console.log('CHECK POINT 050');
-                        rc = -1;
-                    } else {
-                        console.log('CHECK POINT 060');
-                        check_apt = val;
-                        rc = 1;
-                    }
-                    console.log('CHECK POINT 070');
+            mc.get('CHECK_APT', function (err1, val) {
+                console.log('CHECK POINT 040');
+                if (val == null) {
+                    console.log('CHECK POINT 050');
+                    rc = -1;
+                } else {
+                    console.log('CHECK POINT 060');
+                    check_apt = val;
+                    rc = 1;
+                }
+                console.log('CHECK POINT 070');
+            }).then( function() {
+                if (rc == -1) {
+                    console.log('CHECK POINT 080 ' + rc);
+                    promise = new Promise((resolve) => {
+                        mc.set('CHECK_APT', 'dummy', {
+                            expires: 10 * 60
+                        }, function (err2, rc2) {
+                            console.log('CHECK POINT 090');
+                        });
+                    });
+                }
+            }).then(function(){
+                console.log('CHECK POINT 100');
+                if (rc == 1) {
+                    console.log('CHECK POINT 110');
+                    return;
+                }
+                console.log('CHECK POINT 120');
+                var stdout = execSync('apt-get update');
+                console.log('CHECK POINT 130');
+                stdout = execSync('apt-get -s upgrade | grep upgraded');
+                check_apt = stdout.toString();
+                console.log(check_apt);
+                
+                mc.set('CHECK_APT', stdout.toString(), {
+                    expires: 24 * 60 * 60
+                }, function (err3, rc3) {
+                    console.log('CHECK POINT 150');
                 });
+                console.log('CHECK POINT 160');
             });
-            console.log('CHECK POINT 080 ' + rc);
-
-            if (rc == -1) {
-                console.log('CHECK POINT 090 ' + rc);
-                mc.set('CHECK_APT', 'dummy', {
-                    expires: 10 * 60
-                }, function (err2, rc2) {
-                    console.log('CHECK POINT 100');
-                });
-            } else if (rc == 1) {
-                console.log('CHECK POINT 110');
-                return;
-            }
-            console.log('CHECK POINT 120');
-
-            var stdout = execSync('apt-get update');
-            console.log('CHECK POINT 130');
-            stdout = execSync('apt-get -s upgrade | grep upgraded');
-            console.log(stdout.toString());
-            console.log('CHECK POINT 140');
-            mc.set('CHECK_APT', stdout.toString(), {
-                expires: 24 * 60 * 60
-            }, function (err3, rc3) {
-                console.log('CHECK POINT 150');
-            });
-            console.log('CHECK POINT 160');
+            console.log('CHECK POINT 170');
 
             /*
             const check_apt_file = '/tmp/CHECK_APT';
@@ -215,12 +218,12 @@ function check_package_update() {
             }
             */
         } catch (err) {
-            console.log('CHECK POINT 160');
+            console.log('CHECK POINT 180');
             // logger.warn(err.stack);
             console.log(err.stack);
-            console.log('CHECK POINT 170');
+            console.log('CHECK POINT 190');
         }
         resolve();
     });
-    console.log('CHECK POINT 180');
+    console.log('CHECK POINT 200');
 }
