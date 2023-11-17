@@ -2,7 +2,7 @@
 
 set -x
 
-cp -f ./mpm_prefork.conf /etc/apache/mods-available/
+cp -f ./mpm_prefork.conf /etc/apache2/mods-available/
 ls -lang /etc/apache2/
 ls -lang /etc/apache2/mods-enabled/
 cat /etc/apache2/mods-enabled/mpm_prefork.conf
