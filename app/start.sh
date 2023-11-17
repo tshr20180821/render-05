@@ -2,17 +2,10 @@
 
 set -x
 
-ls -lang /etc/apache2/mods-enabled/
-cat /etc/apache2/mods-enabled/mpm_prefork.conf
+# ls -lang /etc/apache2/mods-enabled/
+# cat /etc/apache2/mods-enabled/mpm_prefork.conf
 
-find / -name libmemcached.so -print
-
-ls /usr/local/lib/php/extensions/no-debug-non-zts-20220829/ -lang
-cat /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini
-cat /usr/local/etc/php/conf.d/docker-php-ext-memcached.ini
-cat /usr/local/etc/php/php.ini
-# echo "extension=/usr/local/lib/php/extensions/no-debug-non-zts-20220829/memcached" >/usr/local/etc/php/conf.d/memcached.ini
-php --ini
+eslint crond.js
 
 # memcached sasl
 useradd memcached -G sasl
@@ -44,8 +37,8 @@ sed -i s/__DEPLOY_DATETIME__/${DEPLOY_DATETIME}/ /etc/apache2/sites-enabled/apac
 echo ServerName ${RENDER_EXTERNAL_HOSTNAME} >/etc/apache2/sites-enabled/server_name.conf
 . /etc/apache2/envvars
 
-exec /usr/sbin/apache2 -DFOREGROUND &
+exec /usr/sbin/apache2 -DFOREGROUND
 
-sleep 3s && ps aux &
+# sleep 3s && ps aux &
 
-node --expose-gc crond.js
+# node --expose-gc crond.js
