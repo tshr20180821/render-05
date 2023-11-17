@@ -11,6 +11,7 @@ cp -f ./mpm_prefork.conf /etc/apache2/mods-available/
 /usr/src/app/node_modules/.bin/eslint crond.js
 /usr/src/app/node_modules/.bin/eslint MyUtils.js
 
+date '+%Y-%m-%d %H:%M:%S.%3N'
 chmod +x ./log_memcached.sh
 
 # memcached sasl
