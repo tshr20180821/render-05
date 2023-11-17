@@ -98,7 +98,7 @@ function check_package_update() {
                 check_apt = datetime + ' ' + stdout.toString();
                 mc.set('CHECK_APT', check_apt, {
                     expires: 24 * 60 * 60
-                }, function (err, rc) {
+                }, function (err, _) {
                     if (err) {
                         logger.warn(err.stack);
                     } else {
