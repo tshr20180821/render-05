@@ -56,9 +56,7 @@ try {
                         mu.send_slack_message('HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME);
                     }
                 }).end();
-                console.log("CHECK POINT 010");
                 check_package_update();
-                console.log("CHECK POINT 020");
             } catch (err) {
                 logger.warn(err.stack);
             }
