@@ -1,7 +1,8 @@
 #!/bin/bash
 
-PID=$$
+pid=$$
 
 while read line; do
-echo "${PID} Memcached Log : ${line}"
+dt=$(date '+%Y-%m-%d %H:%M:%S.%3N')
+echo "${dt} ${RENDER_EXTERNAL_HOSTNAME} ${DEPLOY_DATETIME} ${pid} Memcached ${line}"
 done
