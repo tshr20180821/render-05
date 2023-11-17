@@ -38,8 +38,8 @@ sed -i s/__DEPLOY_DATETIME__/${DEPLOY_DATETIME}/ /etc/apache2/sites-enabled/apac
 echo ServerName ${RENDER_EXTERNAL_HOSTNAME} >/etc/apache2/sites-enabled/server_name.conf
 . /etc/apache2/envvars
 
-exec /usr/sbin/apache2 -DFOREGROUND
+exec /usr/sbin/apache2 -DFOREGROUND &
 
-# sleep 3s && ps aux &
+sleep 3s && ps aux &
 
-# node --expose-gc crond.js
+node --expose-gc crond.js
