@@ -7,6 +7,7 @@ set -x
 
 # find / -name eslint -print
 /usr/src/app/node_modules/.bin/eslint crond.js
+/usr/src/app/node_modules/.bin/eslint MyUtils.js
 
 # memcached sasl
 useradd memcached -G sasl
