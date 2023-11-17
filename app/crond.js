@@ -78,7 +78,7 @@ try {
 }
 
 function check_package_update() {
-    new Promise((resolve) => {
+    new Promise(() => {
        try {
             const mc = memjs.Client.create();
             var check_apt = '';
