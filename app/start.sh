@@ -44,4 +44,4 @@ echo ServerName ${RENDER_EXTERNAL_HOSTNAME} >/etc/apache2/sites-enabled/server_n
 # exec /usr/sbin/apache2 -DFOREGROUND
 exec /usr/sbin/apache2 -DFOREGROUND &
 sleep 3s && ps aux &
-node --expose-gc crond.js
+node crond.js
