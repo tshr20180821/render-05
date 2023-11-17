@@ -3,13 +3,15 @@
 set -x
 
 cp -f ./mpm_prefork.conf /etc/apache2/mods-available/
-ls -lang /etc/apache2/
-ls -lang /etc/apache2/mods-enabled/
-cat /etc/apache2/mods-enabled/mpm_prefork.conf
+# ls -lang /etc/apache2/
+# ls -lang /etc/apache2/mods-enabled/
+# cat /etc/apache2/mods-enabled/mpm_prefork.conf
 
 # find / -name eslint -print
 /usr/src/app/node_modules/.bin/eslint crond.js
 /usr/src/app/node_modules/.bin/eslint MyUtils.js
+
+chmod +x ./log_memcached.sh
 
 # memcached sasl
 useradd memcached -G sasl
@@ -20,7 +22,7 @@ chown memcached:memcached /etc/sasldb2
 export SASL_CONF_PATH=/tmp/memcached.conf
 echo "mech_list: plain cram-md5" >${SASL_CONF_PATH}
 /usr/sbin/saslauthd -a sasldb -n 2 -V
-/usr/bin/memcached -S -v -B binary -d -u memcached
+/usr/bin/memcached -S -v -B binary -d -u memcached 1>|/usr/src/app/log_memcached.sh 2>|/usr/src/app/log_memcached.sh
 testsaslauthd -u memcached -p ${SASL_PASSWORD}
 
 # memjs
