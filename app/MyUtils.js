@@ -8,8 +8,6 @@ log4js.configure('log4js.json');
 const logger = log4js.getLogger();
 logger.level = 'debug';
 
-const mc = (require('memjs')).Client.create()
-
 if (process.env.DEPLOY_DATETIME != undefined) {
     logger.addContext("DEPLOY_DATETIME", process.env.DEPLOY_DATETIME);
 } else {
@@ -145,7 +143,7 @@ module.exports.send_mail = function (subject_, body_) {
 
     (async () => {
         const smtp = require('nodemailer').createTransport(smtp_options);
-        const result = await smtp.sendMail(mail, function (err, info) {
+        await smtp.sendMail(mail, function (err, info) {
             if (err) {
                 logger.warn(err.stack);
             } else {
