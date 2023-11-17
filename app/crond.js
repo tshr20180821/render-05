@@ -82,9 +82,11 @@ function check_package_update() {
        try {
             const mc = memjs.Client.create();
             var check_apt = '';
-            mc.get('CHECK_APT', function (err1, val) {
-                if (val == null) {
-                } else {
+            mc.get('CHECK_APT', function (err, val) {
+                if (err) {
+                    logger.warn(err.stack);
+                }
+                if (val != null) {
                     logger.info('memcached hit : ' + val);
                     return;
                 }
@@ -97,7 +99,11 @@ function check_package_update() {
                 mc.set('CHECK_APT', check_apt, {
                     expires: 24 * 60 * 60
                 }, function (err, rc) {
-                    logger.info('memcached set : ' + check_apt);
+                    if (err) {
+                        logger.warn(err.stack);
+                    } else {
+                        logger.info('memcached set : ' + check_apt);
+                    }
                 });
             });
         } catch (err) {
