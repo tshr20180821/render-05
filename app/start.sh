@@ -6,7 +6,7 @@ set -x
 # cat /etc/apache2/mods-enabled/mpm_prefork.conf
 
 find / -name eslint -print
-eslint crond.js
+/usr/src/app/node_modules/.bin/eslint crond.js
 
 # memcached sasl
 useradd memcached -G sasl
