@@ -56,7 +56,9 @@ try {
                         mu.send_slack_message('HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME);
                     }
                 }).end();
+                console.log("CHECK POINT 010");
                 check_package_update();
+                console.log("CHECK POINT 020");
             } catch (err) {
                 logger.warn(err.stack);
             }
@@ -96,7 +98,7 @@ function check_package_update() {
                 check_apt = datetime + ' ' + stdout.toString();
                 mc.set('CHECK_APT', check_apt, {
                     expires: 24 * 60 * 60
-                }, function (err2, rc2) {
+                }, function (err, rc) {
                     logger.info('memcached set : ' + check_apt);
                 });
             });
