@@ -2,8 +2,9 @@
 
 set -x
 
-# ls -lang /etc/apache2/mods-enabled/
-# cat /etc/apache2/mods-enabled/mpm_prefork.conf
+cp -f ./mpm_prefork.conf /etc/apache/mods-available/
+ls -lang /etc/apache2/mods-enabled/
+cat /etc/apache2/mods-enabled/mpm_prefork.conf
 
 # find / -name eslint -print
 /usr/src/app/node_modules/.bin/eslint crond.js
@@ -39,7 +40,7 @@ sed -i s/__DEPLOY_DATETIME__/${DEPLOY_DATETIME}/ /etc/apache2/sites-enabled/apac
 echo ServerName ${RENDER_EXTERNAL_HOSTNAME} >/etc/apache2/sites-enabled/server_name.conf
 . /etc/apache2/envvars
 
-exec /usr/sbin/apache2 -DFOREGROUND
-# exec /usr/sbin/apache2 -DFOREGROUND &
-# sleep 3s && ps aux &
-# node --expose-gc crond.js
+# exec /usr/sbin/apache2 -DFOREGROUND
+exec /usr/sbin/apache2 -DFOREGROUND &
+sleep 3s && ps aux &
+node --expose-gc crond.js
