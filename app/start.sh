@@ -11,7 +11,8 @@ cp -f ./mpm_prefork.conf /etc/apache2/mods-available/
 /usr/src/app/node_modules/.bin/eslint crond.js
 /usr/src/app/node_modules/.bin/eslint MyUtils.js
 
-date '+%Y-%m-%d %H:%M:%S.%3N'
+export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
+
 chmod +x ./log_memcached.sh
 
 # memcached sasl
@@ -38,7 +39,6 @@ echo ${MEMCACHIER_SERVERS}
 export BLOWFISH_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
 export FIXED_THREAD_POOL=1
-export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 sed -i s/__RENDER_EXTERNAL_HOSTNAME__/${RENDER_EXTERNAL_HOSTNAME}/ /etc/apache2/sites-enabled/apache.conf
 sed -i s/__DEPLOY_DATETIME__/${DEPLOY_DATETIME}/ /etc/apache2/sites-enabled/apache.conf
 
