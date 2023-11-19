@@ -1,6 +1,4 @@
-ENV DOCKER_HUB_PHP_TAG="8.2-apache"
-
-FROM php:${DOCKER_HUB_PHP_TAG}
+FROM php:8.2-apache
 
 EXPOSE 80
 
