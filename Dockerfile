@@ -1,4 +1,5 @@
-FROM php:8.2-apache
+ARG DOCKER_HUB_PHP_TAG="8.2-apache"
+FROM php:${DOCKER_HUB_PHP_TAG}
 
 EXPOSE 80
 
