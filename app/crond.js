@@ -135,6 +135,7 @@ function check_npm_update() {
                 const datetime = dt.getFullYear() + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2) + ' ' +
                    ('0' + dt.getHours()).slice(-2) + ':' + ('0' + dt.getMinutes()).slice(-2);
                 var stdout = execSync('npm outdated');
+                logger.info('check_npm_update length : ' + stdout.toString().length);
                 check_npm = datetime + ' ' + stdout.toString();
                 mc.set('CHECK_NPM', check_npm, {
                     expires: 24 * 60 * 60
