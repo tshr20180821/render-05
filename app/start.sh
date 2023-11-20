@@ -11,8 +11,6 @@ cp -f ./mpm_prefork.conf /etc/apache2/mods-available/
 
 export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 
-echo ${DOCKER_HUB_PHP_TAG2}
-
 docker stats
 
 chmod +x ./log_memcached.sh
@@ -20,18 +18,17 @@ chmod +x ./log_memcached.sh
 # memcached sasl
 useradd memcached -G sasl
 export SASL_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
-echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c -f /tmp/sasl.db memcached 
-# chown memcached:memcached /etc/sasldb2
-chown memcached:memcached /tmp/sasl.db
-sasldblistusers2 -f /tmp/sasl.db
+echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c memcached 
+chown memcached:memcached /etc/sasldb2
+# sasldblistusers2
 export SASL_CONF_PATH=/tmp/memcached.conf
 echo "mech_list: plain cram-md5" >${SASL_CONF_PATH}
-echo "sasldb_path: /tmp/sasl.db" >>${SASL_CONF_PATH}
+# echo "sasldb_path: /tmp/sasl.db" >>${SASL_CONF_PATH}
 # /usr/sbin/saslauthd -a sasldb -n 2 -V
 /usr/bin/memcached -h | head -n 1
 /usr/bin/memcached -S -v -B binary -d -u memcached 2>&1 |/usr/src/app/log_memcached.sh &
 # /usr/bin/memcached -S -v -B binary -d -u memcached
-testsaslauthd -u memcached -p ${SASL_PASSWORD}
+# testsaslauthd -u memcached -p ${SASL_PASSWORD}
 
 # memjs
 export MEMCACHIER_SERVERS=127.0.0.1:11211
