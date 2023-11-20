@@ -16,7 +16,7 @@ docker stats
 chmod +x ./log_memcached.sh
 
 # memcached sasl
-useradd memcached -G sasl
+# useradd memcached -G sasl
 export SASL_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c memcached 
 chown memcached:memcached /etc/sasldb2
