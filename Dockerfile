@@ -1,6 +1,6 @@
 ARG DOCKER_HUB_PHP_TAG="8.2-apache"
 FROM php:${DOCKER_HUB_PHP_TAG}
-ENV DOCKER_HUB_PHP_TAG=${DOCKER_HUB_PHP_TAG}
+ENV DOCKER_HUB_PHP_TAG2=${DOCKER_HUB_PHP_TAG}
 
 EXPOSE 80
 
@@ -98,6 +98,6 @@ COPY --chmod=755 ./app/log.sh /usr/src/app/
 
 COPY ./auth/*.php /var/www/html/auth/
 
-RUN echo ${DOCKER_HUB_PHP_TAG}
+RUN echo ${DOCKER_HUB_PHP_TAG2}
 
 ENTRYPOINT ["bash","/usr/src/app/start.sh"]
