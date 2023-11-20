@@ -56,7 +56,11 @@ try {
                         mu.send_slack_message('HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME);
                     }
                 }).end();
-                check_package_update();
+                if ((new Date()).getMinutes() % 2 == 0) {
+                    check_apt_update();
+                } else {
+                    check_npm_update();
+                }
             } catch (err) {
                 logger.warn(err.stack);
             }
@@ -77,9 +81,10 @@ try {
     logger.warn(err.stack);
 }
 
-function check_package_update() {
+function check_apt_update() {
     new Promise(() => {
        try {
+            logger.info('START check_apt_update');
             const mc = memjs.Client.create();
             var check_apt = '';
             mc.get('CHECK_APT', function (err, val) {
@@ -87,7 +92,7 @@ function check_package_update() {
                     logger.warn(err.stack);
                 }
                 if (val != null) {
-                    logger.info('memcached hit : ' + val);
+                    logger.info('memcached hit CHECK_APT : ' + val);
                     return;
                 }
                 const dt = new Date();
@@ -102,7 +107,42 @@ function check_package_update() {
                     if (err) {
                         logger.warn(err.stack);
                     } else {
-                        logger.info('memcached set : ' + check_apt);
+                        logger.info('memcached set CHECK_APT : ' + check_apt);
+                    }
+                });
+            });
+        } catch (err) {
+            logger.warn(err.stack);
+        }
+    });
+}
+
+function check_npm_update() {
+    new Promise(() => {
+       try {
+            logger.info('START check_npm_update');
+            const mc = memjs.Client.create();
+            var check_npm = '';
+            mc.get('CHECK_NPM', function (err, val) {
+                if (err) {
+                    logger.warn(err.stack);
+                }
+                if (val != null) {
+                    logger.info('memcached hit CHECK_NPM : ' + val);
+                    return;
+                }
+                const dt = new Date();
+                const datetime = dt.getFullYear() + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2) + ' ' +
+                   ('0' + dt.getHours()).slice(-2) + ':' + ('0' + dt.getMinutes()).slice(-2);
+                var stdout = execSync('npm outdated');
+                check_npm = datetime + ' ' + stdout.toString();
+                mc.set('CHECK_NPM', check_npm, {
+                    expires: 24 * 60 * 60
+                }, function (err, _) {
+                    if (err) {
+                        logger.warn(err.stack);
+                    } else {
+                        logger.info('memcached set CHECK_NPM : ' + check_npm);
                     }
                 });
             });
