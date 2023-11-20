@@ -11,6 +11,8 @@ cp -f ./mpm_prefork.conf /etc/apache2/mods-available/
 
 export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 
+echo ${DOCKER_HUB_PHP_TAG}
+
 chmod +x ./log_memcached.sh
 
 # memcached sasl
