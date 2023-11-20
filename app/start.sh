@@ -13,6 +13,8 @@ export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 
 /usr/src/app/node_modules/.bin/eslint crond.js
 
+npm outdated
+
 chmod +x ./log_memcached.sh
 
 # memcached sasl
