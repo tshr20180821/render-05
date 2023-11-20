@@ -98,4 +98,6 @@ COPY --chmod=755 ./app/log.sh /usr/src/app/
 
 COPY ./auth/*.php /var/www/html/auth/
 
+RUN echo ${DOCKER_HUB_PHP_TAG}
+
 ENTRYPOINT ["bash","/usr/src/app/start.sh"]
