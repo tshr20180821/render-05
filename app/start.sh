@@ -6,10 +6,8 @@ cp -f ./mpm_prefork.conf /etc/apache2/mods-available/
 # ls -lang /etc/apache2/
 # ls -lang /etc/apache2/mods-enabled/
 # cat /etc/apache2/mods-enabled/mpm_prefork.conf
-
-# find / -name eslint -print
-/usr/src/app/node_modules/.bin/eslint crond.js
-/usr/src/app/node_modules/.bin/eslint MyUtils.js
+# /usr/src/app/node_modules/.bin/eslint crond.js
+# /usr/src/app/node_modules/.bin/eslint MyUtils.js
 
 export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 
@@ -18,12 +16,15 @@ chmod +x ./log_memcached.sh
 # memcached sasl
 useradd memcached -G sasl
 export SASL_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
-echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c memcached
-chown memcached:memcached /etc/sasldb2
-# sasldblistusers2
+echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c -f /tmp/sasl.db memcached 
+# chown memcached:memcached /etc/sasldb2
+chown mwmcached:memcached /tmp/sasl.db
+sasldblistusers2 -f /tmp/sasl.db
 export SASL_CONF_PATH=/tmp/memcached.conf
 echo "mech_list: plain cram-md5" >${SASL_CONF_PATH}
-/usr/sbin/saslauthd -a sasldb -n 2 -V
+echo "sasldb_path: /tmp/sasl.db" >>${SASL_CONF_PATH}
+# /usr/sbin/saslauthd -a sasldb -n 2 -V
+/usr/bin/memcached -h
 /usr/bin/memcached -S -v -B binary -d -u memcached 2>&1 |/usr/src/app/log_memcached.sh &
 # /usr/bin/memcached -S -v -B binary -d -u memcached
 testsaslauthd -u memcached -p ${SASL_PASSWORD}
@@ -32,8 +33,6 @@ testsaslauthd -u memcached -p ${SASL_PASSWORD}
 export MEMCACHIER_SERVERS=127.0.0.1:11211
 export MEMCACHIER_USERNAME=memcached
 export MEMCACHIER_PASSWORD=${SASL_PASSWORD}
-
-echo ${MEMCACHIER_SERVERS}
 
 # phpMyAdmin
 export BLOWFISH_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
