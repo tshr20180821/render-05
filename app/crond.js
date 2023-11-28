@@ -6,9 +6,7 @@ const logger = mu.get_logger();
 const https = require("https");
 const url = 'https://' + process.env.RENDER_EXTERNAL_HOSTNAME + '/auth/crond.php';
 // const fs = require('fs');
-const {
-    execSync
-} = require('child_process');
+const { execSync } = require('child_process');
 const memjs = require('memjs');
 
 const CronJob = require('cron').CronJob;
@@ -29,7 +27,7 @@ try {
                     }
                 };
                 http_options.agent = new https.Agent({
-                    keepAlive: true
+                    keepAlive: false
                 });
 
                 var data_buffer = [];
@@ -56,10 +54,12 @@ try {
                         mu.send_slack_message('HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME);
                     }
                 }).end();
-                if ((new Date()).getMinutes() % 2 == 0) {
-                    check_apt_update();
-                } else {
-                    check_npm_update();
+                if (Date.now() - process.env.START_TIME > 5 * 60 * 1000) {
+                    if ((new Date()).getMinutes() % 2 == 0) {
+                        check_apt_update();
+                    } else {
+                        check_npm_update();
+                    }
                 }
             } catch (err) {
                 logger.warn(err.stack);
@@ -86,15 +86,21 @@ function check_apt_update() {
        try {
             logger.info('START check_apt_update');
             const mc = memjs.Client.create();
+            logger.info('check_apt_update CHECK POINT 010');
             var check_apt = '';
             mc.get('CHECK_APT', function (err, val) {
+                logger.info('check_apt_update CHECK POINT 020');
                 if (err) {
+                    logger.info('check_apt_update CHECK POINT 030');
                     logger.warn(err.stack);
                 }
+                logger.info('check_apt_update CHECK POINT 040');
                 if (val != null) {
+                    logger.info('check_apt_update CHECK POINT 050');
                     logger.info('memcached hit CHECK_APT : ' + val);
                     return;
                 }
+                logger.info('check_apt_update CHECK POINT 060');
                 const dt = new Date();
                 const datetime = dt.getFullYear() + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2) + ' ' +
                    ('0' + dt.getHours()).slice(-2) + ':' + ('0' + dt.getMinutes()).slice(-2);
@@ -111,7 +117,30 @@ function check_apt_update() {
                     }
                 });
             });
+            logger.info('check_apt_update CHECK POINT 070');
+            /*
+            await setTimeout(20000);
+            logger.info('check_apt_update CHECK POINT 080');
+            if (check_apt == '') {
+                const dt = new Date();
+                const datetime = dt.getFullYear() + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2) + ' ' +
+                   ('0' + dt.getHours()).slice(-2) + ':' + ('0' + dt.getMinutes()).slice(-2);
+                var stdout = execSync('apt-get update');
+                stdout = execSync('apt-get -s upgrade | grep upgraded');
+                check_apt = datetime + ' ' + stdout.toString();
+                mc.set('CHECK_APT', check_apt, {
+                    expires: 24 * 60 * 60
+                }, function (err, _) {
+                    if (err) {
+                        logger.warn(err.stack);
+                    } else {
+                        logger.info('memcached set CHECK_APT : ' + check_apt);
+                    }
+                });
+            }
+            */
         } catch (err) {
+            logger.info('check_apt_update CHECK POINT 080');
             logger.warn(err.stack);
         }
     });
@@ -135,8 +164,7 @@ function check_npm_update() {
                 const datetime = dt.getFullYear() + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2) + ' ' +
                    ('0' + dt.getHours()).slice(-2) + ':' + ('0' + dt.getMinutes()).slice(-2);
                 var stdout = execSync('npm outdated');
-                logger.info('check_npm_update length : ' + stdout.toString().length);
-                check_npm = datetime + ' ' + stdout.toString();
+                check_npm = datetime + ' ' + (stdout.toString().length == 0 ? "none" : stdout.toString());
                 mc.set('CHECK_NPM', check_npm, {
                     expires: 24 * 60 * 60
                 }, function (err, _) {

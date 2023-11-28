@@ -19,15 +19,17 @@ function get_dockerhub_repository_information()
     global $log;
     $log->info('BEGIN');
   
+    $log->info('target_tag_name : ' . $_ENV['DOCKER_HUB_PHP_TAG']);
     $res = file_get_contents('https://hub.docker.com/v2/repositories/library/php/tags?page_size=100');
 
     for ($i = 0; $i < 10; $i++) {
         $data = json_decode($res, true);
 
         foreach ($data['results'] as $data_tag) {
-            if ($data_tag['name'] == '8.2-apache') {
+            $log->info('tag_name : ' . $data_tag['name']);
+            if ($data_tag['name'] == $_ENV['DOCKER_HUB_PHP_TAG']) {
                 $log->info($data_tag['last_updated']);
-                apcu_store('last_updated_8.2-apache', $data_tag['last_updated']);
+                apcu_store('last_updated_' . $_ENV['DOCKER_HUB_PHP_TAG'], $data_tag['last_updated']);
                 break 2;
             }
         }

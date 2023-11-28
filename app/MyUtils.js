@@ -32,7 +32,7 @@ class MyLog {
     }
 
     #output(level_, message_) {
-        new Promise((resolve) => {
+        new Promise(() => {
             try {
                 // console.log((new Error).stack);
                 const target_line = (new Error()).stack.split("\n")[5].substring(7);
@@ -70,7 +70,6 @@ class MyLog {
             } catch (err) {
                 console.warn(err.stack);
             }
-            resolve();
         });
     }
 }
@@ -90,7 +89,7 @@ module.exports.send_slack_message = function (message_) {
             'Content-type': 'application/json'
         }
     };
-    new Promise((resolve) => {
+    new Promise(() => {
         try {
             [process.env.SLACK_CHANNEL_01, process.env.SLACK_CHANNEL_02].forEach(channel => {
                 const post_data = JSON.stringify({
@@ -107,7 +106,6 @@ module.exports.send_slack_message = function (message_) {
         } catch (err) {
             console.warn(err.stack);
         }
-        resolve();
     });
 }
 
