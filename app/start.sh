@@ -49,7 +49,8 @@ useradd memcached -G sasl
 export MEMCACHED_SASL_PWDB=/tmp/sasl.db
 export SASL_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 # echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c memcached
-echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c memcached -f ${MEMCACHED_SASL_PWDB}
+# echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c memcached -f ${MEMCACHED_SASL_PWDB}
+echo "memcached:${SASL_PASSWORD}" >${MEMCACHED_SASL_PWDB}
 ls -lang ${MEMCACHED_SASL_PWDB}
 cat ${MEMCACHED_SASL_PWDB}
 # chown memcached:memcached /etc/sasldb2
