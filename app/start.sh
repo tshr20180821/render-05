@@ -63,7 +63,7 @@ cat ${SASL_CONF_PATH}
 chown memcached:memcached ${SASL_CONF_PATH}
 ls -lang /tmp
 # /usr/sbin/saslauthd -a sasldb -n 2 -V 2>&1 |/usr/src/app/log_general.sh saslauthd &
-./memcached -l 127.0.0.1 --enable-sasl -vvvv -B binary -d -u memcached 2>&1 |/usr/src/app/log_general.sh memcached &
+./memcached -l 127.0.0.1 --enable-sasl -vvv -B binary -d -u memcached 2>&1 |/usr/src/app/log_general.sh memcached &
 # testsaslauthd -u memcached -p ${SASL_PASSWORD}
 
 # memjs
