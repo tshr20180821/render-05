@@ -55,8 +55,7 @@ echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c memcached
 # cat ${MEMCACHED_SASL_PWDB}
 chown memcached:memcached /etc/sasldb2
 ls -lang /etc/sasldb2
-cat /etc/sasldb2
-sleep 10s
+# cat /etc/sasldb2
 # chown memcached:memcached ${MEMCACHED_SASL_PWDB}
 # sasldblistusers2
 export SASL_CONF_PATH=/tmp/memcached.conf
