@@ -50,13 +50,14 @@ export MEMCACHED_SASL_PWDB=/tmp/sasl.db
 export SASL_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 # echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c memcached
 echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c memcached -f ${MEMCACHED_SASL_PWDB}
+cat ${MEMCACHED_SASL_PWDB}
 # chown memcached:memcached /etc/sasldb2
 chown memcached:memcached ${MEMCACHED_SASL_PWDB}
 # sasldblistusers2
 export SASL_CONF_PATH=/tmp/memcached.conf
-echo "mech_list: plain cram-md5" >${SASL_CONF_PATH}
+echo "mech_list: plain" >${SASL_CONF_PATH}
 # /usr/sbin/saslauthd -a sasldb -n 2 -V 2>&1 |/usr/src/app/log_general.sh saslauthd &
-./memcached -S -v -B binary -d -u memcached 2>&1 |/usr/src/app/log_general.sh memcached &
+./memcached -l 127.0.0.1 --enable-sasl -vv -B binary -d -u memcached 2>&1 |/usr/src/app/log_general.sh memcached &
 # testsaslauthd -u memcached -p ${SASL_PASSWORD}
 
 # memjs
