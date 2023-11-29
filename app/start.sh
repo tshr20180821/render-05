@@ -52,6 +52,7 @@ export SASL_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head
 echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c memcached -f ${MEMCACHED_SASL_PWDB}
 # chown memcached:memcached /etc/sasldb2
 chown memcached:memcached ${MEMCACHED_SASL_PWDB}
+chmod 644 ${MEMCACHED_SASL_PWDB}
 # sasldblistusers2
 export SASL_CONF_PATH="/tmp/memcached.conf"
 echo "mech_list: plain" >${SASL_CONF_PATH}
