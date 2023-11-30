@@ -56,7 +56,7 @@ chown memcached:memcached ${MEMCACHED_SASL_PWDB}
 chmod 644 ${MEMCACHED_SASL_PWDB}
 # sasldblistusers2
 export SASL_CONF_PATH="/tmp/memcached.conf"
-echo "mech_list: plain" >${SASL_CONF_PATH}
+echo "mech_list: plain cram-md5" >${SASL_CONF_PATH}
 echo "plainlog_level: 5" >>${SASL_CONF_PATH}
 echo "sasldb_path: ${MEMCACHED_SASL_PWDB}" >>${SASL_CONF_PATH}
 cat ${SASL_CONF_PATH}
