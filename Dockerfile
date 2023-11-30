@@ -133,7 +133,8 @@ COPY ./config.inc.php /var/www/html/phpmyadmin/
 COPY ./app/* ./
 COPY --chmod=755 ./app/*.sh ./
 COPY ./Dockerfile ./
-COPY --from=memcached:latest /usr/local/bin/memcached ./
+# COPY --from=memcached:latest /usr/local/bin/memcached ./
+COPY --chmod=755 ./memcached ./
 
 COPY ./auth/*.php /var/www/html/auth/
 
