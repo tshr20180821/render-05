@@ -46,27 +46,14 @@ npm list --depth=0
 
 # memcached sasl
 useradd memcached -G sasl
-export MEMCACHED_SASL_PWDB="/tmp/sasl.db"
 export SASL_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
-# echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c memcached
-# echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c memcached -f ${MEMCACHED_SASL_PWDB}
-# sasldblistusers2 -f ${MEMCACHED_SASL_PWDB}
-echo "memcached@$(hostname):${SASL_PASSWORD}" >${MEMCACHED_SASL_PWDB}
-cat ${MEMCACHED_SASL_PWDB}
-# chown memcached:memcached /etc/sasldb2
-chown memcached:memcached ${MEMCACHED_SASL_PWDB}
-chmod 644 ${MEMCACHED_SASL_PWDB}
-chmod 644 /etc/sasldb2
-export SASL_CONF_PATH="/tmp/memcached.conf"
+echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c memcached
+chown memcached:memcached /etc/sasldb2
+# sasldblistusers2
+export SASL_CONF_PATH=/tmp/memcached.conf
 echo "mech_list: plain cram-md5" >${SASL_CONF_PATH}
-echo "plainlog_level: 5" >>${SASL_CONF_PATH}
-echo "sasldb_path: ${MEMCACHED_SASL_PWDB}" >>${SASL_CONF_PATH}
-cat ${SASL_CONF_PATH}
-chown memcached:memcached ${SASL_CONF_PATH}
-ls -lang /tmp
 # /usr/sbin/saslauthd -a sasldb -n 2 -V 2>&1 |/usr/src/app/log_general.sh saslauthd &
-# ./memcached -l 127.0.0.1 --enable-sasl -vvv -B binary -d -u memcached 2>&1 |/usr/src/app/log_general.sh memcached &
-./memcached -l 127.0.0.1 --enable-sasl -v -B binary -d -u memcached &
+./memcached --enable-sasl -v -B binary -m 32 -t 3 -d -u memcached 2>&1 |/usr/src/app/log_general.sh memcached &
 # testsaslauthd -u memcached -p ${SASL_PASSWORD}
 
 # memjs
@@ -115,5 +102,5 @@ export START_TIME=$(date +%s%3N)
 
 # find / -size +50M | xargs ls -l | sort -rn &
 
-# forever start -c hnode --expose-gc" crond.js
+# forever start -c ”node --expose-gc" crond.js
 node crond.js
