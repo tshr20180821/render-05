@@ -54,9 +54,9 @@ try {
                         mu.send_slack_message('HTTP STATUS CODE : ' + res.statusCode + ' ' + process.env.RENDER_EXTERNAL_HOSTNAME);
                     }
                 }).end();
-                if (Date.now() - process.env.START_TIME > 5 * 60 * 1000) {
+                if (Date.now() - process.env.START_TIME > 2 * 60 * 1000) {
                     if ((new Date()).getMinutes() % 2 == 0) {
-                        check_apt_update();
+                        // check_apt_update();
                     } else {
                         check_npm_update();
                     }
@@ -163,7 +163,7 @@ function check_npm_update() {
                 const dt = new Date();
                 const datetime = dt.getFullYear() + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2) + ' ' +
                    ('0' + dt.getHours()).slice(-2) + ':' + ('0' + dt.getMinutes()).slice(-2);
-                var spawn = spawnSync('npm outdated');
+                var spawn = require('child_process').spawnSync('npm outdated');
                 console.log('stdout : ' + spawn.stdout.toString());
                 console.log('stderr : ' + spawn.stderr.toString());
                 // check_npm = datetime + ' ' + (stdout.toString().length == 0 ? "none" : stdout.toString());
