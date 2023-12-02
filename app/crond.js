@@ -158,6 +158,7 @@ function check_npm_update() {
                 }
                 if (val != null) {
                     logger.info('memcached hit CHECK_NPM : ' + val);
+                    mc.quit();
                     return;
                 }
                 const dt = new Date();
@@ -178,6 +179,7 @@ function check_npm_update() {
                     } else {
                         logger.info('memcached set CHECK_NPM : ' + check_npm);
                     }
+                    mc.quit();
                 });
             });
         } catch (err) {
