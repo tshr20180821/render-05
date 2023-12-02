@@ -163,8 +163,11 @@ function check_npm_update() {
                 const dt = new Date();
                 const datetime = dt.getFullYear() + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2) + ' ' +
                    ('0' + dt.getHours()).slice(-2) + ':' + ('0' + dt.getMinutes()).slice(-2);
-                var stdout = execSync('npm outdated');
-                check_npm = datetime + ' ' + (stdout.toString().length == 0 ? "none" : stdout.toString());
+                var spawn = spawnSync('npm outdated');
+                console.log('stdout : ' + spawn.stdout.toString());
+                console.log('stderr : ' + spawn.stderr.toString());
+                // check_npm = datetime + ' ' + (stdout.toString().length == 0 ? "none" : stdout.toString());
+                check_npm = 'dummy';
                 mc.set('CHECK_NPM', check_npm, {
                     expires: 24 * 60 * 60
                 }, function (err, _) {
