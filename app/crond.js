@@ -171,8 +171,11 @@ function check_npm_update() {
                     result = stdout.toString();
                 } catch (err) {
                     console.log('------ CHECK POINT 020');
-                    result = stdout.toString();
-                    // result = err.stderr.toString();
+                    console.log(err);
+                    console.log('------ CHECK POINT 030');
+                    // result = stdout.toString();
+                    result = err.stderr.toString();
+                    console.log('------ CHECK POINT 040');
                 }
                 console.log('------ ' + result);
                 // check_npm = datetime + ' ' + (stdout.toString().length == 0 ? "none" : stdout.toString());
