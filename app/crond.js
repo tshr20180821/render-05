@@ -174,7 +174,7 @@ function check_npm_update() {
                     console.log(err);
                     console.log('------ CHECK POINT 030');
                     // result = stdout.toString();
-                    result = err.stderr.toString();
+                    result = err.stdout.toString();
                     console.log('------ CHECK POINT 040');
                 }
                 console.log('------ ' + result);
