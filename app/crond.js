@@ -163,15 +163,16 @@ function check_npm_update() {
                 const dt = new Date();
                 const datetime = dt.getFullYear() + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2) + ' ' +
                    ('0' + dt.getHours()).slice(-2) + ':' + ('0' + dt.getMinutes()).slice(-2);
-                var spawn = require('child_process').spawnSync('npm outdated');
-                console.log('----- start');
-                if (spawn.stdout != null) {
-                    console.log('----- stdout : ' + spawn.stdout.toString());
+                var result = '';
+                try {
+                    var stdout = require('child_process').execSync('npm outdated');
+                    console.log('------ CHECK POINT 010');
+                    result = stdout.toString();
+                } catch (err) {
+                    console.log('------ CHECK POINT 020');
+                    result = err.stderr.toString();
                 }
-                if (spawn.stderr != null) {
-                    console.log('----- stderr : ' + spawn.stderr.toString());
-                }
-                console.log('----- finish');
+                console.log('------ ' + result);
                 // check_npm = datetime + ' ' + (stdout.toString().length == 0 ? "none" : stdout.toString());
                 check_npm = 'dummy';
                 mc.set('CHECK_NPM', check_npm, {
