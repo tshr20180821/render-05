@@ -169,7 +169,7 @@ function check_npm_update() {
                 } catch (err) {
                     result = err.stdout.toString();
                 }
-                check_npm = datetime + ' ' + result);
+                check_npm = datetime + ' ' + result;
                 mc.set('CHECK_NPM', check_npm, {
                     expires: 24 * 60 * 60
                 }, function (err, _) {
