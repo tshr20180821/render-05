@@ -2,8 +2,6 @@
 
 set -x
 
-find /usr/local -type f -executable -exec ldd '{}' ';'
-
 apt-mark showmanual
 
 dpkg -l
