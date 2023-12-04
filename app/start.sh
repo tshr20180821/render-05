@@ -3,6 +3,7 @@
 set -x
 
 whereis memcached
+find / -name memcached -print 2>/dev/null
 
 dpkg -l
 
