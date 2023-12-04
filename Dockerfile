@@ -101,6 +101,7 @@ RUN set -x \
  && time npm cache clean --force \
  && time pecl clear-cache \
  && time apt-get -q purge -y --auto-remove gcc libonig-dev make \
+ && dpkg -l \
  && time apt-mark auto '.*' \
  && time apt-mark manual ${savedAptMark} \
  && time find /usr/local -type f -executable -exec ldd '{}' ';' | \
