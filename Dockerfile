@@ -43,17 +43,18 @@ ENV SQLITE_JDBC_VERSION="3.44.1.0"
 # zlib1g-dev : pecl memcached
 RUN set -x \
  && savedAptMark="$(apt-mark showmanual)" \
- && dpkg -l \
- && echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/sqlite-jdbc-$SQLITE_JDBC_VERSION.jar" >download.txt \
- && echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/phpMyAdmin-5.2.1-all-languages.tar.xz" >>download.txt \
- && echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/slf4j-api-2.0.9.jar" >>download.txt \
- && echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/slf4j-nop-2.0.9.jar" >>download.txt \
- && echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/LogOperation.jar" >>download.txt \
- && echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/gpg" >>download.txt \
- && echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2_2.4.58-1_amd64.deb" >>download.txt \
- && echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-bin_2.4.58-1_amd64.deb" >>download.txt \
- && echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-data_2.4.58-1_all.deb" >>download.txt \
- && echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-utils_2.4.58-1_amd64.deb" >>download.txt \
+ && { \
+      echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/sqlite-jdbc-$SQLITE_JDBC_VERSION.jar" \
+      echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/phpMyAdmin-5.2.1-all-languages.tar.xz" \
+      echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/slf4j-api-2.0.9.jar" \
+      echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/slf4j-nop-2.0.9.jar" \
+      echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/LogOperation.jar" \
+      echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/gpg" \
+      echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2_2.4.58-1_amd64.deb" \
+      echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-bin_2.4.58-1_amd64.deb" \
+      echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-data_2.4.58-1_all.deb" \
+      echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-utils_2.4.58-1_amd64.deb" \
+    } >download.txt \
  && time xargs -P2 -n1 curl -sSO <download.txt \
  && chmod +x ./gpg \
  && mkdir -p /etc/apt/keyrings \
@@ -84,9 +85,8 @@ RUN set -x \
  && time dpkg -i apache2-bin_2.4.58-1_amd64.deb apache2-data_2.4.58-1_all.deb apache2-utils_2.4.58-1_amd64.deb apache2_2.4.58-1_amd64.deb \
  && rm -f *.deb \
  && time MAKEFLAGS="-j $(nproc)" pecl install apcu >/dev/null \
- && time docker-php-ext-enable apcu \
  && time MAKEFLAGS="-j $(nproc)" pecl install memcached --enable-memcached-sasl >/dev/null \
- && time docker-php-ext-enable memcached \
+ && time docker-php-ext-enable apcu memcached \
  && time docker-php-ext-configure zip --with-zip >/dev/null \
  && time docker-php-ext-install -j$(nproc) \
   pdo_mysql \
@@ -101,15 +101,13 @@ RUN set -x \
  && time npm cache clean --force \
  && time pecl clear-cache \
  && time apt-get -q purge -y --auto-remove gcc libonig-dev make \
- && dpkg -l \
- && apt-mark showauto nodejs \
- && apt-mark showmanual nodejs \
  && time apt-mark auto '.*' \
  && time apt-mark manual ${savedAptMark} \
  && time find /usr/local -type f -executable -exec ldd '{}' ';' | \
   awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' | \
-  sort -u | xargs -r dpkg-query --search | cut -d: -f1 | sort -u | xargs -r apt-mark manual \
- && time apt-mark manual nodejs \
+  sort -u | xargs -r dpkg-query --search | cut -d: -f1 | sort -u | xargs -r apt-mark manual >/dev/null \
+ && apt-mark manual nodejs \
+ && dpkg -l \
  && time apt-mark showmanual \
  && time apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
  && time apt-get clean \
