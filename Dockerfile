@@ -99,12 +99,13 @@ RUN set -x \
  && time npm cache clean --force \
  && time pecl clear-cache \
  && time apt-get -q purge -y --auto-remove gcc libonig-dev make \
+ && dpkg -l \
  && time apt-mark auto '.*' >/dev/null \
  && time apt-mark manual ${savedAptMark} \
  && time find /usr/local -type f -executable -exec ldd '{}' ';' | \
   awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' | \
   sort -u | xargs -r dpkg-query --search | cut -d: -f1 | sort -u | xargs -r apt-mark manual >/dev/null \
- && apt-mark manual nodejs \
+ && apt-mark manual nodejs memcached \
  && dpkg -l \
  && time apt-mark showmanual \
  && time apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
