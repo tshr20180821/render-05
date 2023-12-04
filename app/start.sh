@@ -2,6 +2,8 @@
 
 set -x
 
+apt-mark showmanual
+
 dpkg -l
 
 cat /proc/version
