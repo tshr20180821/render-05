@@ -2,7 +2,7 @@
 
 set -x
 
-apt-mark showmanual
+whereis memcached
 
 dpkg -l
 
