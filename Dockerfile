@@ -82,7 +82,7 @@ RUN set -x \
   tzdata \
   zlib1g-dev \
  && time dpkg -i apache2-bin_2.4.58-1_amd64.deb apache2-data_2.4.58-1_all.deb apache2-utils_2.4.58-1_amd64.deb apache2_2.4.58-1_amd64.deb \
- && rm *.deb \
+ && rm -f *.deb \
  && time MAKEFLAGS="-j $(nproc)" pecl install apcu >/dev/null \
  && time docker-php-ext-enable apcu \
  && time MAKEFLAGS="-j $(nproc)" pecl install memcached --enable-memcached-sasl >/dev/null \
@@ -106,7 +106,8 @@ RUN set -x \
  && time find /usr/local -type f -executable -exec ldd '{}' ';' | \
   awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' | \
   sort -u | xargs -r dpkg-query --search | cut -d: -f1 | sort -u | xargs -r apt-mark manual \
- && time apt-get purge --dry-run -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+ && time apt-mark showmanual \
+ && time apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
  && time apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /var/www/html/auth \
@@ -115,7 +116,7 @@ RUN set -x \
  && a2enmod -q authz_groupfile rewrite \
  && ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
  && time tar xf ./phpMyAdmin-5.2.1-all-languages.tar.xz --strip-components=1 -C /var/www/html/phpmyadmin \
- && rm ./phpMyAdmin-5.2.1-all-languages.tar.xz ./download.txt \
+ && rm ./phpMyAdmin-5.2.1-all-languages.tar.xz ./download.txt ./gpg \
  && chown www-data:www-data /var/www/html/phpmyadmin -R
 
 COPY ./config.inc.php /var/www/html/phpmyadmin/
