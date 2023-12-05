@@ -105,7 +105,11 @@ RUN set -x \
  && time find /usr/local -type f -executable -exec ldd '{}' ';' | \
   awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' | \
   sort -u | xargs -r dpkg-query --search | cut -d: -f1 | sort -u | xargs -r apt-mark manual >/dev/null \
- && apt-mark manual nodejs memcached \
+ && apt-mark manual \
+  default-jre-headless \
+  memcached \
+  nodejs \
+  sasl2-bin \
  && dpkg -l \
  && time apt-mark showmanual \
  && time apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
