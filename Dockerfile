@@ -107,6 +107,7 @@ RUN set -x \
   sort -u | xargs -r dpkg-query --search | cut -d: -f1 | sort -u | xargs -r apt-mark manual >/dev/null \
  && apt-mark manual \
   default-jre-headless \
+  libmemcached-dev \
   memcached \
   nodejs \
   sasl2-bin \
