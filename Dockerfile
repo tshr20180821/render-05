@@ -134,4 +134,4 @@ COPY --from=memcached:latest /usr/local/bin/memcached ./
 COPY ./auth/*.php /var/www/html/auth/
 
 # CMD ["bash","/usr/src/app/start.sh"]
-ENTRYPOINT ["bash","/usr/src/app/start.sh"]
+ENTRYPOINT ["/bin/bash","/usr/src/app/start.sh"]
