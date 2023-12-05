@@ -2,9 +2,6 @@
 
 set -x
 
-whereis memcached
-find / -name memcached -print 2>/dev/null
-
 dpkg -l
 
 cat /proc/version
@@ -20,8 +17,6 @@ ulimit -n
 java --version
 apachectl -V
 apachectl -M
-
-npm outdated
 
 tmp1=$(cat ./Dockerfile | head -n 1)
 export DOCKER_HUB_PHP_TAG=${tmp1:9}
@@ -50,20 +45,23 @@ export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 npm list --depth=0
 
 # memcached sasl
-useradd memcached -G sasl
+export MEMCACHED_SERVER=127.0.0.1
+export MEMCACHED_PORT=11211
+export MEMCACHED_USER=memcached
+useradd ${MEMCACHED_USER} -G sasl
 export SASL_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
-echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c memcached
-chown memcached:memcached /etc/sasldb2
-# sasldblistusers2
+echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c ${MEMCACHED_USER}
+chown ${MEMCACHED_USER}:memcached /etc/sasldb2
+sasldblistusers2
 export SASL_CONF_PATH=/tmp/memcached.conf
-echo "mech_list: plain cram-md5" >${SASL_CONF_PATH}
+echo "mech_list: plain" >${SASL_CONF_PATH}
 # /usr/sbin/saslauthd -a sasldb -n 2 -V 2>&1 |/usr/src/app/log_general.sh saslauthd &
-./memcached --enable-sasl -v -B binary -m 32 -t 3 -d -u memcached 2>&1 &
-# testsaslauthd -u memcached -p ${SASL_PASSWORD}
+./memcached --enable-sasl -v -l ${MEMCACHED_SERVER} -P ${MEMCACHED_PORT} -B binary -m 32 -t 3 -d -u ${MEMCACHED_USER} 2>&1 |/usr/src/app/log_general.sh memcached &
+# testsaslauthd -u ${MEMCACHED_USER} -p ${SASL_PASSWORD}
 
 # memjs
-export MEMCACHIER_SERVERS=127.0.0.1:11211
-export MEMCACHIER_USERNAME=memcached
+export MEMCACHIER_SERVERS=${MEMCACHED_SERVER}:${MEMCACHED_PORT}
+export MEMCACHIER_USERNAME=${MEMCACHED_USER}
 export MEMCACHIER_PASSWORD=${SASL_PASSWORD}
 
 php -l /var/www/html/auth/crond.php
@@ -102,10 +100,10 @@ exec /usr/sbin/apache2 -DFOREGROUND &
 sleep 5s && curl -sS -u ${BASIC_USER}:${BASIC_PASSWORD} http://127.0.0.1/auth/preload.php &
 
 # while true; do sleep 840s && ps aux && curl -sS -A "health check" -u ${BASIC_USER}:${BASIC_PASSWORD} https://${RENDER_EXTERNAL_HOSTNAME}/; done &
-# while true; \
-#   do for i in {1..16}; do sleep 60s && echo ${i}; done \
-#   && ps aux && curl -sS -A "health check" -u ${BASIC_USER}:${BASIC_PASSWORD} https://${RENDER_EXTERNAL_HOSTNAME}/; \
-# done &
+while true; \
+  do for i in {1..16}; do sleep 60s && echo ${i}; done \
+  && ps aux && curl -sS -A "health check" -u ${BASIC_USER}:${BASIC_PASSWORD} https://${RENDER_EXTERNAL_HOSTNAME}/; \
+done &
 
 export START_TIME=$(date +%s%3N)
 
