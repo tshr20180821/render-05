@@ -101,13 +101,15 @@ RUN set -x \
  && time apt-get -q purge -y --auto-remove gcc libonig-dev make \
  && dpkg -l \
  && time apt-mark auto '.*' >/dev/null \
- && time apt-mark manual ${savedAptMark} \
+ && time apt-mark manual ${savedAptMark} >/dev/null \
  && time find /usr/local -type f -executable -exec ldd '{}' ';' | \
   awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' | \
-  sort -u | xargs -r dpkg-query --search | cut -d: -f1 | sort -u | xargs -r apt-mark manual >/dev/null \
+  sort -u | xargs -r dpkg-query --search | cut -d: -f1 | sort -u | xargs -r apt-mark manual >/dev/null 2>&1 \
  && apt-mark manual \
   default-jre-headless \
   libmemcached-dev \
+  libsasl2-2 \
+  libsasl2-modules-db \
   memcached \
   nodejs \
   sasl2-bin \
@@ -134,4 +136,4 @@ COPY --from=memcached:latest /usr/local/bin/memcached ./
 COPY ./auth/*.php /var/www/html/auth/
 
 # CMD ["bash","/usr/src/app/start.sh"]
-ENTRYPOINT ["/bin/bash","/usr/src/app/start.sh"]
+ENTRYPOINT ["bash","/usr/src/app/start.sh"]
