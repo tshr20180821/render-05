@@ -115,7 +115,6 @@ RUN set -x \
   sasl2-bin \
  && dpkg -l \
  && time apt-mark showmanual \
- && time apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
  && time apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /var/www/html/auth \
