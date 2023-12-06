@@ -13,10 +13,8 @@ ENV NODE_ENV=production
 ENV NODE_MAJOR=20
 
 COPY ./php.ini ${PHP_INI_DIR}/
-COPY ./index.html ./robots.txt /var/www/html/
 COPY --chmod=644 .htpasswd /var/www/html/
 COPY ./apache.conf /etc/apache2/sites-enabled/
-COPY ./apt-fast.conf /tmp/
 COPY ./app/package.json ./
 
 ENV SQLITE_JDBC_VERSION="3.44.1.0"
@@ -63,7 +61,7 @@ RUN set -x \
  && echo "deb http://deb.debian.org/debian bookworm-backports main contrib non-free" | tee /etc/apt/sources.list.d/backports.list \
  && time apt-get -q update \
  && time DEBIAN_FRONTEND=noninteractive apt-get -q install -y --no-install-recommends apt-fast curl/bookworm-backports \
- && cp -f /tmp/apt-fast.conf /etc/ \
+ && echo "MIRRORS=( 'http://deb.debian.org/debian, http://cdn-fastly.deb.debian.org/debian, http://httpredir.debian.org/debian' )" >/etc/apt-fast.conf \
  && time apt-fast install -y --no-install-recommends \
   binutils \
   ca-certificates \
@@ -124,7 +122,10 @@ RUN set -x \
  && ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
  && time tar xf ./phpMyAdmin-5.2.1-all-languages.tar.xz --strip-components=1 -C /var/www/html/phpmyadmin \
  && rm ./phpMyAdmin-5.2.1-all-languages.tar.xz ./download.txt ./gpg \
- && chown www-data:www-data /var/www/html/phpmyadmin -R
+ && chown www-data:www-data /var/www/html/phpmyadmin -R \
+ && echo '<HTML />' >/var/www/html/index.html \
+ && echo 'User-agent: *' >/var/www/html/robots.txt \
+ && echo 'Disallow: /' >>/var/www/html/robots.txt
 
 COPY ./config.inc.php /var/www/html/phpmyadmin/
 COPY ./app/* ./
