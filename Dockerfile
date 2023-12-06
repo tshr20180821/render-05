@@ -108,13 +108,13 @@ RUN set -x \
  && apt-mark manual \
   default-jre-headless \
   libmemcached-dev \
-  libsasl2-2 \
-  libsasl2-modules-db \
+  libsasl2-modules \
   memcached \
   nodejs \
   sasl2-bin \
  && dpkg -l \
  && time apt-mark showmanual \
+ && time apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
  && time apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /var/www/html/auth \
