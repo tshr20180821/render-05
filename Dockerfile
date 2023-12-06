@@ -15,7 +15,7 @@ ENV NODE_MAJOR=20
 COPY ./php.ini ${PHP_INI_DIR}/
 COPY --chmod=644 .htpasswd /var/www/html/
 COPY ./apache.conf /etc/apache2/sites-enabled/
-COPY ./app/package.json ./
+COPY ./app/*.json ./
 
 ENV SQLITE_JDBC_VERSION="3.44.1.0"
 
@@ -128,9 +128,8 @@ RUN set -x \
  && echo 'Disallow: /' >>/var/www/html/robots.txt
 
 COPY ./config.inc.php /var/www/html/phpmyadmin/
-COPY ./app/* ./
+COPY ./Dockerfile ./app/*.js ./app/*.php ./
 COPY --chmod=755 ./app/*.sh ./
-COPY ./Dockerfile ./
 COPY --from=memcached:latest /usr/local/bin/memcached ./
 
 COPY ./auth/*.php /var/www/html/auth/
