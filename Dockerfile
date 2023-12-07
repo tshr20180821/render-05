@@ -80,6 +80,7 @@ RUN set -x \
   sasl2-bin \
   tzdata \
   zlib1g-dev \
+  zstd \
  && time dpkg -i apache2-bin_2.4.58-1_amd64.deb apache2-data_2.4.58-1_all.deb apache2-utils_2.4.58-1_amd64.deb apache2_2.4.58-1_amd64.deb \
  && time dpkg -i dragonfly_amd64.deb \
  && rm -f *.deb \
