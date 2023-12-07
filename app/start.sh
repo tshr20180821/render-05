@@ -61,7 +61,7 @@ chown memcached:memcached /etc/sasldb2
 export SASL_CONF_PATH=/tmp/memcached.conf
 echo "mech_list: plain cram-md5" >${SASL_CONF_PATH}
 # /usr/sbin/saslauthd -a sasldb -n 2 -V 2>&1 |/usr/src/app/log_general.sh saslauthd &
-./memcached --enable-sasl -v -B binary -m 32 -t 3 -d -u memcached 2>&1 &
+memcached --enable-sasl -v -B binary -m 32 -t 3 -d -u memcached 2>&1 &
 # testsaslauthd -u memcached -p ${SASL_PASSWORD}
 
 # memjs
