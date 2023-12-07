@@ -2,6 +2,9 @@
 
 set -x
 
+lsb-release -cs
+lsb-release
+
 redis-server --version
 redis-cli --version
 find / -name dragonfly -print
