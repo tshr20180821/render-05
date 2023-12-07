@@ -39,6 +39,7 @@ ENV SQLITE_JDBC_VERSION="3.44.1.0"
 # sasl2-bin : sasl
 # tzdata : ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 # zlib1g-dev : pecl memcached
+# zstd : dragonfly
 RUN set -x \
  && savedAptMark="$(apt-mark showmanual)" \
  && echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/sqlite-jdbc-$SQLITE_JDBC_VERSION.jar" >download.txt \
@@ -59,14 +60,13 @@ RUN set -x \
  && echo "deb [signed-by=/etc/apt/keyrings/apt-fast.gpg] http://ppa.launchpad.net/apt-fast/stable/ubuntu jammy main" | tee /etc/apt/sources.list.d/apt-fast.list \
  && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | ./gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
  && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+ && curl -fsSL https://packages.redis.io/gpg | ./gpg --dearmor -o /etc/apt/keyrings/redis-archive-keyring.gpg \
+ && echo "deb [signed-by=/etc/apt/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb bookworm main" | tee /etc/apt/sources.list.d/redis.list \
  && echo "deb http://deb.debian.org/debian bookworm-backports main contrib non-free" | tee /etc/apt/sources.list.d/backports.list \
  && time apt-get -q update \
  && time DEBIAN_FRONTEND=noninteractive apt-get -q install -y --no-install-recommends \
   apt-fast \
   curl/bookworm-backports \
-  lsb-release \
- && lsb_release -cs \
- && lsb_release \
  && echo "MIRRORS=( 'http://deb.debian.org/debian, http://cdn-fastly.deb.debian.org/debian, http://httpredir.debian.org/debian' )" >/etc/apt-fast.conf \
  && time apt-fast install -y --no-install-recommends \
   binutils \
