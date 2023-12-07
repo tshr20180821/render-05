@@ -69,6 +69,9 @@ export MEMCACHIER_SERVERS=127.0.0.1:11211
 export MEMCACHIER_USERNAME=memcached
 export MEMCACHIER_PASSWORD=${SASL_PASSWORD}
 
+redis-server --help
+redis-server --port 6379 --daemonize yes --loglevel verbose
+
 php -l /var/www/html/auth/crond.php
 php -l /var/www/html/auth/health_check.php
 php -l /var/www/html/auth/update_sqlite.php
