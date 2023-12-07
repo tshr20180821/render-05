@@ -59,9 +59,14 @@ RUN set -x \
  && echo "deb [signed-by=/etc/apt/keyrings/apt-fast.gpg] http://ppa.launchpad.net/apt-fast/stable/ubuntu jammy main" | tee /etc/apt/sources.list.d/apt-fast.list \
  && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | ./gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
  && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+ && curl -fsSL https://packages.redis.io/gpg | ./gpg --dearmor -o /etc/apt/keyrings/redis-archive-keyring.gpg \
+ && echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/redis.list \
  && echo "deb http://deb.debian.org/debian bookworm-backports main contrib non-free" | tee /etc/apt/sources.list.d/backports.list \
  && time apt-get -q update \
- && time DEBIAN_FRONTEND=noninteractive apt-get -q install -y --no-install-recommends apt-fast curl/bookworm-backports \
+ && time DEBIAN_FRONTEND=noninteractive apt-get -q install -y --no-install-recommends \
+  apt-fast \
+  curl/bookworm-backports \
+  lsb-release \
  && echo "MIRRORS=( 'http://deb.debian.org/debian, http://cdn-fastly.deb.debian.org/debian, http://httpredir.debian.org/debian' )" >/etc/apt-fast.conf \
  && time apt-fast install -y --no-install-recommends \
   binutils \
@@ -109,10 +114,12 @@ RUN set -x \
   sort -u | xargs -r dpkg-query --search | cut -d: -f1 | sort -u | xargs -r apt-mark manual >/dev/null 2>&1 \
  && apt-mark manual \
   default-jre-headless \
+  dragonfly \
   libmemcached-dev \
   libsasl2-modules \
   memcached \
   nodejs \
+  redis \
   sasl2-bin \
  && dpkg -l \
  && time apt-mark showmanual \
