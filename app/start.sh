@@ -2,7 +2,7 @@
 
 set -x
 
-diff /tmp/package_list_before.txt /tmp/package_list_after.txt
+diff ./package_list_before.txt ./package_list_after.txt
 
 dpkg -l
 
