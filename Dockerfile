@@ -141,7 +141,7 @@ RUN set -x \
 COPY ./config.inc.php /var/www/html/phpmyadmin/
 COPY ./Dockerfile ./app/*.js ./app/*.php ./
 COPY --chmod=755 ./app/*.sh ./
-COPY --from=memcached:latest /usr/local/bin/memcached ./
+COPY --from=memcached:latest /usr/local/bin/memcached /usr/bin/
 
 COPY ./auth/*.php /var/www/html/auth/
 
