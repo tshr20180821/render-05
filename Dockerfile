@@ -51,7 +51,8 @@ RUN set -x \
  && echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-bin_2.4.58-1_amd64.deb" >>download.txt \
  && echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-data_2.4.58-1_all.deb" >>download.txt \
  && echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-utils_2.4.58-1_amd64.deb" >>download.txt \
- && time xargs -P2 -n1 curl -sSO <download.txt \
+ && echo "https://github.com/dragonflydb/dragonfly/releases/download/v1.13.0/dragonfly_amd64.deb" >>download.txt \
+ && time xargs -P2 -n1 curl -sSLO <download.txt \
  && chmod +x ./gpg \
  && mkdir -p /etc/apt/keyrings \
  && curl -fsSL 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA2166B8DE8BDC3367D1901C11EE2FF37CA8DA16B' | ./gpg --dearmor -o /etc/apt/keyrings/apt-fast.gpg \
@@ -75,6 +76,7 @@ RUN set -x \
   libzip-dev \
   memcached \
   nodejs \
+  redis \
   sasl2-bin \
   tzdata \
   zlib1g-dev \
