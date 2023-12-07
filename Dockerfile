@@ -117,6 +117,7 @@ RUN set -x \
  && apt-mark manual \
   default-jre-headless \
   dragonfly \
+  iproute2 \
   libmemcached-dev \
   libsasl2-modules \
   memcached \
