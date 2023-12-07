@@ -2,6 +2,8 @@
 
 set -x
 
+ss -ant
+
 redis-server --version
 redis-cli --version
 dragonfly --version
