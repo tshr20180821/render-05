@@ -28,6 +28,7 @@ ENV SQLITE_JDBC_VERSION="3.44.1.0"
 # ca-certificates : node.js
 # curl : node.js
 # default-jre-headless : java
+# iproute2 : ss
 # libmemcached-dev : pecl memcached
 # libonig-dev : mbstring
 # libsasl2-modules : sasl
@@ -73,6 +74,7 @@ RUN set -x \
   ca-certificates \
   curl \
   default-jre-headless \
+  iproute2 \
   libmemcached-dev \
   libonig-dev \
   libsasl2-modules \
