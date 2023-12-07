@@ -65,6 +65,8 @@ RUN set -x \
   apt-fast \
   curl/bookworm-backports \
   lsb-release \
+ && lsb-release -cs \
+ && lsb-release \
  && echo "MIRRORS=( 'http://deb.debian.org/debian, http://cdn-fastly.deb.debian.org/debian, http://httpredir.debian.org/debian' )" >/etc/apt-fast.conf \
  && time apt-fast install -y --no-install-recommends \
   binutils \
