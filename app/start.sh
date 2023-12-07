@@ -3,7 +3,8 @@
 set -x
 
 redis --version
-dragonfly --version
+redis-cli --version
+find / -name dragonfly -print
 
 whereis memcached
 
