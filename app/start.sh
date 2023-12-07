@@ -2,8 +2,6 @@
 
 set -x
 
-ss -ant
-
 redis-server --version
 redis-cli --version
 dragonfly --version
@@ -72,7 +70,9 @@ export MEMCACHIER_USERNAME=memcached
 export MEMCACHIER_PASSWORD=${SASL_PASSWORD}
 
 redis-server --help
-redis-server --port 6379 --daemonize yes --loglevel verbose
+echo 'maxmemory 32mb' | redis-server --port 6379 --daemonize yes --loglevel verbose
+
+dragonfly --help
 
 php -l /var/www/html/auth/crond.php
 php -l /var/www/html/auth/health_check.php
@@ -112,7 +112,7 @@ sleep 5s && curl -sS -u ${BASIC_USER}:${BASIC_PASSWORD} http://127.0.0.1/auth/pr
 # while true; do sleep 840s && ps aux && curl -sS -A "health check" -u ${BASIC_USER}:${BASIC_PASSWORD} https://${RENDER_EXTERNAL_HOSTNAME}/; done &
 while true; \
   do for i in {1..16}; do sleep 60s && echo ${i}; done \
-  && ps aux && curl -sS -A "health check" -u ${BASIC_USER}:${BASIC_PASSWORD} https://${RENDER_EXTERNAL_HOSTNAME}/; \
+  && ss -ant && ps aux && curl -sS -A "health check" -u ${BASIC_USER}:${BASIC_PASSWORD} https://${RENDER_EXTERNAL_HOSTNAME}/; \
 done &
 
 export START_TIME=$(date +%s%3N)
