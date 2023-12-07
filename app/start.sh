@@ -2,11 +2,11 @@
 
 set -x
 
-redis --version
+redis-server --version
 redis-cli --version
 find / -name dragonfly -print
 
-whereis memcached
+find / -name memcached -print
 
 dpkg -l
 
