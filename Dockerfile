@@ -124,11 +124,9 @@ RUN set -x \
   nodejs \
   redis \
   sasl2-bin \
- && dpkg -l \
  && time apt-mark showmanual \
  && time apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
  && dpkg -l >/tmp/package_list_after.txt \
- && diff /tmp/package_list_before.txt /tmp/package_list_after.txt \
  && time apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /var/www/html/auth \
