@@ -108,7 +108,7 @@ RUN set -x \
  && time npm cache clean --force \
  && time pecl clear-cache \
  && time apt-get -q purge -y --auto-remove gcc libonig-dev make \
- && dpkg -l \
+ && dpkg -l >/tmp/package_list_before.txt \
  && time apt-mark auto '.*' >/dev/null \
  && time apt-mark manual ${savedAptMark} >/dev/null \
  && time find /usr/local -type f -executable -exec ldd '{}' ';' | \
@@ -127,6 +127,8 @@ RUN set -x \
  && dpkg -l \
  && time apt-mark showmanual \
  && time apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+ && dpkg -l >/tmp/package_list_after.txt \
+ && diff /tmp/package_list_before.txt /tmp/package_list_after.txt \
  && time apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /var/www/html/auth \
