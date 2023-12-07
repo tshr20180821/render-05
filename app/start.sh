@@ -2,11 +2,7 @@
 
 set -x
 
-redis-server --version
-redis-cli --version
-dragonfly --version
-
-find / -name memcached -print
+diff /tmp/package_list_before.txt /tmp/package_list_after.txt
 
 dpkg -l
 
