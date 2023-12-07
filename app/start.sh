@@ -73,7 +73,8 @@ redis-server --help
 echo 'maxmemory 32mb' | redis-server --port 6379 --daemonize yes --loglevel verbose
 
 dragonfly --help
-dragonfly --bind=127.0.0.1 --requirepass=${SASL_PASSWORD} --version_check=false --maxmemory=32mb --memcached_port=11212 --port=0
+dragonfly --helpfull
+dragonfly --bind=127.0.0.1 --requirepass=${SASL_PASSWORD} --version_check=false --maxmemory=32mb --memcached_port=11212
 
 php -l /var/www/html/auth/crond.php
 php -l /var/www/html/auth/health_check.php
