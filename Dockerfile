@@ -127,6 +127,8 @@ RUN set -x \
  && time apt-mark showmanual \
  && time apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
  && dpkg -l >./package_list_after.txt \
+ && diff ./package_list_before.txt ./package_list_after.txt | cat \
+ && rm ./package_list_before.txt ./package_list_after.txt \
  && time apt-get clean \
  && rm -rf /var/lib/apt/lists/* \
  && mkdir -p /var/www/html/auth \
