@@ -2,8 +2,6 @@
 
 set -x
 
-diff ./package_list_before.txt ./package_list_after.txt
-
 dpkg -l
 
 cat /proc/version
@@ -20,10 +18,12 @@ java --version
 apachectl -V
 apachectl -M
 
-npm outdated
+# npm audit
+npm list --depth=0
 
 tmp1=$(cat ./Dockerfile | head -n 1)
 export DOCKER_HUB_PHP_TAG=${tmp1:9}
+rm ./Dockerfile
 
 # ls -lang /etc/apache2/mods-enabled/
 # cat /etc/apache2/mods-enabled/mpm_prefork.conf
@@ -35,48 +35,59 @@ export APACHE_VERSION=$(apachectl -V | head -n 1)
 export PHP_VERSION=$(php --version | head -n 1)
 export NODE_VERSION=$(node --version)
 export JAVA_VERSION=$(java --version | head -n 1)
-export MEMCACHED_VERSION=$(./memcached -h | head -n 1)
+export MEMCACHED_VERSION=$(memcached -h | head -n 1)
 
+# log.php LogOperation.jar
 export SQLITE_LOG_DB_FILE="/tmp/sqlitelog.db"
 
 # phpMyAdmin
 export BLOWFISH_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
+# LogOperation.jar
 export FIXED_THREAD_POOL=1
+
 export DEPLOY_DATETIME=$(date +'%Y%m%d%H%M%S')
 
-# npm audit
-npm list --depth=0
-
 # memcached sasl
-useradd memcached -G sasl
+export MEMCACHED_SERVER=127.0.0.1
+export MEMCACHED_PORT=11211
+export MEMCACHED_USER=memcached
+useradd ${MEMCACHED_USER} -G sasl
 export SASL_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
-echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c memcached
-chown memcached:memcached /etc/sasldb2
-# sasldblistusers2
+echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c ${MEMCACHED_USER}
+chown ${MEMCACHED_USER}:memcached /etc/sasldb2
+sasldblistusers2
 export SASL_CONF_PATH=/tmp/memcached.conf
-echo "mech_list: plain cram-md5" >${SASL_CONF_PATH}
+echo "mech_list: plain" >${SASL_CONF_PATH}
 # /usr/sbin/saslauthd -a sasldb -n 2 -V 2>&1 |/usr/src/app/log_general.sh saslauthd &
-memcached --enable-sasl -v -B binary -m 32 -t 3 -d -u memcached 2>&1 &
-# testsaslauthd -u memcached -p ${SASL_PASSWORD}
+memcached --enable-sasl -v -l ${MEMCACHED_SERVER} -P ${MEMCACHED_PORT} -B binary -m 32 -t 3 -d -u ${MEMCACHED_USER} 2>&1 |/usr/src/app/log_general.sh memcached &
+# testsaslauthd -u ${MEMCACHED_USER} -p ${SASL_PASSWORD}
+
+dragonfly --bind=127.0.0.1 --requirepass=${SASL_PASSWORD} --version_check=false --memcached_port=11212 --tcp_keepalive=120 --port 6379 --colorlogtostderr &
 
 # memjs
-export MEMCACHIER_SERVERS=127.0.0.1:11211
-export MEMCACHIER_USERNAME=memcached
+export MEMCACHIER_SERVERS=${MEMCACHED_SERVER}:${MEMCACHED_PORT}
+export MEMCACHIER_USERNAME=${MEMCACHED_USER}
 export MEMCACHIER_PASSWORD=${SASL_PASSWORD}
 
-redis-server --help
-echo 'maxmemory 32mb' | redis-server --port 6379 --daemonize yes --loglevel verbose
+pushd /var/www/html/auth
+find . -maxdepth 1 -name "*.php" -type f -printf "%f\0" | xargs --max-procs=1 --max-args=1 --null -t php -l | tee -a /tmp/php_error.txt
+popd
+php -l log.php | tee -a /tmp/php_error.txt
 
-dragonfly --help
-dragonfly --helpfull
-export DFLY_PASSWORD=${SASL_PASSWORD}
-dragonfly --bind=127.0.0.1 --requirepass --version_check=false --maxmemory=32mb --memcached_port=11212 --tcp_keepalive=120 --port 6380
+count1=$(grep -c 'No syntax errors detected in' /tmp/php_error.txt)
+count2=$(< /tmp/php_error.txt wc -l)
+rm /tmp/php_error.txt
 
-php -l /var/www/html/auth/crond.php
-php -l /var/www/html/auth/health_check.php
-php -l /var/www/html/auth/update_sqlite.php
-php -l log.php
+if [ ${count1} -lt ${count2} ]; then
+  curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
+   -d "text=PHP_SYNTAX_ERROR" -d "channel=${SLACK_CHANNEL_01}" https://slack.com/api/chat.postMessage >/dev/null \
+    && sleep 1s \
+    && curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
+        -d "text=PHP_SYNTAX_ERROR" -d "channel=${SLACK_CHANNEL_02}" https://slack.com/api/chat.postMessage >/dev/null \
+    && sleep 1s
+fi
+
 /usr/src/app/node_modules/.bin/eslint crond.js
 /usr/src/app/node_modules/.bin/eslint MyUtils.js
 
@@ -85,24 +96,26 @@ ls -lang /var/www/html/
 sed -i s/__RENDER_EXTERNAL_HOSTNAME__/${RENDER_EXTERNAL_HOSTNAME}/g /etc/apache2/sites-enabled/apache.conf
 sed -i s/__DEPLOY_DATETIME__/${DEPLOY_DATETIME}/ /etc/apache2/sites-enabled/apache.conf
 
-echo "${RENDER_EXTERNAL_HOSTNAME} START ${DEPLOY_DATETIME}" >VERSION.txt
-echo "Host : ${HOST_VERSION}" >>VERSION.txt
-echo "Guest : ${GUEST_VERSION}" >>VERSION.txt
-echo "Processor : ${PROCESSOR_NAME}" >>VERSION.txt
-echo "Apache : ${APACHE_VERSION}" >>VERSION.txt
-echo "PHP : ${PHP_VERSION}" >>VERSION.txt
-echo "Node.js : ${NODE_VERSION}" >>VERSION.txt
-echo "Java : ${JAVA_VERSION}" >>VERSION.txt
-echo "Memcached : ${MEMCACHED_VERSION}" >>VERSION.txt
+{ \
+  echo "${RENDER_EXTERNAL_HOSTNAME} START ${DEPLOY_DATETIME}"; \
+  echo "Host : ${HOST_VERSION}"; \
+  echo "Guest : ${GUEST_VERSION}"; \
+  echo "Processor : ${PROCESSOR_NAME}"; \
+  echo "Apache : ${APACHE_VERSION}"; \
+  echo "PHP : ${PHP_VERSION}"; \
+  echo "Node.js : ${NODE_VERSION}"; \
+  echo "Java : ${JAVA_VERSION}"; \
+  echo "Memcached : ${MEMCACHED_VERSION}"; \
+} >VERSION.txt
 
 VERSION=$(cat VERSION.txt)
 rm VERSION.txt
 
 curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
-  -d "text=${VERSION}" -d "channel=${SLACK_CHANNEL_01}" https://slack.com/api/chat.postMessage >/dev/null \
- && sleep 1s \
- && curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
-  -d "text=${VERSION}" -d "channel=${SLACK_CHANNEL_02}" https://slack.com/api/chat.postMessage >/dev/null &
+ -d "text=${VERSION}" -d "channel=${SLACK_CHANNEL_01}" https://slack.com/api/chat.postMessage >/dev/null \
+  && sleep 1s \
+  && curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
+      -d "text=${VERSION}" -d "channel=${SLACK_CHANNEL_02}" https://slack.com/api/chat.postMessage >/dev/null &
 . /etc/apache2/envvars >/dev/null 2>&1
 exec /usr/sbin/apache2 -DFOREGROUND &
 
@@ -111,7 +124,9 @@ sleep 5s && curl -sS -u ${BASIC_USER}:${BASIC_PASSWORD} http://127.0.0.1/auth/pr
 # while true; do sleep 840s && ps aux && curl -sS -A "health check" -u ${BASIC_USER}:${BASIC_PASSWORD} https://${RENDER_EXTERNAL_HOSTNAME}/; done &
 while true; \
   do for i in {1..16}; do sleep 60s && echo ${i}; done \
-  && ss -anpt && ps aux && curl -sS -A "health check" -u ${BASIC_USER}:${BASIC_PASSWORD} https://${RENDER_EXTERNAL_HOSTNAME}/; \
+  && ss -anpt \
+  && ps aux \
+  && curl -sS -A "health check" -u ${BASIC_USER}:${BASIC_PASSWORD} https://${RENDER_EXTERNAL_HOSTNAME}/; \
 done &
 
 export START_TIME=$(date +%s%3N)
