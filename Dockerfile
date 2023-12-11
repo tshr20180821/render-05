@@ -56,7 +56,7 @@ RUN set -x \
   echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-bin_${APACHE_VERSION}_amd64.deb"; \
   echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-data_${APACHE_VERSION}_all.deb"; \
   echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-utils_${APACHE_VERSION}_amd64.deb"; \
-  echo echo "https://github.com/dragonflydb/dragonfly/releases/download/v1.13.0/dragonfly_amd64.deb"; \
+  echo "https://github.com/dragonflydb/dragonfly/releases/download/v1.13.0/dragonfly_amd64.deb"; \
   } >download.txt \
  && time xargs -P2 -n1 curl -sSLO <download.txt \
  && chmod +x ./gpg \
