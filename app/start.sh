@@ -63,12 +63,12 @@ echo "mech_list: plain" >${SASL_CONF_PATH}
 memcached --enable-sasl -v -l ${MEMCACHED_SERVER} -P ${MEMCACHED_PORT} -B binary -m 32 -t 3 -d -u ${MEMCACHED_USER} 2>&1 |/usr/src/app/log_general.sh memcached &
 # testsaslauthd -u ${MEMCACHED_USER} -p ${SASL_PASSWORD}
 
-dragonfly --bind=127.0.0.1 --requirepass=${SASL_PASSWORD} --version_check=false --memcached_port=11212 --tcp_keepalive=120 --port 6379 --colorlogtostderr &
-
 # memjs
 export MEMCACHIER_SERVERS=${MEMCACHED_SERVER}:${MEMCACHED_PORT}
 export MEMCACHIER_USERNAME=${MEMCACHED_USER}
 export MEMCACHIER_PASSWORD=${SASL_PASSWORD}
+
+dragonfly --bind=127.0.0.1 --requirepass=${SASL_PASSWORD} --version_check=false --memcached_port=11212 --tcp_keepalive=120 --port 6379 --colorlogtostderr &
 
 pushd /var/www/html/auth
 find . -maxdepth 1 -name "*.php" -type f -printf "%f\0" | xargs --max-procs=1 --max-args=1 --null -t php -l | tee -a /tmp/php_error.txt
