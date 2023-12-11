@@ -87,6 +87,7 @@ RUN set -x \
   sasl2-bin \
   tzdata \
   zlib1g-dev \
+  zstd \
  && time dpkg -i \
   apache2-bin_${APACHE_VERSION}_amd64.deb \
   apache2-data_${APACHE_VERSION}_all.deb \
