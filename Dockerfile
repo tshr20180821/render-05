@@ -93,9 +93,10 @@ RUN set -x \
   apache2-utils_${APACHE_VERSION}_amd64.deb \
   apache2_${APACHE_VERSION}_amd64.deb \
  && rm -f *.deb \
- && time MAKEFLAGS="-j $(nproc)" pecl install apcu >/dev/null \
- && time MAKEFLAGS="-j $(nproc)" pecl install memcached --enable-memcached-sasl >/dev/null \
- && time MAKEFLAGS="-j $(nproc)" pecl install redis >/dev/null \
+ && nproc=$(nproc) \
+ && time MAKEFLAGS="-j ${nproc}" pecl install apcu >/dev/null \
+ && time MAKEFLAGS="-j ${nproc}" pecl install memcached --enable-memcached-sasl >/dev/null \
+ && time MAKEFLAGS="-j ${nproc}" pecl install redis >/dev/null \
  && time docker-php-ext-enable \
   apcu \
   memcached \
@@ -167,5 +168,4 @@ COPY ./auth/*.php /var/www/html/auth/
 
 STOPSIGNAL SIGWINCH
 
-# CMD ["bash","/usr/src/app/start.sh"]
 ENTRYPOINT ["/bin/bash","/usr/src/app/start.sh"]
