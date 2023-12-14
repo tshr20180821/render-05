@@ -6,7 +6,7 @@ const logger = mu.get_logger();
 const https = require("https");
 const url = 'https://' + process.env.RENDER_EXTERNAL_HOSTNAME + '/auth/crond.php';
 // const fs = require('fs');
-const { execSync } = require('child_process');
+const child_process = require('child_process');
 const memjs = require('memjs');
 // const { setTimeout } = require('timers/promises');
 
@@ -106,7 +106,7 @@ function check_npm_update() {
                    ('0' + dt.getHours()).slice(-2) + ':' + ('0' + dt.getMinutes()).slice(-2);
                 var result = 'none';
                 try {
-                    require('child_process').execSync('npm outdated');
+                    child_process.execSync('npm outdated');
                 } catch (err) {
                     result = err.stdout.toString();
                 }
