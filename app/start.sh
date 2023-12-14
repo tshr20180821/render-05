@@ -78,7 +78,7 @@ sasldblistusers2
 export SASL_CONF_PATH=/tmp/memcached.conf
 echo "mech_list: plain" >"${SASL_CONF_PATH}"
 # /usr/sbin/saslauthd -a sasldb -n 2 -V 2>&1 |/usr/src/app/log_general.sh saslauthd &
-memcached --enable-sasl -v -l "${MEMCACHED_SERVER}" -P "${MEMCACHED_PORT}" -B binary -m 32 -t 3 -d -u "${MEMCACHED_USER}" 2>&1 |/usr/src/app/log_general.sh memcached &
+memcached --enable-sasl -v -l "${MEMCACHED_SERVER}" -P "${MEMCACHED_PORT}" -B binary -m 32 -t 3 -d -u "${MEMCACHED_USER}" -P /tmp/11211.tmp 2>&1 |/usr/src/app/log_general.sh memcached &
 # testsaslauthd -u ${MEMCACHED_USER} -p ${SASL_PASSWORD}
 
 # memjs
