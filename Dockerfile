@@ -45,18 +45,18 @@ ENV SQLITE_JDBC_VERSION="3.44.1.0"
 # zlib1g-dev : pecl memcached
 RUN set -x \
  && savedAptMark="$(apt-mark showmanual)" \
- && { \
-  echo "https://github.com/xerial/sqlite-jdbc/releases/download/$SQLITE_JDBC_VERSION/sqlite-jdbc-$SQLITE_JDBC_VERSION.jar"; \
-  echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages.tar.xz"; \
-  echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/slf4j-api-2.0.9.jar"; \
-  echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/slf4j-nop-2.0.9.jar"; \
-  echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/LogOperation.jar"; \
-  echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/gpg"; \
-  echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2_${APACHE_VERSION}_amd64.deb"; \
-  echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-bin_${APACHE_VERSION}_amd64.deb"; \
-  echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-data_${APACHE_VERSION}_all.deb"; \
-  echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-utils_${APACHE_VERSION}_amd64.deb"; \
-  echo "https://github.com/dragonflydb/dragonfly/releases/download/v1.13.0/dragonfly_amd64.deb"; \
+ && \
+  { \
+   echo "https://github.com/xerial/sqlite-jdbc/releases/download/$SQLITE_JDBC_VERSION/sqlite-jdbc-$SQLITE_JDBC_VERSION.jar"; \
+   echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages.tar.xz"; \
+   echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/slf4j-api-2.0.9.jar"; \
+   echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/slf4j-nop-2.0.9.jar"; \
+   echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/LogOperation.jar"; \
+   echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/gpg"; \
+   echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2_${APACHE_VERSION}_amd64.deb"; \
+   echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-bin_${APACHE_VERSION}_amd64.deb"; \
+   echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-data_${APACHE_VERSION}_all.deb"; \
+   echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-utils_${APACHE_VERSION}_amd64.deb"; \
   } >download.txt \
  && time xargs -P2 -n1 curl -sSLO <download.txt \
  && chmod +x ./gpg \
@@ -87,19 +87,19 @@ RUN set -x \
   sasl2-bin \
   tzdata \
   zlib1g-dev \
-  zstd \
  && time dpkg -i \
   apache2-bin_${APACHE_VERSION}_amd64.deb \
   apache2-data_${APACHE_VERSION}_all.deb \
   apache2-utils_${APACHE_VERSION}_amd64.deb \
   apache2_${APACHE_VERSION}_amd64.deb \
- && time dpkg -i dragonfly_amd64.deb \
  && rm -f *.deb \
  && time MAKEFLAGS="-j $(nproc)" pecl install apcu >/dev/null \
  && time MAKEFLAGS="-j $(nproc)" pecl install memcached --enable-memcached-sasl >/dev/null \
+ && time MAKEFLAGS="-j $(nproc)" pecl install redis >/dev/null \
  && time docker-php-ext-enable \
   apcu \
   memcached \
+  redis \
  && time docker-php-ext-configure zip --with-zip >/dev/null \
  && time docker-php-ext-install -j$(nproc) \
   mbstring \
@@ -123,12 +123,12 @@ RUN set -x \
  && dpkg -l >./package_list_before.txt \
  && time apt-mark auto '.*' >/dev/null \
  && time apt-mark manual ${savedAptMark} >/dev/null \
+ && time find /usr/local -type f -executable -print \
  && time find /usr/local -type f -executable -exec ldd '{}' ';' | \
   awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' | \
   sort -u | xargs -r dpkg-query --search | cut -d: -f1 | sort -u | xargs -r apt-mark manual >/dev/null 2>&1 \
  && apt-mark manual \
   default-jre-headless \
-  dragonfly \
   iproute2 \
   libmemcached-dev \
   libsasl2-modules \
@@ -152,9 +152,10 @@ RUN set -x \
  && rm ./phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages.tar.xz ./download.txt ./gpg ./package_list_before.txt ./package_list_after.txt \
  && chown www-data:www-data /var/www/html/phpmyadmin -R \
  && echo '<HTML />' >/var/www/html/index.html \
- && { \
-  echo 'User-agent: *'; \
-  echo 'Disallow: /'; \
+ && \
+  { \
+   echo 'User-agent: *'; \
+   echo 'Disallow: /'; \
   } >/var/www/html/robots.txt
 
 COPY ./config.inc.php /var/www/html/phpmyadmin/
