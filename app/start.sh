@@ -26,7 +26,7 @@ cat /proc/version
 cat /etc/os-release
 strings /etc/localtime
 echo 'Processor Count : ' "$(grep -c -e processor /proc/cpuinfo)"
-head -n $(($(< /proc/cpuinfo wc -l) / $(grep -c -e processor /proc/cpuinfo))) /proc/cpuinfo
+head -n $(($(wc -l /proc/cpuinfo) / $(grep -c -e processor /proc/cpuinfo))) /proc/cpuinfo
 hostname -A
 whoami
 # free -h
@@ -39,7 +39,7 @@ apachectl -M
 # npm audit
 npm list --depth=0
 
-tmp1=$(cat ./Dockerfile | head -n 1)
+tmp1=$(head -n 1 ./Dockerfile)
 export DOCKER_HUB_PHP_TAG=${tmp1:9}
 rm ./Dockerfile
 
@@ -47,8 +47,8 @@ rm ./Dockerfile
 # cat /etc/apache2/mods-enabled/mpm_prefork.conf
 
 export HOST_VERSION=$(cat /proc/version)
-export GUEST_VERSION=$(cat /etc/os-release | grep "PRETTY_NAME" | cut -c 13- | tr -d '"')
-export PROCESSOR_NAME=$(cat /proc/cpuinfo | grep "model name" | head -n 1 | cut -c 14-)
+export GUEST_VERSION=$(grep "PRETTY_NAME" /etc/os-release | cut -c 13- | tr -d '"')
+export PROCESSOR_NAME=$(grep "model name" /proc/cpuinfo | head -n 1 | cut -c 14-)
 export APACHE_VERSION=$(apachectl -V | head -n 1)
 export PHP_VERSION=$(php --version | head -n 1)
 export NODE_VERSION=$(node --version)
@@ -59,7 +59,7 @@ export MEMCACHED_VERSION=$(memcached -h | head -n 1)
 export SQLITE_LOG_DB_FILE="/tmp/sqlitelog.db"
 
 # phpMyAdmin
-export BLOWFISH_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+export BLOWFISH_SECRET=$(tr -dc 'a-zA-Z0-9' </dev/urandom | fold -w 32 | head -n 1)
 
 # LogOperation.jar
 export FIXED_THREAD_POOL=1
@@ -71,7 +71,7 @@ export MEMCACHED_SERVER=127.0.0.1
 export MEMCACHED_PORT=11211
 export MEMCACHED_USER=memcached
 useradd ${MEMCACHED_USER} -G sasl
-export SASL_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+export SASL_PASSWORD=$(tr -dc 'a-zA-Z0-9' </dev/urandom | fold -w 64 | head -n 1)
 echo "${SASL_PASSWORD}" | saslpasswd2 -p -a memcached -c "${MEMCACHED_USER}"
 chown "${MEMCACHED_USER}":memcached /etc/sasldb2
 sasldblistusers2
@@ -92,7 +92,7 @@ popd || exit
 php -l log.php | tee -a /tmp/php_error.txt
 
 count1=$(grep -c 'No syntax errors detected in' /tmp/php_error.txt)
-count2=$(< wc -l /tmp/php_error.txt)
+count2=$(wc -l /tmp/php_error.txt)
 rm /tmp/php_error.txt
 
 if [ "${count1}" -lt "${count2}" ]; then
@@ -146,6 +146,7 @@ while true; \
    && apt_result2cache
 done &
 
+# for npm check delay
 export START_TIME=$(date +%s%3N)
 
 node crond.js
