@@ -64,11 +64,7 @@ try {
                 req.end();
 
                 if (Date.now() - process.env.START_TIME > 5 * 60 * 1000) {
-                    if ((new Date()).getMinutes() % 2 == 0) {
-                        check_apt_update();
-                    } else {
-                        check_npm_update();
-                    }
+                    check_npm_update();
                 }
             } catch (err) {
                 logger.warn(err.stack);
@@ -88,44 +84,6 @@ try {
     job.start();
 } catch (err) {
     logger.warn(err.stack);
-}
-
-function check_apt_update() {
-    new Promise(() => {
-       try {
-            logger.info('START check_apt_update');
-            const mc = memjs.Client.create();
-            var check_apt = '';
-            mc.get('CHECK_APT', function (err, val) {
-                if (err) {
-                    logger.warn(err.stack);
-                }
-                if (val != null) {
-                    logger.info('memcached hit CHECK_APT : ' + val);
-                    mc.quit();
-                    return;
-                }
-                const dt = new Date();
-                const datetime = dt.getFullYear() + '-' + ('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2) + ' ' +
-                   ('0' + dt.getHours()).slice(-2) + ':' + ('0' + dt.getMinutes()).slice(-2);
-                var stdout = execSync('apt-get update');
-                stdout = execSync('apt-get -s upgrade | grep upgraded');
-                check_apt = datetime + ' ' + stdout.toString();
-                mc.set('CHECK_APT', check_apt, {
-                    expires: 24 * 60 * 60
-                }, function (err, _) {
-                    if (err) {
-                        logger.warn(err.stack);
-                    } else {
-                        logger.info('memcached set CHECK_APT : ' + check_apt);
-                    }
-                    mc.quit();
-                });
-            });
-        } catch (err) {
-            logger.warn(err.stack);
-        }
-    });
 }
 
 function check_npm_update() {
