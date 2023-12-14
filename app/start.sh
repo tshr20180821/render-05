@@ -2,12 +2,30 @@
 
 set -x
 
+send_slack_message() {
+  curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
+   -d "text=${1}" -d "channel=${SLACK_CHANNEL_01}" https://slack.com/api/chat.postMessage >/dev/null \
+    && sleep 1s \
+    && curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
+        -d "text=${1}" -d "channel=${SLACK_CHANNEL_02}" https://slack.com/api/chat.postMessage >/dev/null \
+    && sleep 1s
+}
+
+apt_result2cache() {
+  apt-get -qq update
+  curl -X POST -sS -H "Authorization: Bearer ${UPSTASH_REDIS_REST_TOKEN}" \
+   -d "$(echo -n '["SET", "__KEY__", "__VALUE__", "EX", "86400"]' | \
+    sed "s/__KEY__/APT_RESULT_${RENDER_EXTERNAL_HOSTNAME}/" | \
+    sed "s/__VALUE__/$(date +'%Y-%m-%d %H:%M') $(apt-get -s upgrade | grep installed)/")" \
+   "${UPSTASH_REDIS_REST_URL}"
+}
+
 dpkg -l
 
 cat /proc/version
 cat /etc/os-release
 strings /etc/localtime
-echo 'Processor Count : ' $(grep -c -e processor /proc/cpuinfo)
+echo 'Processor Count : ' "$(grep -c -e processor /proc/cpuinfo)"
 head -n $(($(< /proc/cpuinfo wc -l) / $(grep -c -e processor /proc/cpuinfo))) /proc/cpuinfo
 hostname -A
 whoami
@@ -54,38 +72,32 @@ export MEMCACHED_PORT=11211
 export MEMCACHED_USER=memcached
 useradd ${MEMCACHED_USER} -G sasl
 export SASL_PASSWORD=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
-echo ${SASL_PASSWORD} | saslpasswd2 -p -a memcached -c ${MEMCACHED_USER}
-chown ${MEMCACHED_USER}:memcached /etc/sasldb2
+echo "${SASL_PASSWORD}" | saslpasswd2 -p -a memcached -c "${MEMCACHED_USER}"
+chown "${MEMCACHED_USER}":memcached /etc/sasldb2
 sasldblistusers2
 export SASL_CONF_PATH=/tmp/memcached.conf
-echo "mech_list: plain" >${SASL_CONF_PATH}
+echo "mech_list: plain" >"${SASL_CONF_PATH}"
 # /usr/sbin/saslauthd -a sasldb -n 2 -V 2>&1 |/usr/src/app/log_general.sh saslauthd &
-memcached --enable-sasl -v -l ${MEMCACHED_SERVER} -P ${MEMCACHED_PORT} -B binary -m 32 -t 3 -d -u ${MEMCACHED_USER} 2>&1 |/usr/src/app/log_general.sh memcached &
+memcached --enable-sasl -v -l "${MEMCACHED_SERVER}" -P "${MEMCACHED_PORT}" -B binary -m 32 -t 3 -d -u "${MEMCACHED_USER}" 2>&1 |/usr/src/app/log_general.sh memcached &
 # testsaslauthd -u ${MEMCACHED_USER} -p ${SASL_PASSWORD}
 
 # memjs
-export MEMCACHIER_SERVERS=${MEMCACHED_SERVER}:${MEMCACHED_PORT}
-export MEMCACHIER_USERNAME=${MEMCACHED_USER}
-export MEMCACHIER_PASSWORD=${SASL_PASSWORD}
+export MEMCACHIER_SERVERS="${MEMCACHED_SERVER}":"${MEMCACHED_PORT}"
+export MEMCACHIER_USERNAME="${MEMCACHED_USER}"
+export MEMCACHIER_PASSWORD="${SASL_PASSWORD}"
 
-dragonfly --bind=127.0.0.1 --requirepass=${SASL_PASSWORD} --version_check=false --memcached_port=11212 --tcp_keepalive=120 --port 6379 --colorlogtostderr &
-
-pushd /var/www/html/auth
+pushd /var/www/html/auth || exit
 find . -maxdepth 1 -name "*.php" -type f -printf "%f\0" | xargs --max-procs=1 --max-args=1 --null -t php -l | tee -a /tmp/php_error.txt
-popd
+popd || exit
 php -l log.php | tee -a /tmp/php_error.txt
 
 count1=$(grep -c 'No syntax errors detected in' /tmp/php_error.txt)
-count2=$(< /tmp/php_error.txt wc -l)
+count2=$(< wc -l /tmp/php_error.txt)
 rm /tmp/php_error.txt
 
-if [ ${count1} -lt ${count2} ]; then
-  curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
-   -d "text=PHP_SYNTAX_ERROR" -d "channel=${SLACK_CHANNEL_01}" https://slack.com/api/chat.postMessage >/dev/null \
-    && sleep 1s \
-    && curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
-        -d "text=PHP_SYNTAX_ERROR" -d "channel=${SLACK_CHANNEL_02}" https://slack.com/api/chat.postMessage >/dev/null \
-    && sleep 1s
+if [ "${count1}" -lt "${count2}" ]; then
+  send_slack_message 'PHP_SYNTAX_ERROR'
+  exit 1
 fi
 
 /usr/src/app/node_modules/.bin/eslint crond.js
@@ -93,9 +105,10 @@ fi
 
 ls -lang /var/www/html/
 
-sed -i s/__RENDER_EXTERNAL_HOSTNAME__/${RENDER_EXTERNAL_HOSTNAME}/g /etc/apache2/sites-enabled/apache.conf
-sed -i s/__DEPLOY_DATETIME__/${DEPLOY_DATETIME}/ /etc/apache2/sites-enabled/apache.conf
+sed -i s/__RENDER_EXTERNAL_HOSTNAME__/"${RENDER_EXTERNAL_HOSTNAME}"/g /etc/apache2/sites-enabled/apache.conf
+sed -i s/__DEPLOY_DATETIME__/"${DEPLOY_DATETIME}"/ /etc/apache2/sites-enabled/apache.conf
 
+# version
 { \
   echo "${RENDER_EXTERNAL_HOSTNAME} START ${DEPLOY_DATETIME}"; \
   echo "Host : ${HOST_VERSION}"; \
@@ -110,28 +123,29 @@ sed -i s/__DEPLOY_DATETIME__/${DEPLOY_DATETIME}/ /etc/apache2/sites-enabled/apac
 
 VERSION=$(cat VERSION.txt)
 rm VERSION.txt
+send_slack_message "${VERSION}" &
 
-curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
- -d "text=${VERSION}" -d "channel=${SLACK_CHANNEL_01}" https://slack.com/api/chat.postMessage >/dev/null \
-  && sleep 1s \
-  && curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
-      -d "text=${VERSION}" -d "channel=${SLACK_CHANNEL_02}" https://slack.com/api/chat.postMessage >/dev/null &
+# apache start
 . /etc/apache2/envvars >/dev/null 2>&1
 exec /usr/sbin/apache2 -DFOREGROUND &
 
-sleep 5s && curl -sS -u ${BASIC_USER}:${BASIC_PASSWORD} http://127.0.0.1/auth/preload.php &
+# php opcache cache
+sleep 5s && curl -sS -u "${BASIC_USER}":"${BASIC_PASSWORD}" http://127.0.0.1/auth/preload.php &
 
-# while true; do sleep 840s && ps aux && curl -sS -A "health check" -u ${BASIC_USER}:${BASIC_PASSWORD} https://${RENDER_EXTERNAL_HOSTNAME}/; done &
+# apt upgrade info cached
+sleep 3m && apt_result2cache &
+
+# apt upgrade info cached
 while true; \
-  do for i in {1..16}; do sleep 60s && echo ${i}; done \
-  && ss -anpt \
-  && ps aux \
-  && curl -sS -A "health check" -u ${BASIC_USER}:${BASIC_PASSWORD} https://${RENDER_EXTERNAL_HOSTNAME}/; \
+  do for i in {1..144}; do \
+    for j in {1..10}; do sleep 60s && echo "${j}"; done \
+     && ss -anpt \
+     && ps aux \
+     && curl -sS -A "health check" -u "${BASIC_USER}":"${BASIC_PASSWORD}" https://"${RENDER_EXTERNAL_HOSTNAME}"/; \
+  done \
+   && apt_result2cache
 done &
 
 export START_TIME=$(date +%s%3N)
 
-# find / -size +50M | xargs ls -l | sort -rn &
-
-# forever start -c ”node --expose-gc" crond.js
 node crond.js
