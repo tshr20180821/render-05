@@ -52,13 +52,12 @@ RUN set -x \
    echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/slf4j-api-2.0.9.jar"; \
    echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/slf4j-nop-2.0.9.jar"; \
    echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/LogOperation.jar"; \
-   echo "https://raw.githubusercontent.com/tshr20180821/render-07/main/app/gpg"; \
    echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2_${APACHE_VERSION}_amd64.deb"; \
    echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-bin_${APACHE_VERSION}_amd64.deb"; \
    echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-data_${APACHE_VERSION}_all.deb"; \
    echo "http://mirror.coganng.com/debian/pool/main/a/apache2/apache2-utils_${APACHE_VERSION}_amd64.deb"; \
   } >download.txt \
- && time xargs -P2 -n1 curl -sSLO <download.txt \
+ && curl -sSO https://raw.githubusercontent.com/tshr20180821/render-07/main/app/gpg \
  && chmod +x ./gpg \
  && mkdir -p /etc/apt/keyrings \
  && curl -fsSL 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xA2166B8DE8BDC3367D1901C11EE2FF37CA8DA16B' | ./gpg --dearmor -o /etc/apt/keyrings/apt-fast.gpg \
@@ -70,6 +69,7 @@ RUN set -x \
  && time DEBIAN_FRONTEND=noninteractive apt-get -q install -y --no-install-recommends \
   apt-fast \
   curl/${DEBIAN_CODE_NAME}-backports \
+ && aira2c -i download.txt \
  && echo "MIRRORS=( 'http://deb.debian.org/debian, http://cdn-fastly.deb.debian.org/debian, http://httpredir.debian.org/debian' )" >/etc/apt-fast.conf \
  && time apt-fast install -y --no-install-recommends \
   binutils \
@@ -102,7 +102,7 @@ RUN set -x \
   memcached \
   redis \
  && time docker-php-ext-configure zip --with-zip >/dev/null \
- && time docker-php-ext-install -j$(nproc) \
+ && time docker-php-ext-install -j${nproc} \
   mbstring \
   mysqli \
   opcache \
