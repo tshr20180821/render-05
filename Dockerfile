@@ -69,7 +69,7 @@ RUN set -x \
  && time DEBIAN_FRONTEND=noninteractive apt-get -q install -y --no-install-recommends \
   apt-fast \
   curl/${DEBIAN_CODE_NAME}-backports \
- && aira2c -i download.txt \
+ && time aria2c -i download.txt \
  && echo "MIRRORS=( 'http://deb.debian.org/debian, http://cdn-fastly.deb.debian.org/debian, http://httpredir.debian.org/debian' )" >/etc/apt-fast.conf \
  && time apt-fast install -y --no-install-recommends \
   binutils \
