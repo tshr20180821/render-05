@@ -123,7 +123,7 @@ sed -i s/__DEPLOY_DATETIME__/"${DEPLOY_DATETIME}"/ /etc/apache2/sites-enabled/ap
 
 VERSION=$(cat VERSION.txt)
 rm VERSION.txt
-send_slack_message "${VERSION}" &
+# send_slack_message "${VERSION}" &
 
 # apache start
 htpasswd -c -b /var/www/html/.htpasswd "${BASIC_USER}" "${BASIC_PASSWORD}"
@@ -139,20 +139,20 @@ touch ${BACKPORTS_RESULT}
 chmod 644 ${BACKPORTS_RESULT}
 
 # apt upgrade info cached
-sleep 3m \
- && apt_result2cache \
- && dpkg -l | tail -n +6 | awk '{print $2}' | awk -F: '{print $1}' | xargs -I {} ./check_backports.sh {} ${BACKPORTS_RESULT} &
+# sleep 3m \
+#  && apt_result2cache \
+#  && dpkg -l | tail -n +6 | awk '{print $2}' | awk -F: '{print $1}' | xargs -I {} ./check_backports.sh {} ${BACKPORTS_RESULT} &
 
 # apt upgrade info cached
-while true; do \
-  for i in {1..144}; do \
-    for j in {1..10}; do sleep 60s && echo "${i} ${j}"; done \
-     && ss -anpt \
-     && ps aux \
-     && curl -sS -A "health check" -u "${BASIC_USER}":"${BASIC_PASSWORD}" https://"${RENDER_EXTERNAL_HOSTNAME}"/; \
-  done \
-   && apt_result2cache; \
-done &
+# while true; do \
+#   for i in {1..144}; do \
+#     for j in {1..10}; do sleep 60s && echo "${i} ${j}"; done \
+#      && ss -anpt \
+#      && ps aux \
+#      && curl -sS -A "health check" -u "${BASIC_USER}":"${BASIC_PASSWORD}" https://"${RENDER_EXTERNAL_HOSTNAME}"/; \
+#   done \
+#    && apt_result2cache; \
+# done &
 
 # for npm check delay
 export START_TIME=$(date +%s%3N)
