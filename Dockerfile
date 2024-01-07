@@ -156,6 +156,8 @@ RUN set -x \
  && a2enmod -q \
   authz_groupfile \
   brotli \
+  proxy \
+  proxy_connect \
   rewrite \
  && ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
  && time tar xf ./phpMyAdmin-"${PHPMYADMIN_VERSION}"-all-languages.tar.xz --strip-components=1 -C /var/www/html/phpmyadmin \
