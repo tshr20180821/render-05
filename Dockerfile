@@ -89,10 +89,10 @@ RUN set -x \
   tzdata \
   zlib1g-dev \
  && time dpkg -i \
-  apache2-bin_"${APACHE_VERSION}"_amd64.deb \
+  apache2-bin_"${APACHE_VERSION}"+b1_amd64.deb \
   apache2-data_"${APACHE_VERSION}"_all.deb \
-  apache2-utils_"${APACHE_VERSION}"_amd64.deb \
-  apache2_"${APACHE_VERSION}"_amd64.deb \
+  apache2-utils_"${APACHE_VERSION}"+b1_amd64.deb \
+  apache2_"${APACHE_VERSION}"+b1_amd64.deb \
  && nproc=$(nproc) \
  && time MAKEFLAGS="-j ${nproc}" pecl install apcu >/dev/null \
  && time MAKEFLAGS="-j ${nproc}" pecl install igbinary >/dev/null \
