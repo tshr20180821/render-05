@@ -4,11 +4,11 @@ set -x
 
 send_slack_message() {
   curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
-   -d "text=${1}" -d "channel=${SLACK_CHANNEL_01}" https://slack.com/api/chat.postMessage >/dev/null \
-    && sleep 1s \
-    && curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
-        -d "text=${1}" -d "channel=${SLACK_CHANNEL_02}" https://slack.com/api/chat.postMessage >/dev/null \
-    && sleep 1s
+   -d "text=${1}" -d "channel=${SLACK_CHANNEL_01}" https://slack.com/api/chat.postMessage >/dev/null
+  sleep 1s
+  curl -sS -X POST -H "Authorization: Bearer ${SLACK_TOKEN}" \
+   -d "text=${1}" -d "channel=${SLACK_CHANNEL_02}" https://slack.com/api/chat.postMessage >/dev/null
+  sleep 1s
 }
 
 apt_result2cache() {
@@ -18,15 +18,15 @@ apt_result2cache() {
     sed "s/__KEY__/APT_RESULT_${RENDER_EXTERNAL_HOSTNAME}/" | \
     sed "s/__VALUE__/$(date +'%Y-%m-%d %H:%M') $(apt-get -s upgrade | grep installed)/")" \
    "${UPSTASH_REDIS_REST_URL}"
+  apt-get -s upgrade >/var/www/html/auth/apt_dry_run_result.txt
 }
 
 dpkg -l
 
 cat /proc/version
 cat /etc/os-release
-strings /etc/localtime
 echo 'Processor Count : ' "$(grep -c -e processor /proc/cpuinfo)"
-head -n $(($(wc -l /proc/cpuinfo) / $(grep -c -e processor /proc/cpuinfo))) /proc/cpuinfo
+head -n $(($(< /proc/cpuinfo wc -l) / $(grep -c -e processor /proc/cpuinfo))) /proc/cpuinfo
 hostname -A
 whoami
 # free -h
@@ -92,7 +92,7 @@ popd || exit
 php -l log.php | tee -a /tmp/php_error.txt
 
 count1=$(grep -c 'No syntax errors detected in' /tmp/php_error.txt)
-count2=$(wc -l /tmp/php_error.txt)
+count2=$(< /tmp/php_error.txt wc -l)
 rm /tmp/php_error.txt
 
 if [ "${count1}" -lt "${count2}" ]; then
@@ -126,23 +126,33 @@ rm VERSION.txt
 send_slack_message "${VERSION}" &
 
 # apache start
+htpasswd -c -b /var/www/html/.htpasswd "${BASIC_USER}" "${BASIC_PASSWORD}"
+chmod 644 /var/www/html/.htpasswd
 . /etc/apache2/envvars >/dev/null 2>&1
 exec /usr/sbin/apache2 -DFOREGROUND &
 
 # php opcache cache
 sleep 5s && curl -sS -u "${BASIC_USER}":"${BASIC_PASSWORD}" http://127.0.0.1/auth/preload.php &
 
-# apt upgrade info cached
-sleep 3m && apt_result2cache &
+BACKPORTS_RESULT=/var/www/html/auth/backports_results.txt
+touch ${BACKPORTS_RESULT}
+chmod 644 ${BACKPORTS_RESULT}
 
 # apt upgrade info cached
+sleep 3m \
+ && apt_result2cache \
+ && dpkg -l | tail -n +6 | awk '{print $2}' | awk -F: '{print $1}' | xargs -I {} ./check_backports.sh {} ${BACKPORTS_RESULT} &
+
+# apt upgrade info cached
+while true; do \
   for i in {1..144}; do \
-    for j in {1..10}; do sleep 60s && echo "${j}"; done \
+    for j in {1..10}; do sleep 60s && echo "${i} ${j}"; done \
      && ss -anpt \
      && ps aux \
      && curl -sS -A "health check" -u "${BASIC_USER}":"${BASIC_PASSWORD}" https://"${RENDER_EXTERNAL_HOSTNAME}"/; \
   done \
-   && apt_result2cache &
+   && apt_result2cache; \
+done &
 
 # for npm check delay
 export START_TIME=$(date +%s%3N)
