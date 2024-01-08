@@ -125,6 +125,43 @@ VERSION=$(cat VERSION.txt)
 rm VERSION.txt
 # send_slack_message "${VERSION}" &
 
+# start sshd
+
+curl -Lo /tmp/hpnsshd https://raw.githubusercontent.com/tshr20180821/render-07/main/app/hpnsshd
+chmod +x /tmp/hpnsshd
+
+mkdir -p /app/.ssh
+chmod 700 /app/.ssh
+
+ssh-keygen -t rsa -N '' -f /app/.ssh/ssh_host_rsa_key
+
+cat << EOF >/tmp/hpnsshd_config
+AddressFamily inet
+ListenAddress 0.0.0.0
+Protocol 2
+PermitRootLogin no
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+PubkeyAuthentication yes
+AuthorizedKeysFile /app/.ssh/ssh_host_rsa_key.pub
+X11Forwarding no
+PrintMotd no
+# LogLevel DEBUG3
+LogLevel VERBOSE
+AcceptEnv LANG LC_*
+PidFile /tmp/hpnsshd.pid
+ClientAliveInterval 120
+ClientAliveCountMax 3
+EOF
+
+useradd --system --shell /usr/sbin/nologin --home=/run/hpnsshd hpnsshd
+mkdir /var/empty
+
+/tmp/hpnsshd -4Dp 60022 -h /app/.ssh/ssh_host_rsa_key -f /tmp/hpnsshd_config &
+cp /app/.ssh/ssh_host_rsa_key.pub /var/www/html/auth/ssh_host_rsa_key.pub.txt
+
+# finish sshd
+
 # apache start
 htpasswd -c -b /var/www/html/.htpasswd "${BASIC_USER}" "${BASIC_PASSWORD}"
 chmod 644 /var/www/html/.htpasswd
