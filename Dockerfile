@@ -86,6 +86,7 @@ RUN set -x \
   memcached \
   nodejs \
   sasl2-bin \
+  ssh \
   tzdata \
   zlib1g-dev \
  && time dpkg -i \
@@ -144,6 +145,7 @@ RUN set -x \
   memcached \
   nodejs \
   sasl2-bin \
+  ssh \
  && time apt-mark showmanual \
  && time DEBIAN_FRONTEND=noninteractive apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
  && dpkg -l >./package_list_after.txt \
